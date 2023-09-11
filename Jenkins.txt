@@ -1,0 +1,136 @@
+
+	[JENKINS]
+	
+	ASIAN PAINT PROJECT
+[16:19] Mohammed Rafi
+
+Login: P00997431@asianpaints.com
+
+Password: Devops_123
+
+Tools URLS:
+
+for JIRA access
+https://isim.asianpaints.com/itim/ui/Login.jsp
+
+Prod Jenkins
+https://172.25.10.225/
+
+test Jenkins
+https://172.25.10.238/
+
+Nexus:
+https://172.25.10.239/
+
+GitLab
+https://172.25.10.240/
+
+Grafana
+https://172.25.10.240/-/grafana/login
+
+Cyberark
+https://appim.asianpaints.com/PasswordVault/v10/Accounts
+
+Prod Jira
+https://172.25.210.203:8443/
+http://172.25.210.203:8080/
+https://alm.asianpaints.com/   (as jira url in prod)
+
+Test Jira
+http://172.25.10.204:8080/login.jsp (Not in use)
+http://172.25.110.71:8080/browse/ICM-526    (updated)
+ 
+Fortify 
+http://172.25.111.146:8081/ssc 
+
+Fortify server:
+172.25.111.29
+
+
+---------------------CUBA Based Applcation------------------------------
+	- Build on Gradle. 
+	- Packaging is on Nexus.
+	- Deployment is done in Tomcat Container.
+	
+--------------------APIGEE Based Applcation------------------------------
+	- Build on Ant.
+	- Packaging is on Nexus.
+	- Deployment is done using Ansible Playbook.
+
+--------------------Windows Based Applcation------------------------------
+	- Build on MSBuild.
+	- Packaging is on Nexus.
+	- Deployment, jenkins directly deployed on google playstore.
+
+------------------------
+- Test UAT For ICM-526
+- Test Prod ICM-26
+
+----------------Fortify DAST (Dynamic Application Security Testing)-------------
+	- It is handle by Infosec team.
+
+------------------------
+- Custom field should be taken from JIRA Team.
+
+-------------------Ansible Login Server------------
+	- Test server IP - 172.25.10.241
+	- Prod Server IP - 172.25.10.226
+
+------------------Delta Changes
+- Last commit till latest commit files changes.
+- ChangeSet will be aply on Checkout stage.
+	- Add this line folder = [].
+	- Next Line load"C:\\program files\\jenkinsprod\\Groovy_script\\ChangeSet.groovy"----> path where changes set is located. 
+    - In Fortify translate ---> javaSrcFiles:"${input_files}"
+	- In Fortify upload ---> We have to add scrit
+	- These 3 changes should be added when changeSet is applied in Job.
+	
+	
+	
+--------------------Scheme Reconfiguration Ansible Script------------------------------
+Hi Pavithra, below are the current deployment steps we follow , please verify and let us know in case of any change.
+
+Deleting files from the application server
+Download package from Nexus
+making backup of config and custom folder
+unzip files that we downloaded from nexus
+searching file for delete files in delete.txt
+stopping the server
+Deploy content (custom and Config) from package
+execute ant clean all command / execute ant all command
+starting the server
+Get files in a logs folder and verify by checking the "Server startup" in logs
+---------------------------------------
+
+* sanity report parth : cd /tmp
+
+Explore the sanity script in test jenkins and check the script how it works, and explore the execute_santity_report.sh in this script we are getting
+the report And in this we are adding the colours script.
+
+* JIRA
+
+	- Usage of component features in Jira workflow.	
+	Platform - Hybris ------> We can say Hybris is a Backend for Ecommerce Application. [Hybris Commece] is Platform ICM for test jenkins
+	Application - B2B, B2C, etc
+	Change request - Each aplication have multiple change request. Users can come and create a CR.
+	
+	If application is enabled the devops enabled should be YES.
+	A single application can have a different component. We can define that, if we have to deployment android based we can add android as component.
+	
+	
+	- Connectivity between Jira and Jenkins
+	As i explore the connectivity between jira and jenkins are done, and in configure system i have gone through the JIRA steps like Connection timeout and the JIRA url.
+
+
+Shall we try to do the UAT deployment only through ansible by bypassing jenkins
+
+-----------------Aniket Task------------
+- File Read one by one using shell script
+
+
+Here is the presentation of the last week update. I have explored the Asian paints environment and explored some tools this week.
+
+
+Create a new user 
+
+

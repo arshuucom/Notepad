@@ -1,0 +1,691 @@
+
+
+* Check wheather anisble is intall or not, and to check vim editor is installed or not.
+	- dnf install ansible-core python3-pip vim -y
+	
+* We have to switch the user in exam.
+
+* To check ansible navigator is installed or not
+	- pip install ansible-navigator
+	- Use can use the above command to install ansible-navigator.
+	
+* Check the connectivity with nall nodes.
+	- ping node1, ping node2, etc...
+	
+* For indentation problem in playbook make a file .vimrc and add the data.
+	- vim .vimrc
+		set ai
+		set ts=2
+		set et
+		set cursorcolumn
+		
+* Problem[1]
+
+* Solution[1]
+	- Make a directory for collections
+		mkdir -p /home/vikasnehra/ansible/mycollection
+	- Make a directory for roles
+		mkdir -p /home/vikasnehra/ansible/roles
+	- Create a inventory file
+		vim /home/vikasnehra/ansible/inventory
+		- Add nodes in inventory
+		[dev]
+		node1
+		
+		[test]
+		node2
+        
+		[prod]
+		node[3:4]
+		
+		[balancers]
+		node5
+		
+		[webserver:children]
+		prod
+		
+		And save the file.
+	- To check the node connectivity and name.
+		ansible -i /home/vikasnehra/ansible/inventory all --list-hosts.
+	- Create a ansible.cfg file in /home/vikasnehra/ansible/ansible.cfg
+		[defaults]
+		inventory = /home/vikasnehra/ansible/inventory
+		roles_path = /home/vikasnehra/ansible/roles
+		collections_path = /home/vikasnehra/ansible/mycollection
+		remote_user = vikasnehra
+		ask_pass = false
+		host_key_checking = false
+		
+		[privilege_escalation]
+		become = true
+		become_method = sudo
+		become_user = root
+		become_ask_pass = false
+		
+		- Now to check wheather ansible is using which ansible.cfg file.
+			ansible --version
+			
+			- we will export the ansible.cfg file
+				echo "export ANSIBLE_CONFIG=/home/vikasnehra/ansible/ansible.cfg" >> .bashrc
+			- Add command to use the export 
+				source .bashrc
+			- Now check the connectivity.
+				ansible -m ping all
+		
+-------------------------------------------------------------------------------------------------
+
+* Problem[2]
+Create and run an ansible ad-hoc command. As a system administrator, you will need to install software on the managed nodes:
+	a) Create a shell script called yum-repo.sh that runs ansible ad-hoc commands to create the yum repositories on each of the managed nodes as per the following details:
+	b) NOTE: you need to create 2 repos(BaseOS & AppStream) in the managed nodes.
+	
+* Solution[2]
+	- TO check on all the managed nodes that repolists is there or not.
+		ansible all -m command -a 'dnf repolist all'
+		
+	- Create a file vim repo.sh
+		#! /bin/bash 
+		ansible all -m yum_repositry -a 'file=external.repo name=BaseOS description="Base OS Repo" base baseurl=file:///mnt/BaseOS/ gpgcheck=yes gpgkey=file:///etc/pki enabled=yes state=present' -b
+		
+		Same as above for AppStream.
+		
+	- Now give the permission of execute. 
+		chmod +x yum-repo.sh
+		./yum-repo.sh
+		
+	- Verify that repolist is installed on managed node.
+		ansible all -m command -a 'dnf repolist all'
+		
+----------------------------------------------------------------------------------------------------
+		
+* Problem[3]
+Create a playbook called /home/vikasnehra/ansible/packages.yml that:
+	a) Install the php and mariadb packages on hosts in the dev, test and prod host groups only.
+	b) Install the RPM Development Tools package group on hosts in the dev host group only.
+	c) updates all packages to the latest version on hosts in the dev host group only.
+	
+* Solution
+	- Create a playbook packages.yml
+	
+---
+- name: Packages Management ansible playbook.
+  hosts: all
+  tasks:
+    - name: Install the packages
+	  ansible.builtin.dnf:
+	    name: "{{ item }}"
+		state: present
+	  loop:
+        - php
+        - mariadb
+	  when:	inventory_hostname in groups['dev'] or inventory_hostname in groups['test'] or inventory_hostname in groups['prod']
+	
+	- name: Install the RPM development tool
+	  ansible.builtin.dnf:
+	    name: "@RPM Development Tools"
+		state: present
+	  when: inventory_hostname in groups['dev']
+	  
+	- name: Update all the packages
+	  ansible.builtin.dnf:
+	    name: '*'
+		state: latest
+	  when: inventory_hostname in groups['dev']
+	  
+...
+
+
+--------------------------------------------------------------------------------------
+
+* Problem[4]
+Install the RHEL system roles packages and create a playbook called /home/vikasnehra/ansible/timesync.yml that:
+	a) Runs on all the managed hosts.
+	b) Uses the timesync role.
+	c) Configures the role to use the time server 172.25.254.250.
+	d) Configures the role to set the iburst parameter as enabled.
+	
+* Solution
+	- Firstly install the RHEL roles.
+		sudo yum install rhel-system-roles -y
+	- Create a playbook /home/vikasnehra/ansible/timesync.yml
+	
+---
+- name: Time sync Using Roles Playbook
+  hosts: all
+  become: true
+  vars:
+    timesync_ntp_servers:
+	  - hostname: 172.25.254.250
+	    iburst: yes
+  roles:
+    - /usr/share/ansible/roles/rhel-system-roles.timesync
+
+...
+	  
+------------------------------------------------------------------------------------
+	  
+* Problem[5]
+Create a role called apache in /home/vikasnehra/ansible/roles with the following requirement:
+	a) The httpd package should be installed, httpd service should be enabled on boot, and started.
+	b) The firewall is enabled and running with a rule to allow access to the web server.
+	c) A template file index.html.j2 exists (you have to create this file) and is used to create the file /var/www/html/index.html with the following output: Welcome to HOSTNAME on IPADDRESS, where HOSTNAME is fully qualified domain name of the managed node and IPADDRESS is the IP address of the managed node.
+	
+* Solution
+	- Firstly go to /home/vikasnehra/ansible/
+		ansible-galaxy init --init-path=roles apache
+	- Verify using ll command.
+	- Open the roles/tasks/main.yml file and add the tasks in it.	
+---
+- name: Installing all the required packages
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+	state: present
+  loop: "{{ pkgs }}"
+
+- name: Creating index.html file from ansible jinja2 template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+
+- name: Starting and enabling the services
+  ansible.builtin.service:
+    service: "{{ item }}"
+    state: started
+    enabled: true
+  loop: "{{ pkgs }}"
+ 
+- name: Managing firewall rules
+  ansible.builtin.firewalld:
+	
+	
+-------------------------------------------------------------------
+
+*Problem[6]
+Use ansible galaxy with the requirement file called /home/vikasnehra/ansible/roles/requirement.yml to download and install roles to /home/vikasnehra/ansible/roles from the following url:
+	a) https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz the name of this role should be zabbix.
+	b) https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz the name of this role should be security.
+	c) https://galaxy.ansible.com/download/mafalb-squid0.2.0tar.gz the name of this role should be squid.
+	
+* Solution
+	- Go to directory /home/vikasnehra/ansible/roles/requirements.yml
+	
+---
+- src: https://galaxy.ansible.com/download/zabbix-zabbix-1.0.6.tar.gz
+  name: zabbix
+  
+- src: https://galaxy.ansible.com/download/openafs_contrib-openafs-1.9.0.tar.gz
+  name: security
+  
+- src: https://galaxy.ansible.com/download/mafalb-squid0.2.0tar.gz
+  name: squid
+  
+...
+
+	- Install the ansible-galaxy
+		ansible-galaxy install -r /home/vikasnehra/ansible/roles/requirements.yml
+		
+-------------------------------------------------------------
+
+* Problem[7]
+Create a playbook called squid.yml as per the following details:
+	a) The playbook contains a play that runs on hosts in the balancers host group and uses the squid role present in your machine.
+	
+* Solution
+	- Create a directory /home/vikasnehra/ansible/squid.yml
+	
+---
+- name: Play for balancers group
+  hosts: balancers
+  roles:
+    - /home/vikasnehra/ansible/roles/squid
+
+...
+
+	- Check the changes
+		ansible balancers -m command -a 'systemctl status squid' -b
+		ansible balancers -m command -a 'sudo cat /etc/squid/squid.conf'
+		
+------------------------------------------------------------------------------
+
+* Problem[8]
+Create a playbook called test.yml as per the following details:
+	a) The playbook runs on managed nodes in the test host group.
+	b) Create the directory /webtest with the group ownership webtest group and having the regular permission rwx for the owner and group and rx for the others.
+	c) Apply the specail permission: set group ID.
+	d) Symbolically link /var/www/html/webtest to /webtest directory.
+	e) Create the file /webtest/index.html with a single line of text that reads: Testing
+	
+* Solution
+	- Create a directory /home/vikasnehra/ansible/test.yml
+	
+---
+- name:
+  hosts:
+  tasks:
+    - name: Creating the webtest group.
+	  ansible.builtin.group:
+	    name: webtest
+	- name: Creating the /webtest directory.
+	  ansible.builtin.file:
+	    state: directory
+		path: /webtest
+		mode: '2775'
+		group: webtest
+		owner: apache
+	- name: Creating the /webtest directory symbolic link.
+	  ansible.builtin.file:
+	    src: /webtest
+		dest: /var/www/html/myweb
+		state: link
+		mode: '2775'
+		owner: apache
+	- name: Creating the index file.
+	  ansible.builtin.copy:
+	    dest: /webtest/index.html
+		mode: '0640'
+		owner: apache
+		content: "Testing"
+		
+...
+
+--------------------------------------------------------------------------
+
+*Problem[9]
+Create an ansible vault to store user password with the following conditions:
+	a) The name of the vault is vault.yml
+	b) The vault contains two variables, dev_pass with value as redhat and mgr_pass with value as linux respectively.
+	c) The password to encrypt and decrypt the vault is nehraclasses
+	d) The password is stored in the file /home/vikasnehra/ansible/password.txt
+	
+* Solution
+	- Create a file /home/vikasnehra/ansible/password.txt and add the line below.
+		nehraclasses
+	- Next command
+		ansible-vault create --vault-password-file=/home/vikasnehra/ansible/password.txt vault.yml
+	- Mention the variables
+		dev_pass: redhat
+		mgr_pass: linux
+	- Save the file.
+    - View the vault.yml
+		ansible-vault view vault.yml
+		
+-----------------------------------------------------------------
+	
+		
+*Problem[10]
+Generate a host file
+	a) Download an initial template file called host.j2 from the below url:
+		http://classroom.example.com/content/hosts.j2 to /home/vikasnehra/ansible/directory.Complete the template so that it can be used to generate a file with a line for each inventory host in the same format as /etc/hosts.
+	b) Create a playbook called gen_hosts.yml that uses this template to generate the hosts in the dev host group.
+	c) When completed,the file /etc/hosts on myhosts on hosts in the dev host group should have a line for each managed host.
+	
+* Solution
+	- Firtly fetch the url and download.
+		wget http://classroom.example.com/content/hosts.j2
+	- Edit hosts.j2 file
+		{% for x in groups['all'] %} -------------- It will capture all nodes information.
+		{{ hostvars[x]['ansible_facts']['default_ipv4']['address'] }} {{ hostvars[x]['ansible_facts']['fqdn'] }} {{ hostvars[x]['ansible_facts']['hostname'] }}
+		{% endfor %}
+	- And save the file.
+	- Create a playbook gen_hosts.yml
+
+---
+- name: Hosts file playbook
+  hosts: all
+  tasks: []
+- hosts: dev
+  tasks:
+    - name: Generating the hosts file.
+	  ansible.builtin.template:
+	    src: "/home/vikasnehra/ansible/hosts.j2"
+		dest: "/etc/myhosts"
+...		
+	- Now run the playbook
+	- Check the changes using adhoc command
+		ansible dev -m command -a 'sudo cat /etc/myhosts'
+		
+-----------------------------------------------------------------------------		
+
+* Problem[11]
+Create a playbook called hwreport.yml that produces an output file called /root/hwreport.txt on all of the managed nodes with the following information:
+	a) Inventory hostname
+	b) Total memory in MB
+	c) BIOS	version
+Each line of the output file contains a single key-value pair.
+
+* Solution
+	- Go to the ansible directory /home/vikasnehra/ansible/
+	- Create a file hwreport.j2
+	
+-- Inventory hostname : {{ ansible_facts['fqdn'] }}
+-- Total memory in MB : {{ ansible_facts['memtotal_mb'] }}
+-- BIOS version : {{ ansible_facts['bios_version'] }}
+
+	- Now create a playbook hwreport.yml.
+	
+---
+- name: Playbook for the hardware report.
+  hosts: all
+  become: true
+  tasks:
+  - name: Generating the hardware report
+    ansible.builtin.template:
+	  src: /home/vikasnehra/ansible/hwreport.j2
+	  dest: /root/hwreport.txt
+...
+
+	- Save the file.
+	- Check the changes using adhoc command
+		ansible all -m command -a 'sudo cat /root/hwreport.txt'
+		
+-------------------------------------------------------------
+
+* Problem[12]
+Create a playbook called /home/vikasnehra/ansible/issue.yml as per the following requirement:
+	a) The playbook run on all inventory hosts.
+	b) The playbook replaces the contents of /etc/issue with a single line of text as:
+		a) On hosts in the dev host group, the line read: Development
+		b) On hosts in the test hosts group, the line read: Test
+		c) On hosts in the prod hosts group, the line read: Production
+	
+* Solution
+	- Create a playbook in /home/vikasnehra/ansible/issue.yml
+	
+---
+- name: Ansible playbook for replacing the content in the /etc/issue file
+  hosts: all
+  - name: Replacing the content in dev group
+    ansible.builtin.copy:
+	  content: "Development"
+	  dest: /etc/issue
+	when: inventory_hostname in group['dev']
+	
+  - name: Replacing the content in dev group
+    ansible.builtin.copy:
+	  content: "Test"
+	  dest: /etc/issue
+	when: inventory_hostname in group['test']
+	
+  - name: Replacing the content in dev group
+    ansible.builtin.copy:
+	  content: "Production"
+	  dest: /etc/issue
+	when: inventory_hostname in group['prod']
+
+...
+
+	- Save the playbook.
+	- Check the changes using adhoc command
+		ansible dev -m command -a 'sudo cat /root/issue'
+		ansible test -m command -a 'sudo cat /root/issue'
+		ansible prod -m command -a 'sudo cat /root/issue'
+
+----------------------------------------------------------------------------------
+
+* Problem[13]
+Rekey an existing ansible vault as per the following condition:
+	a) Use the vault.yml file which you have created earlier.
+	b) Set the new vault password as ansible.
+	c) The vault remain in an encrypted state with the new password.
+	
+* Solution
+	- Go to the directory /home/vikasnehra/ansible/
+	- For Rekey password changes
+		ansible-vault rekey --ask-vault-pass vault.yml
+		Vault password: Enter Old password
+		New Vault password: ansible
+		Confirm new vault password: ansible
+		Rekey successful
+	- Open file and check
+		ansible-vault view vault.yml
+		
+-----------------------------------------------------------------------------------------------
+
+* Problem[14]
+Create user accounts. A list of user to be created can be found in the file called user_list.yml which you should download from "http://classroom.example.com/content/user_list.yml" and save to /home/vikasnehra/ansible/ directory. Using the password vault created elsewhere in this exam,
+create a playbook called create_user.yml that creates user accounts as follow:
+ 		a) Users with a job description of developer should be created on managed nodes in the dev and test host group assigned the password from the dev_pass variable and is a member of supplementary group devops.
+		b) Users with a job description of manager should be created on managed nodes in the prod host group assigned the password from the mgr_pass variable and is a member of supplementary group opsmgr.
+		c) Password should use the SHA512 has format. Your playbook should work using the vault password file created elsewhere in the exam.
+		
+* Solution
+	- Go to the directory /home/vikasnehra/ansible/
+	- Download the file
+		wget http://classroom.example.com/content/user_list.yml
+	- Edit the file user_list.yml
+	- Creat a playbook create_user.yml
+	
+---
+- name: Users and group management playbook
+  hosts: test,dev
+  vars_files: 
+    - /home/vikasnehra/ansible/user_list.yml
+	- /home/vikasnehra/ansible/vault.yml
+  tasks:
+    - name: Creating the devops group
+      ansible.builtin.group:
+        name: devops
+		state: present
+		
+	- name: Creating the users having developer profile.
+	  ansible.builtin.user:
+	    name: "{{ item.name }}"
+		uid: "{{ item.uid }}"
+		groups: devops
+		state: present
+		password: "{{ dev_pass | password_hash('sha512') }}"
+	  when: item.job == "developer"
+	  loop: "{{ users }}"
+	  
+- hosts: prod
+  vars_files: 
+    - /home/vikasnehra/ansible/user_list.yml
+	- /home/vikasnehra/ansible/vault.yml
+  tasks:
+    - name: Creating the devops group
+      ansible.builtin.group:
+        name: opsmgr
+		state: present
+		
+	- name: Creating the users having manager profile.
+	  ansible.builtin.user:
+	    name: "{{ item.name }}"
+		uid: "{{ item.uid }}"
+		groups: opsmgr
+		state: present
+		password: "{{ mgr_pass | password_hash('sha512') }}"
+	  when: item.job == "manager"
+	  loop: "{{ users }}"
+	  
+...
+
+	- Make sure that in password.txt file is having the lastest password.
+	- ansible-navigator create_user.yml --vault-password-file=password.txt
+	- It will run the playbook firstly it will decrypt the password the it will run.
+	- Check the changes using adhoc command
+		ansible all -m command -a 'sudo id -a lucifer'
+		
+-----------------------------------------------------------------------
+
+* Problem[15]
+Create /home/vikasnehra/ansible/cron.yml playbook as per the following requirement:
+	a) This playbook runs on all managed nodes in the hostgroup.
+	b) Configure cronjob, which runs every 2 minutes and executes the following commands:  logger "EX294
+	exam in progress" and runs as user natasha.
+	
+* Solution
+	- Go to the directory /home/vikasnehra/ansible/
+	
+---
+- name: Cron job playbook
+  hosts: all
+  tasks:
+    - name: Creating the user natasha for running the cron job.
+	  ansible.builtin.user:
+	    name: natasha
+		state: present
+	- name: Scheduling the cron job.
+	  ansible.builtin.cron:
+	    name: "cron job for the natasha user"
+		minutes: "*/2"
+		job: 'logger "EX294 exam in progress"'
+		
+...
+
+	- Check the changes
+		ansible all -m command -a 'crontab -l -u natasha'
+		ansible all -m command -a 'sudo tail /var/log/cron'
+		ansible all -m command -a 'sudo tail /var/log/message'
+		
+...
+
+
+----------------------------------------------------------------------------------
+
+* Problem[16]
+Create & use a logical volume:
+Create a playbook called /home/vikasnehra/ansible/lvm.yml that runs on all the managed nodes and does the following:
+	a) Create a logical volume with the following requirement:
+		i) The logical volume is created in the research volume group.
+		ii) The logical volume name is data.
+		iii) The logical volume size in 1200 Mib.
+		iv) Format the logical volume with the ext4 file-system.
+		v) If the requested logical volume size cannot be created, the error message "could not create logical volume of that size" should be displayed and size 800 MiB should be used instead.
+		vi) If the volume research does not exist, the error message "volume group does not exist" should be displayed.
+		vii) Dont mount the logical volume in any way.
+		
+* Solution
+	- Go to the directory /home/vikasnehra/ansible/
+	
+---
+- name: LVM Playbook
+  hosts: all
+  tasks:
+  - name: Checking details
+    block:
+	  - name: If the volume research does not exist, print the error message.
+	    ansible.builtin.debug:
+		  msg: "volume group does not exist"
+		when: "'research' not in ansible_lvm.vgs"
+	  - name: creating the 1200m lvm
+	    ansible.builtin.lvol:
+		  vg: research
+		  lv: data
+		  size: 1200m
+		when: "'research' in ansible_lvm.vgs"
+	rescue:
+      - name: If the requested logical volume size cannot be created, the print.
+        ansible.builtin.debug:
+          msg: "Could not create logical volume of that size"
+        when: "'research' in ansible_lvm.vgs"
+      - name: Creating the logical volume of 800m
+        ansible.builtin.lvol:
+          vg: research
+		  lv: data
+		  size: 800m
+		when: "'research' in ansible_lvm.vgs"
+		
+...
+
+-----------------------------------------------------------------------------
+
+* Problem[17]
+Create and use partition:
+Create /home/vikasnehra/ansible/partition.yml, which will create partitions on all the managed nodes:
+	a) After vdb creating a 1200M primary partition, partition number 1, and format it into ext4 filesystem.
+	b) On the prod group to permanently mount the partition to /srv directory.
+	c) If there is not enough disk space, give prompt information "Could not create partition of that size" and create a 800M partition.
+	d) If vdb does not exist, a prompt message will be given "this disk does not exist."
+	
+* Solution
+	- Go to the directory /home/vikasnehra/ansible/
+	
+---
+- name: Partition Playbook
+  hosts: all
+  tasks:
+  - name: Check block storage availability.
+    block:
+	  - name: If vdb does not exist, a prompt message will be given
+	    ansible.builtin.debug:
+		  msg: "this disk does not exist."
+		when: "'vdb' not in ansible_devices"
+	  - name: Creating the 1200m partition
+	    ansible.builtin.parted:
+		  device: /dev/vdb
+		  number: 1
+		  part_end: 1200MiB
+		  state: present
+		when: "'vdb' in ansible_devices"
+		
+	rescue:
+	  - name: If there is not enough disk space, given the information.
+	    ansible.builtin.debug:
+		  msg: "Could not create partition of that size"
+		when: "'vdb1' not in ansible_devices.vdb"
+	  - name: Creating the 800m partition
+	    ansible.builtin.parted:
+		  device: /dev/vdb
+		  number: 1
+		  part_end: 800MiB
+		  state: present
+	always:
+      - name: Creating the ext4 filesystem
+        ansible.builtin.filesystem:
+		  fstype: ext4
+		  dev: /dev/vdb1
+		when: "'vdb' in ansible_devices"
+	  - name: Mounting the filesystem.
+        ansible.builtin.mount:
+		  path: /srv
+		  src: /dev/vdb1
+		  fstype: ext4
+		  state: mounted
+		when: "'prod' in group_names"
+		
+...
+
+
+--------------------------------------------------------------------
+
+* Problem[18]
+Using a selinux role create a selinux.yml playbook with the following conditions:
+	a) Configure on all managed hosts to set the defaults selinux mode as permissive.
+	b) Verify the selinux mode on all the nodes using ansible ad-hoc command.
+	c) Create another copy of the selinux.yml playbook with the name of selinux2.yml and make changes there in it to configure the selinux default mode as enforcing for all the managed nodes.
+	d) Execute the selinux2.yml playbook using ansible navigator.
+	e) Verify the selinux mode on all the node machines.
+	
+* Solution
+	- Go to the directory /home/vikasnehra/ansible/selinux.yml
+	- Install roles for system changes
+		ansible-galaxy install linux-system-roles.selinux
+---
+- name: Creating a playbook for selinux
+  hosts: all
+  vars:
+    - selinux_state: permissive
+  roles: 
+    - linux-system-roles.selinux
+  
+...
+	- And save the playbook
+	- Check the changes
+		ansible all -m command -a 'sestatus'
+	- Run the playbook.
+	
+	- Go to the directory /home/vikasnehra/ansible/selinux2.yml
+
+		ansible-galaxy install linux-system-roles.selinux
+---
+- name: Creating a playbook for selinux
+  hosts: all
+  vars:
+    - selinux_state: enforcing
+  roles: 
+    - linux-system-roles.selinux
+  
+...	
+
+
+-------------------------------------------------------------------

@@ -1,0 +1,701 @@
+			[	Ansible Certification RH294	]
+	[	Red Hat Enterprise Linux Automation with Ansible	]
+	
+* What is Ansible?
+Ansible is an open source automation platform.
+It is a simple automation language that can perfectly describe an IT application infrastructure in Ansible Playbooks. 
+It is also an automation engine that runs Ansible Playbooks.
+
+Ansible can manage powerful automation tasks and can adapt to many different workflows and environments. 
+At the same time, new users of Ansible can very quickly use it to become productive.
+
+Ansible Is Simple
+Ansible Playbooks provide human-readable automation. 
+This means that playbooks are automation tools that are also easy for humans to read, comprehend, and change. 
+No special coding skills are required to write them. Playbooks execute tasks in order. 
+The simplicity of playbook design makes them usable by every team, which allows people new to Ansible to get productive quickly.
+
+Ansible Is Powerful
+You can use Ansible to deploy applications for configuration management, for workflow automation, 
+and for network automation. Ansible can be used to orchestrate the entire application life cycle.
+
+Ansible Is Agentless
+Ansible is built around an agentless architecture. 
+Typically, Ansible connects to the hosts it manages using OpenSSH or WinRM and runs tasks, often (but not always) by pushing out small programs called Ansible modules to those hosts. These programs are used to put the system in a specific desired state. Any modules that are pushed are removed when Ansible is finished with its tasks. You can start using Ansible almost immediately because no special agents need to be approved for use and then deployed to the managed hosts. Because there are no agents and no additional custom security infrastructure, Ansible is more efficient and more secure than other alternatives.
+
+Ansible has a number of important strengths:
+
+Cross platform support: Ansible provides agentless support for Linux, Windows, UNIX, and network devices, in physical, virtual, cloud, and container environments.
+
+Human-readable automation: Ansible Playbooks, written as YAML text files, are easy to read and help ensure that everyone understands what they will do.
+
+Perfect description of applications: Every change can be made by Ansible Playbooks, and every aspect of your application environment can be described and documented.
+
+Easy to manage in version control: Ansible Playbooks and projects are plain text. They can be treated like source code and placed in your existing version control system.
+
+Support for dynamic inventories: The list of machines that Ansible manages can be dynamically updated from external sources in order to capture the correct, current list of all managed servers all the time, regardless of infrastructure or location.
+
+Orchestration that integrates easily with other systems: HP SA, Puppet, Jenkins, Red Hat Satellite, and other systems that exist in your environment can be leveraged and integrated into your Ansible workflow.
+
+* Install automation content navigator on your control nodes.
+	- sudo dnf install ansible-navigator
+
+* Verify that automation content navigator is installed on the system.
+	- ansible-navigator --version
+
+* Log in to the container registry.
+	- podman login registry.redhat.io
+	Username: your-registry-username
+	Password: your-registry-password
+	Login Succeeded!
+	
+* Download the container image for the execution environment that you plan to use with automation content navigator.
+ (Automation content navigator might also automatically download the default execution environment when you run the ansible-navigator command.)
+	- podman pull registry.redhat.io/ansible-automation-platform-22/ee-supported-rhel8:latest
+	
+* Display the list of locally available container images to verify that the image was downloaded.
+	- ansible-navigator images
+	
+* Defining Nested Groups
+Ansible host inventories can include groups of host groups. This is accomplished by creating a host group name with the :children suffix.
+The following example creates a new group called north-america, which includes all hosts from the usa and canada groups.
+
+[usa]
+washington1.example.com
+washington2.example.com
+
+[canada]
+ontario01.example.com
+ontario02.example.com
+
+[north-america:children]
+canada
+usa
+
+
+* Inventory
+
+[defaults]
+inventory = ./inventory
+remote_user = user
+ask_pass = false
+
+[privilege_escalation]
+become = true
+become_method = sudo
+become_user = root
+become_ask_pass = false
+
+The following table explains these parameters:
+
+Directive	Description
+inventory	Specifies the path to the inventory file.
+remote_user	Specifies the username that Ansible uses to connect to the managed hosts. If not specified, the current user's name is used. (In a container-based automation execution environment run by ansible-navigator, this is always root.)
+ask_pass	Specifies whether to prompt for an SSH password. (Can be false, which is the default, if using SSH public key authentication.)
+become	Specifies whether to automatically switch users on the managed host (typically to root) after connecting. This can also be specified by a play.
+become_method	Specifies how to switch users (typically sudo, which is the default, but su is an option).
+become_user	Specifies which user to switch to on the managed host (typically root, which is the default).
+become_ask_pass	Specifies whether to prompt for a password for the become_method parameter. Defaults to false.
+
+
+* Ansible Modules
+
+	Table 2.3. Ansible Modules
+
+Category	Modules
+	[	Files	]	
+ansible.builtin.copy: Copy a local file to the managed host.
+
+ansible.builtin.file: Set permissions and other properties of files.
+
+ansible.builtin.lineinfile: Ensure a particular line is or is not in a file.
+
+ansible.posix.synchronize: Synchronize content using rsync.
+
+	-	[Software]	
+ansible.builtin.package: Manage packages using the automatically detected package manager native to the operating system.
+
+ansible.builtin.dnf: Manage packages using the DNF package manager.
+
+ansible.builtin.apt: Manage packages using the APT package manager.
+
+ansible.builtin.pip: Manage Python packages from PyPI.
+
+	-	[	System	]	
+ansible.posix.firewalld: Manage arbitrary ports and services using firewalld.
+
+ansible.builtin.reboot: Reboot a machine.
+
+ansible.builtin.service: Manage services.
+
+ansible.builtin.user: Add, remove, and manage user accounts.
+
+	[	Net Tools	]
+ansible.builtin.get_url: Download files over HTTP, HTTPS, or FTP.
+
+ansible.builtin.uri: Interact with web services.
+
+
+	[	Lab 1 :- Implementing an Ansible Playbook	]
+	
+* Change into the /home/student/playbook-review directory and create a new playbook called internet.yml.
+Add the necessary entries to start a first play named Enable internet services and specify its intended managed host, serverb.lab.example.com.
+Add the necessary entry to enable privilege escalation, and one to start a task list.
+
+	---
+	- name: Enable internet services
+	  hosts: serverb.lab.example.com
+	  become: true
+	  tasks:
+	  
+* Add the necessary entries to the /home/student/playbook-review/internet.yml file to define a task that installs the latest versions of the firewalld, httpd, mariadb-server, php, and php-mysqlnd packages. Indent the beginning of the entry four spaces.
+
+	- name: Latest version of all required packages installed
+      ansible.builtin.dnf:
+        name:
+          - firewalld
+          - httpd
+          - mariadb-server
+          - php
+          - php-mysqlnd
+        state: latest
+		
+* Add the necessary entries to the /home/student/playbook-review/internet.yml file to define the firewall configuration tasks. They should ensure that the firewalld service is enabled and running, and that access is allowed to the http service. Indent the beginning of these entries four spaces.
+
+	- name: firewalld enabled and running
+      ansible.builtin.service:
+        name: firewalld
+        enabled: true
+        state: started
+
+    - name: firewalld permits http service
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+		
+* Add the necessary entries to ensure the httpd and mariadb services are enabled and running. Indent the beginning of these entries four spaces.
+
+	- name: httpd enabled and running
+      ansible.builtin.service:
+        name: httpd
+        enabled: true
+        state: started
+
+    - name: mariadb enabled and running
+      ansible.builtin.service:
+        name: mariadb
+        enabled: true
+        state: started
+		
+* Add the necessary entry that uses the ansible.builtin.copy module to copy the /home/student/playbook-review/index.php file to the /var/www/html/ directory on the managed host. Ensure the file mode is set to 0644. Indent the beginning of these entries four spaces.
+
+	-  name: Test php page is installed
+      ansible.builtin.copy:
+        src: index.php
+        dest: /var/www/html/index.php
+        mode: 0644
+
+* Define another play in the /home/student/playbook-review/internet.yml file for a task to be performed on the control node. This play tests access to the web server that should be running on the serverb.lab.example.com managed host. This play does not require privilege escalation, and runs on the workstation.lab.example.com managed host.
+
+	- name: Test internet web server
+	  hosts: workstation
+	  become: false
+	  tasks:
+	
+
+* Add the necessary entry that tests the web service running on serverb from the control node using the ansible.builtin.uri module. Look for a return status code of 200. Indent the beginning of the entry four spaces.
+
+	 - name: Connect to internet web server
+       ansible.builtin.uri:
+        url: http://serverb.lab.example.com
+        status_code: 200
+	
+	
+* Validate the syntax of the internet.yml playbook.
+	- ansible-navigator run -m stdout internet.yml --syntax-check
+
+* Use the ansible-navigator run command to run the playbook. Read through the generated output to ensure that all tasks completed successfully.
+
+	- ansible-navigator run -m stdout internet.yml
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+* Changing the Password of an Encrypted File
+	- ansible-vault rekey secret.yml
+	
+* Decrypting an Existing File
+	- ansible-vault decrypt secret1.yml
+	
+* Encrypting an Existing File
+	- ansible-vault encrypt secret1.yml
+	
+* Editing an Existing Encrypted File
+	- ansible-vault edit secret.yml
+	
+* Viewing an Encrypted File
+	- ansible-vault view secret1.yml
+	
+* Creating an Encrypted File
+	- ansible-vault create secret.yml
+	
+	Table 3.3. Examples of Ansible Facts
+
+* Fact	Variable
+Short hostname	ansible_facts['hostname']
+Fully qualified domain name	ansible_facts['fqdn']
+Main IPv4 address (based on routing)	ansible_facts['default_ipv4']['address']
+List of the names of all network interfaces	ansible_facts['interfaces']
+Size of the /dev/vda1 disk partition	ansible_facts['devices']['vda']['partitions']['vda1']['size']
+List of DNS servers	ansible_facts['dns']['nameservers']
+Version of the currently running kernel	ansible_facts['kernel']
+
+	[	Loops	]
+* vars:
+  mail_services:
+    - postfix
+    - dovecot
+
+tasks:
+  - name: Postfix and Dovecot are running
+    ansible.builtin.service:
+      name: "{{ item }}"
+      state: started
+    loop: "{{ mail_services }}"
+	
+	
+--------------------------------------------------------------------------Lab: Implementing Task Control
+
+* On the workstation machine, change to the /home/student/control-review directory.
+	- cd ~/control-review
+	
+* The project directory contains a partially completed play in the playbook.yml playbook. Under the #Fail Fast Message comment, add a task that uses the ansible.builtin.fail module. Provide an appropriate name for the task.
+
+This task should only be executed when the remote system does not meet the following minimum requirements:
+
+Has at least the amount of RAM specified by the min_ram_mb variable. The min_ram_mb variable is defined in the vars.yml file and has a value of 256.
+
+Is running Red Hat Enterprise Linux.
+
+	- tasks:
+    #Fail Fast Message
+    - name: Show Failed System Requirements Message
+      ansible.builtin.fail:
+        msg: "The {{ inventory_hostname }} did not meet minimum reqs."
+      when: >
+        ansible_facts['memtotal_mb'] < min_ram_mb or
+        ansible_facts['distribution'] != "RedHat"
+		
+* Under the #Install all Packages comment, add a task named Ensure required packages are present to install the latest version of any missing packages. Required packages are specified by the packages variable, which is defined in the vars.yml file.
+
+	- #Install all Packages
+    - name: Ensure required packages are present
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: latest
+		
+* Under the #Enable and start services comment, add a task to start services. All services specified by the services variable, which is defined in the vars.yml file, should be started and enabled. Provide an appropriate name for the task.
+
+	-  #Enable and start services
+    - name: Ensure services are started and enabled
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ services }}"
+	  
+* Under the #Block of config tasks comment, add a task block to the play. This block contains two tasks:
+
+A task to ensure that the directory specified by the ssl_cert_dir variable exists on the remote host. This directory stores the web server's certificates.
+
+A task to copy all files specified by the web_config_files variable to the remote host. Examine the structure of the web_config_files variable in the vars.yml file. Configure the task to copy each file to the correct destination on the remote host.
+
+This task should trigger the restart web service handler if any of these files are changed on the remote server.
+
+Additionally, a debug task is executed if either of the two tasks above fail. In this case, the task prints the following message: One or more of the configuration changes failed, but the web service is still active.
+
+	- #Block of config tasks
+    - name: Setting up the SSL cert directory and config files
+      block:
+        - name: Create SSL cert directory
+          ansible.builtin.file:
+            path: "{{ ssl_cert_dir }}"
+            state: directory
+
+        - name: Copy Config Files
+          ansible.builtin.copy:
+            src: "{{ item['src'] }}"
+            dest: "{{ item['dest'] }}"
+          loop: "{{ web_config_files }}"
+          notify: restart web service
+
+      rescue:
+        - name: Configuration Error Message
+          ansible.builtin.debug:
+            msg: >
+              One or more of the configuration
+              changes failed, but the web service
+              is still active.
+			  
+* The play configures the remote host to listen for standard HTTPS requests. Under the #Configure the firewall comment, add a task to configure firewalld.
+
+Ensure that the task configures the remote host to accept standard HTTP and HTTPS connections. The configuration changes must be effective immediately and persist after a reboot. Provide an appropriate name for the task.
+
+	-   #Configure the firewall
+    - name: ensure web server ports are open
+      ansible.builtin.firewalld:
+        service: "{{ item }}"
+        immediate: true
+        permanent: true
+        state: enabled
+      loop:
+        - http
+        - https
+		
+* Define the restart web service handler.
+
+When triggered, this task should restart the web service defined by the web_service variable, defined in the vars.yml file.
+
+	- handlers:
+    - name: restart web service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: restarted
+		
+		
+--------------------------------------------------------------------------------------------------------------------
+
+* Selinux
+	- setype: samba_share_t -------- to change the selinux type
+	- ---
+- name: Using the file module to ensure SELinux file context
+  hosts: all
+  remote_user: root
+  tasks:
+    - name:  SELinux file context is set to defaults
+      ansible.builtin.file:
+        path: /home/devops/users.txt
+        seuser: _default
+        serole: _default
+        setype: _default
+        selevel: _default ------------------------ To make it the default type..
+		
+* jinga template:
+	- Dynamic configuration
+	- Dynamic script
+	
+	extension: .j2
+	
+	
+----------------------------------Lab: Deploying Files to Managed Hosts
+
+* Review the inventory file in the /home/student/file-review directory. This inventory file defines the servers group, which has the serverb.lab.example.com managed host associated with it.
+
+- [student@workstation ~]$ cd ~/file-review/
+[student@workstation file-review]$
+
+* Identify the facts on serverb.lab.example.com that show its total amount of system memory, and the number of processors it has.
+
+---
+- name: Display ansible_facts
+  hosts: serverb.lab.example.com
+  tasks:
+    - name: Display facts
+      debug:
+        var: ansible_facts
+		
+* In the /home/student/file-review/templates directory, create a Jinja2 template file for the Message of the Day (/etc/motd), named motd.j2.
+
+After this template has been deployed to serverb.lab.example.com, when the devops user logs in, a message should display on their terminal that shows the system's total memory and processor count. Use the ansible_facts['memtotal_mb'] and ansible_facts['processor_count'] facts in the template to provide the system resource information for the message.
+
+
+	- System total memory: {{ ansible_facts['memtotal_mb'] }} MiB.
+System processor count: {{ ansible_facts['processor_count'] }}
+
+* In the /home/student/file-review directory, create a new playbook file called motd.yml that contains a new play that runs on all hosts in the inventory. It must log in using the devops user on the remote host, and use become to enable privilege escalation for the whole play.
+
+The play must have a task that uses the ansible.builtin.template module to deploy the motd.j2 Jinja2 template file to the file /etc/motd on the managed hosts. The resulting file must have the root user as its owning user and group, and its permissions must be 0644.
+
+Add an additional task that uses the ansible.builtin.stat module to verify that /etc/motd exists on the managed hosts and registers its results in a variable. That task must be followed by a task that uses ansible.builtin.debug to display the information in that registered variable.
+
+Add a task that uses the ansible.builtin.copy module to place files/issue into the /etc/ directory on the managed host, use the same ownership and permissions as /etc/motd.
+
+Finally, add a task that uses the ansible.builtin.file module to ensure that /etc/issue.net is a symbolic link to /etc/issue on the managed host.
+
+	- Create the playbook and configure the remote_user and become directives.
+	---
+- name: Configure system
+  hosts: all
+  remote_user: devops
+  become: true
+  tasks:
+  
+  - Create a task using the ansible.builtin.template module to deploy the motd.j2 Jinja2 template file to the file /etc/motd
+	- name: Configure a custom /etc/motd
+      ansible.builtin.template:
+        src: templates/motd.j2
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: 0644
+		
+	- Create a task that uses the ansible.builtin.stat module to verify that /etc/motd exists, and register the results. Add another task using the ansible.builtin.debug module to display the registered variable.
+	
+	- name: Check file exists
+      ansible.builtin.stat:
+        path: /etc/motd
+      register: motd
+
+    - name: Display stat results
+      ansible.builtin.debug:
+        var: motd
+		
+	- Add a task that uses the ansible.builtin.copy module to place files/issue into the /etc/ directory.
+	- name: Copy custom /etc/issue file
+      ansible.builtin.copy:
+        src: files/issue
+        dest: /etc/issue
+        owner: root
+        group: root
+        mode: 0644
+		
+	- Add a task that uses the ansible.builtin.file module to ensure that /etc/issue.net is a symbolic link to /etc/issue.
+
+	- name: Ensure /etc/issue.net is a symlink to /etc/issue
+      ansible.builtin.file:
+        src: /etc/issue
+        dest: /etc/issue.net
+        state: link
+        owner: root
+        group: root
+        force: yes
+		
+-------------------------------------------------------
+  
+* use the asterisk (*) character to list all hosts that end in .example.com in the inventory1
+	-   hosts: '*example.com'
+
+* hosts in the *.lab.example.com domain are ignored.
+	-   hosts: '*.example.com, !*.lab.example.com'
+
+* Use a wildcard host pattern to list hosts that start with a 172.25. IP address
+	-   hosts: '172.25.*'
+
+*  list all hosts in the inventory1 inventory file that start with the letter "s"
+	-   hosts: 's*'
+
+* Using a list and wildcard host patterns, list all hosts in the inventory1 inventory in the prod group, those hosts with an IP address beginning with 172, and hosts that contain lab in their name.
+
+	-   hosts: 'prod,172*,*lab*'
+
+* List all hosts that belong to both the db and london groups. 
+
+	-   hosts: db,&london
+
+* Modify the hosts value in the playbook.yml file so that all servers that do not belong to any group are targeted.
+
+	-   hosts: ungrouped
+
+* Import task feature.
+
+	- When using the import_tasks feature, conditional statements set on the import, such as when, are applied to each of the tasks that are imported.
+
+	- You cannot use loops with the import_tasks feature.
+
+	- If you use a variable to specify the name of the file to import, then you cannot use a host or group inventory variable.
+	
+---------------------------------------------------Lab: Managing Complex Plays and Playbooks
+
+* Simplify the list of managed hosts used by the play in the /home/student/projects-review/playbook.yml playbook by using a wildcard host pattern.
+
+You have a second playbook, /home/student/projects-review/host-test.yml, that contains a play that you can use to test host patterns before you use them in the play in the playbook.yml playbook.
+
+- ---
+- name: Install and configure web service
+  hosts: server*.lab.example.com
+  
+* Restructure the playbook.yml playbook so that the first three tasks in its play are kept in an external task file located at tasks/web_tasks.yml. Use the import_tasks feature to incorporate this task file into the play.
+
+	- mkdir tasks
+	- ---
+- name: Install httpd
+  ansible.builtin.dnf:
+    name: httpd
+    state: latest
+
+- name: Enable and start httpd
+  ansible.builtin.service:
+    name: httpd
+    enabled: true
+    state: started
+
+- name: Tuning configuration installed
+  ansible.builtin.copy:
+    src: files/tune.conf
+    dest: /etc/httpd/conf.d/tune.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart httpd
+	
+	- - name: Import the web_tasks.yml task file
+      import_tasks: tasks/web_tasks.yml
+	  
+	  
+* Restructure the playbook.yml playbook so that the fourth, fifth, and sixth tasks in its play are kept in an external task file located at tasks/firewall_tasks.yml. Use the import_tasks feature to incorporate this task file into the play.
+
+	- Place the contents of the three remaining tasks in the play in the playbook.yml playbook into the tasks/firewall_tasks.yml file. The task file should contain the following content.
+	
+	---
+- name: Install firewalld
+  ansible.builtin.dnf:
+    name: firewalld
+    state: latest
+
+- name: Enable and start the firewall
+  ansible.builtin.service:
+    name: firewalld
+    enabled: true
+    state: started
+
+- name: Open the port for http
+  ansible.posix.firewalld:
+    service: http
+    immediate: true
+    permanent: true
+    state: enabled
+	
+	- Remove the remaining three tasks from the play in the playbook.yml playbook. Put the following lines in their place, which imports the tasks/firewall_tasks.yml task file.
+	
+	 - name: Import the firewall_tasks.yml task file
+      import_tasks: tasks/firewall_tasks.yml
+	  
+* Both the tasks/web_tasks.yml file and the tasks/firewall_tasks.yml file contain tasks that install packages and enable services. Those could be consolidated into a single task file and you could use variables to control which packages and services are installed and enabled by those tasks.
+
+Move the tasks that install packages and enable services into a new file named tasks/install_and_enable.yml and update them to use variables. Replace the original tasks with import_tasks statements, passing in appropriate values to the new variables.
+
+	- Copy the ansible.builtin.dnf and ansible.builtin.service tasks from tasks/web_tasks.yml into a new file named tasks/install_and_enable.yml.
+	
+	---
+- name: Install httpd
+  ansible.builtin.dnf:
+    name: httpd
+    state: latest
+
+- name: Enable and start httpd
+  ansible.builtin.service:
+    name: httpd
+    enabled: true
+    state: started
+	
+	- Replace the package and service names in tasks/install_and_enable.yml with the variables package and service.
+	
+	---
+- name: Install {{ package }}
+  ansible.builtin.dnf:
+    name: "{{ package }}"
+    state: latest
+
+- name: Enable and start {{ service }}
+  ansible.builtin.service:
+    name: "{{ service }}"
+    enabled: true
+    state: started
+	
+	- Replace the ansible.builtin.dnf and ansible.builtin.service tasks in tasks/web_tasks.yml and tasks/firewall_tasks.yml with import_tasks statements that import tasks/install_and_enable.yml and set appropriate values on task variables to install the correct package and start the correct service.
+	
+	---
+- name: Install and start httpd
+  import_tasks: install_and_enable.yml
+  vars:
+    package: httpd
+    service: httpd
+	
+	---
+- name: Install and start firewalld
+  import_tasks: install_and_enable.yml
+  vars:
+    package: firewalld
+    service: firewalld
+	
+* Confirm that you made the changes to the play in playbook.yml correctly, and then run the playbook.
+
+	- Verify that the playbook.yml playbook contains the following contents:
+
+	---
+- name: Install and configure web service
+  hosts: server*.lab.example.com
+
+  tasks:
+    - name: Import the web_tasks.yml task file
+      import_tasks: tasks/web_tasks.yml
+
+    - name: Import the firewall_tasks.yml task file
+      import_tasks: tasks/firewall_tasks.yml
+
+  handlers:
+    - name: restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+		
+		
+-----------------------------------------------------------------------------------------------------------------
+
+
+	[	Simplifying Playbooks with Roles and Ansible Content Collections	]
+
+
+* Roles
+Roles let you automatically load related vars, files, tasks, handlers, and other Ansible artifacts based on a known file structure. After you group your content in roles, you can easily reuse them and share them with other users.
+
+
+* Roles Hierrachy
+roles/
+└── motd
+    ├── defaults
+    │   └── main.yml
+    ├── files
+    ├── handlers
+    ├── meta
+    │   └── main.yml
+    ├── README.md
+    ├── tasks
+    │   └── main.yml
+    └── templates
+        └── motd.j2
+		
+* The Ansible Galaxy Command Line Tool
+	- The ansible-galaxy command-line tool can be used to search for, display information about, install, list, remove, or initialize roles.
+
+* AdHoc
+	- ansible demohost -m ansible.builtin.command -a 'df'  ---- managed host is not full.
+	- ansible demohost -m ansible.builtin.command -a 'free -m' ---------- This example returns the current available free memory on the demohost managed host.
+	
+* Ansible galaxy:
+	- Ansible galaxy is a galaxy website, where user can share roles, through command line tool for storing and sharing the code.
+	
+	
+* When conditional
+
+	---
+- name: Install the required packages on the web servers
+  hosts: webservers
+  tasks:
+    - name: Install httpd on RHEL 8 and 9
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      when:
+        - "ansible_facts['distribution'] == 'RedHat'"
+        - "ansible_facts['distribution_major_version'] >= '8'"
+
+    - name: Install httpd on RHEL 7 and earlier
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+      when:
+        - "ansible_facts['distribution'] == 'RedHat'"
+        - "ansible_facts['distribution_major_version'] <= '7'"

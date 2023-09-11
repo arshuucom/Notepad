@@ -1,0 +1,72 @@
+
+[IMPORTANT QUESTION]
+13. BUILD A CONTAINER AS USER STUDENT
+USING THE URL(HTTPS://XYZ.COM) TO BUILD THE CONTAINER IMAGE WITH NAME MONITOR. 
+DO NOT MODIFY THE CONTAINER FILE 
+
+----[ANSWER STEPS]
+
+*ssh student@node1
+*wget (HTTPS://XYZ.COM)
+*podman login registry.lab.examle.com
+*podman build -t MONITOR .
+*podman images
+-----[DONE]
+
+14.CREATE THE CONTAINER NAME AS ASCII2PDF AS STUDENT USER
+RUN THE CONTAINER BY USING IMAGE MONITOR WHICH ONE WAS ALREADY DONE IN PREVIOUS 
+CONFIGURE THE CONTAINER AS A SYSTEM START-UP SERVICE AND MOUNT VOLUMES PERSISTENTLY
+CREATE THE CONTAINER AS A SYSTEM START-UP SERVICE, WHILE REBOOT IT WILL AUTOMATICALLY START THE SERVICE WITHOUT ANY HUMAN INTERVENTION. 
+THE SYSTEM SERVICE SHOULD BE CONTAINER-ASCII2PDF. 
+THE LOCAL DIRECTORY /OPT/FILES SHOULD BE PERSISTENTLY MOUNT ON CONTAINER’S /OPT/INCOMING DIRECTORY. 
+THE LOCAL DIRECTORY /OPT/PROCESSED SHOULD BE PERSISTENTLY MOUNT ON CONTAINER’S /OPT/OUTCOMING DIRECTORY. 
+IN WORKING OF SERVICE STARTS, ANY FILE CREATE/STORE UNDER THE /OPT/FILES AUTOMATICALLY CREATES INTO PDF ON /OPT/OUTCOMING DIRECTORY. 
+
+--[ANSWER STEPS]
+
+*mkdir /opt/files /opt/processed
+*chmod 777 /opt/files /opt/processed
+*chown student:student /opt/files /opt/processed
+*podman run -d --name MONITOR -v /opt/files:/opt/incoming:Z -v /opt/processed:/opt/outcoming:Z localhost/monitor:latest
+*podman ps
+*mkdir -p ~/.config/systemd/user
+*cd ~/.config/systemd/user
+*podman generate systemd --name MONITOR --files --new
+*podman stop MONITOR
+*podman rm MONITOR
+*systemctl --user daemon-reload
+*systemctl --user enable container.MONITOR
+*loginctl enable-linger
+
+--[DONE]
+
+19.CREATE A CONTAINER AS A SYSTEM STARUP SERVICE.
+A)CREATE A CONTAINER NAME AS LOGSERVER WITH THE IMAGE RSYSLOG ARE STORED IN DOCKER IN PARADISE USER.
+B)THE CONTAINER SHOULD BE CONFIGURED AS SYSTEM STARTUP SERVICE.
+C)THE CONTAINER DIRECTORY IS CONTAINER_JOURNAL SHOULD BE CREATED ON PARADISE USER.
+
+20.CONFIGURE THE CONTAINER AS PERSISTENT STORAGE AND CREATE LOGS AND CONTAINER.
+A)CONFIGURE THE CONTAINER WITH THE PERSISTENT STORAGE THAT MOUNTED ON /VAR/LOG/JOURNAL TO /HOME/PARADISE/CONTAINER_JOURNAL
+B)THE CONTAINER DIRECTORY CONTAINS ALL THE JOURNAL FILES.
+
+----[ANSWER]
+
+
+*ssh paradise@node2
+*podman login registry.io
+	-username
+	-password
+*podman serach rsylog
+*podman pull registy.io/rsylog
+*podman images
+*podman run -d --name logserver -v home/paradise/container_journal:/var/log/journal:Z registry.io/rsylog
+*podman ps
+*mkdir -p ~/.config/systemd/user
+*cd ~/.config/systemd/user
+*podman generate systemd --name logserver --files --new
+*podman stop logserver
+*podman rm logserver
+*systemctl --user daemon-reload
+*systemctl --user enable container.logserver --now
+*loginctl enable-linger
+*reboot

@@ -1,0 +1,197 @@
+
+
+	[ Jenkins ISSUES ]
+	Date : 25/07/2023
+- Sumit - I am facing an issue while pushing the change to the master branch, master branch is protected?
+	- Go to Schemes-Portal-2 Repositry Setting and expand the expand the protected branch And check if its protected or not.
+- In repoistry We don't have any option to create a new branch in this repo, can you help out in this?
+	-  Firstly check the permission then assign the permission to mainter to push the code.
+- gitignore binary excepted in jenkins
+	- Add The Bracket in condition in Package Stage.
+	
+	[ Gitlab Issue ]
+
+- If anybody faces issue with gitlab
+Check we need to do:
+
+1. Ask them to login in https://gitlab.asianpaints.com/.
+If they are able to login. ie there credentials are working fine
+
+Ask them to run below commands.
+git config --global user.name --> it should give you P00XXX id.
+
+git config --global user.email --> we should get asianpaints ID.
+
+We can check with them if they have changed their passwords recently.
+
+In Credential manager we create generic credential under window.
+
+URL: https://gitlab.asianpaints.com/.
+Username: P00XXXXX
+Password: Windows passwords
+
+2. If they are unable to login in https://gitlab.asianpaints.com/.
+
+If the employee is old. Check if the P00XXX is active or Blocked in admin area.
+
+
+------------------------------------------------------------------------------------------	
+	Date : 26/07/2023
+	
+-	[11:47] Sumit Upadhyaya
+
+TASK [unzip files] *************************************************************
+fatal: [172.25.111.201]: FAILED! => {"changed": false, "msg": "Source '/devops/sch/app/Schemes-Portals-2.0-UAT-ICM-Test-1-V1.zip' does not exist"}
+
+
+- fatal: [172.25.111.201]: FAILED! => {"changed": true, "cmd": "cd \"/opt/Schemes_Portal/hybris/bin/platform/\"\n. ./setantenv.sh\nant clean all\n", "delta": "0:00:00.053077", "end": "2023-07-26 11:57:19.899138", "msg": "non-zero return code", "rc": 1, "start": "2023-07-26 11:57:19.846061", "stderr": "", "stderr_lines": [], "stdout": "We cannot run Java, please ensure you have Java installed.\n  We have tried to execute java but failed.\nIf you have installed Java in a unusual place you can set JAVA_HOME\nto the directory containing the Java installation.\nant home: /opt/Schemes_Portal/hybris/bin/platform/apache-ant\nant opts: -Xmx2g -Dfile.encoding=UTF-8 -Dpolyglot.js.nashorn-compat=true -Dpolyglot.engine.WarnInterpreterOnly=false --add-exports java.xml/com.sun.org.apache.xpath.internal=ALL-UNNAMED --add-exports java.xml/com.sun.org.apache.xpath.internal.objects=ALL-UNNAMED\nWe cannot run Java, please ensure you have Java installed.\n  We have tried to execute java but failed.\nIf you have installed Java in a unusual place you can set JAVA_HOME\nto the directory containing the Java installation.", "stdout_lines": ["We cannot run Java, please ensure you have Java installed.", "  We have tried to execute java but failed.", "If you have installed Java in a unusual place you can set JAVA_HOME", "to the directory containing the Java installation.", "ant home: /opt/Schemes_Portal/hybris/bin/platform/apache-ant", "ant opts: -Xmx2g -Dfile.encoding=UTF-8 -Dpolyglot.js.nashorn-compat=true -Dpolyglot.engine.WarnInterpreterOnly=false --add-exports java.xml/com.sun.org.apache.xpath.internal=ALL-UNNAMED --add-exports java.xml/com.sun.org.apache.xpath.internal.objects=ALL-UNNAMED", "We cannot run Java, please ensure you have Java installed.", "  We have tried to execute java but failed.",
+ "If you have installed Java in a unusual place you can set JAVA_HOME", "to the directory containing the Java installation."]}
+
+
+
+-- Git issue 
+-- Generic creditainls
+Username : POO Id
+Pass : Typepass
+
+And then clone and it will work.
+
+---------------JAVA PATH ISSUE--------------------
+---Isuue
+If you have installed Java in a unusual place you can set JAVA_HOME", "to the directory containing the Java installation
+--Solution
+-Hi 
+
+The issue is resolved. It was because of Java path only. We have redirected it to /usr/bin/ and now the deployment is success. 
+
+
+---------------------------------Scheme reconfiguration
+
+ 
+- Old Dev Server: 172.25.212.6
+New Dev Server: 172.25.111.201
+
+Folder structure in Application server: (Owner of these folder hybrisadmin hybrisadmin)
+
+Download=/devops/sch/app 
+copydestination=/opt/Schemes_Portal/hybris/bin/custom/ 
+platformpath=/opt/Schemes_Portal/hybris/bin/platform/  
+backupdir=/devops/sch/backup 
+config_path=/opt/Schemes_Portal/hybris/config/ 
+
+name: get the username running the deploy
+  become: true
+  local_action: command whoami
+  register: username_on_the_host
+
+- debug: var=username_on_the_host
+
+- name: Run whoami 
+  command: whoami
+  changed_when: false
+  become: false
+  register: whoami
+
+- name: Set facts
+  set_facts:
+   login_users: "{{ whoami.stdout }}"
+
+Schemes-Portal-2.0/Schemes-Portal-2/Schemes-Portal-2.0-UAT
+
+
+-----In root user of new server java environment is set in 3 different locations. 
+	- .bashrc
+	- .bash_profile
+	- /etc/profile.d/java.sh\nant
+	
+------In old server
+	- No java is set in any path in root
+	- In hybrisadmin java is set in .bashrc path only.
+	
+-----does this kind of errors occurs for setting multiple envirnoment path - we cannot run java,
+ please ensure you have java installed error in managed node ansible
+
+--- i am getthing this error we cannot run java, please ensure you have java installed.", " we have tried to execute java but failed.",
+ "if you have installed java in a unusual place you can set java_home", "to the directory containing the java installation
+ in jenkins scripted pipeline site:stackoverflow.com
+
+
+JAVA_HOME="/opt/jav"
+       export JAVA_HOME
+	   
+	   yum install java-17-openjdk
+	   
+	   
+file push issue
+increasinf file size using git config 
+
+* Jira
+	- Code Analysis: unstable
+	
+* Arshadworks ---AWS
+
+Login on server and check wheather it is asking for git credential. Update credential
+
+-------------------Job Removed
+
+- Test_Execution_AP_ER
+- Test_Execution_3
+- Test_Execution_2
+- Test_Execution_1
+- Test_Fortify
+- Test_Fortify_1
+- Test_Fortify_2
+- test_demo
+- test_demo_V1
+- devops-gradle
+- Test_Git_Branch
+- TestComplete_Freestyle_POC
+- test_jenkins
+- Testing_node
+- Testcomplete_testing
+- Testcomplete_231
+- test_build
+- Test_Execution_AP_OTM
+- Test_Execution_AP_Decor
+- UFT_Execution_Test_pipeline
+- UFT_Execution
+
+--- Deleted from one Drive
+- asianpaints_08_08_2023
+- asianpaints_09_08_2023
+- asianpaints_10_08_2023
+- asianpaints_11_08_2023
+
+- Sure, there are a few Fortify APIs that you can use to get the count of vulnerabilities.
+
+GET /api/v3/releases/{releaseId}/vulnerabilities This API call will return the number of vulnerabilities found in the application version with the specified release ID.
+GET /api/v3/projects/{projectId}/vulnerabilities This API call will return the number of vulnerabilities found in all of the application versions in the specified project.
+GET /api/v3/findings This API call will return the number of all findings, including vulnerabilities, in all of the projects in your account.
+
+To use these APIs, you will need to have an API token. You can get your API token from the Settings page in your Fortify account.
+
+- GET /api/v3/releases/{releaseId}/vulnerabilities?severity=CRITICAL,HIGH
+
+Grafana Application Onboarding
+
+ 
+
+Login Test Ansible: 172.25.10.241
+
+cd /opt/grafana_dashboard/conf
+
+We have to update project.txt in a certain format as mentioned below.
+example: 585|ICM-612|UPLOAD_CCS_FILENET_RM_SOL|JAVA
+There are cron jobs scheduled for the same.
+crontab -l
+Whatever we update in project.txt the same will be updated in jira_issue_key.txt 
+ 
+ https://asianpaints-my.sharepoint.com/personal/p00105715_asianpaints_com/_layouts/15/onedrive.aspx?FolderCTID=0x012000370982326A7CF64EAB6722468E2249BF&id=%2Fpersonal%2Fp00105715%5Fasianpaints%5Fcom%2FDocuments%2FDevOps%2FDatamato -----------Datamato
+ 
+ 
+Emproto - BH stores portal
+
+
+LLD ---- In openshift application Only Checkuot and Build is happening in Jenkins.
+Openshift -------- All Openshift application should be made in excel using script console..
+Gitlab ---- In Gitlab there is reposirty.

@@ -1,0 +1,284 @@
+1. Set  
+	hostnamectl set-hostname root/Arshad
+	
+2. Set the default boot target to multi-user target.
+	Step 1 - To check the default boot target
+		systemctl get-default
+	Step 2- To set the multi-user target
+		systemctl set-default multi-user target.
+	
+3. Set SElinux to enforcing mode.
+	Step 1 - Copy the file from /etc/selinux/config
+		cp -p /etc/selinux/config /etc/selinux/configbkp
+	Step 2 - Open the configbkp file and edit to Disabled to Enforcing
+		SELINUX=enforcing
+		
+4. Create the following user, groups, and group memberships:
+	* A Group named sysgroup.
+	* A user andrew who belong to sysgroup as a secondary group.
+	* A user susan also belong to sysgroup as a secondary group.
+	* A user sarah who does not have any access to an interactive shell on a system and who not a member of sysgroup.
+	* susan, sarah, andrew password = "Redhat123".
+	Step 1 - Create a group 
+		groupadd sysgroup
+	Step 2 - Add a user 
+		useradd andrew
+	Step 3 - Who belong to sysgroup as a secondary group
+		usermod -aG sysgroup andrew
+	Step 4 - Add a user 
+		useradd susan
+	Step 5 - Who belong to sysgroup as a secondary group
+		usermod -aG sysgroup susan
+	Step 6 - Add a user  to an interactive shell on a system
+		useradd -s /sbin/nologin sarah
+	Step 7 - Set password for all user
+		passwd susan
+		passwd sarah
+		passwd andrew.
+		
+5. Create a collaborative directory /redhat/sysgroup/ with the following characteristics:
+	* Group ownership of /redhat/sysgroup/ is sysgroup
+	* The directory should be readable, writable, and accesable to member of sysgroup, but not to any other user.
+	Note: It is unterstood that root has access to a files and directories on the system.
+	* Files created in redhat/sysgroup/ automatically have group ownership set to the sysgroup group.
+	
+	Step 1 - Create a Directory
+		mkdir -p /redhat/sysgroup/
+	Step 2 - Check the ownership
+		ls -ltrd /redhat/sysgroup/
+	Step 3 - Change group
+		chgrp sysgroup /redhat/sysgroup/
+	Step 4 - For readable, writable and accesable
+		chmod 770 /redhat/sysgroup/
+	Step 5 - Files created in redhat/sysgroup/ automatically have group ownership set to the sysgroup group.
+		chmod 2770 /redhat/sysgroup/
+		
+6. Enable IP Forwading on your machine.
+	Step 1 - Take a backup of a file
+		cp -p /etc/sysctl.conf /etc/sysctl.confbkp1
+	Step 2 - Open the file /etc/selinux/conf
+		Go to the last line
+		net.ipv4.ip_forward = 1 and save the file
+	Step 3 - Enable 
+		sysctl -p
+		
+7. Copy the file /etc/fstab to /var/tmp and configure the permission of /var/tmp/fstab, So that the file /var/tmp/fstab is owned 
+	by the root user, belongs to the group root and it should not be exectable by anyone.
+	* The user andrew is able to read and write /var/tmp/fstab
+	* The user susan can niether write nor read /var/tmp/fstab
+	* All other users (current or future) have the ability to read /var/tmp/fstab.
+	
+	Step 1 - First copy the file
+		cp -p /etc/fstab /var/tmp
+	Step 2 - Owned permission
+		chown root:root /var/tmp/fstab
+	Step 3 - user andrew is able to read and write
+		setfacl -m u:andrew:rw- /var/tmp/fstab
+	Step 4 - user susan can niether write nor read /var/tmp/fstab
+		setfacl -m u:susan:--- /var/tmp/fstab
+		
+8. Add the user with userid 1099 and find the user id which is owner by user sam and copy the file into /root/findresults directory.
+	Step 1 - Add user with ID 1099
+		useradd -u 1099 john
+	Step 2 - Set the password
+		passwd john
+	Step 3 - find the user id which is owner by user sam 
+		find / -user sam
+	Step 4 - find the user id which is owner by user sam and copy the file into /root/findresults directory
+		find / -user sam -exec cp -pfr {} /root/findresults/ \6
+		
+7. Create an archive file /root/local.tgz for /usr/local it should be compress by gzip.
+	Step 1 - 
+		tar -cvzf /root/local.tgz /usr/local
+	
+8. Search the string john in the /etc/passwd file and save the output in the /root/lines
+	Step 1 - 
+	cat /etc/passwd | grep -i Arshad >> /root/test01.txt
+	
+9. Create a new 150 MB physical partition of using disk  "/dev/sdb" and mount it under /oradb.
+	Step 1 - Go to the Disk 
+		fdisk -l
+	Step 2 - To go inside the disk
+		fdisk /dev/sdb
+	Step 3 - For Print
+		Command p
+	Step 4 - For Help
+		Command h
+	Step 5 - To create a partiton
+		- n
+		- p
+		- Default is 1 enter 
+		- +150MB
+		- w
+		Skip the Further steps.
+		
+10. Create a swap partition.
+	Skip the task will perform on the machine.
+	
+11. Create a yum repoistery for http://content.example.com/rhel7.0/x86_64/dvd
+	Step 1 - Go to the repo file 
+		vi /etc/yum.reps.d/myserver.repo
+	Step 2 - Add the content in that file
+		[localrepo]
+		name = local repo for RHCSA Exam
+		baseurl=http://content.example.com/rhel7.0/x86_64/dvd
+		gpgcheck=0
+		enabled=1 and save the file
+	Step 3 - Clean 
+		yum clean all
+	Step 4 - Yum List
+		yum list all
+	Step 5 - To check the repo list
+		yum repolist
+		
+12. Install the appropriate kernal update from http://content.example.com/rhel7.2/x86_64/errata
+	The following criteria must also be met:
+	* The updated kernel is default kernel when the system rebooted.
+	* The original kernel remains avaibale and bootable on the system.
+	Step 1 - Go to the repo file 
+		vi /etc/yum.reps.d/myserver.repo
+	Step 2 - Add the content in that file
+		[localrepo]
+		name = Repo for Kernel
+		baseurl=http://content.example.com/rhel7.2/x86_64/errata
+		gpgcheck=0
+		enabled=1 and save the file
+	Step 3 - To check the repo list
+		yum repolist
+	Step 4 - Install kernel
+		yum install kernel
+	Step 5 - Reboot
+		rebooted
+	Step 6 - Check wheather updated or not
+		uname -r
+		
+13. Bind the LDAP used provided by classroom.example.com for user authentication
+
+	Note the following:
+	* The LDAP search base DN is dc=example,dc=com
+	* The LDAP certificate file is 
+		http://classroom.example.com/pub/EXAMPLE-CE-CERT
+	* ldapuserX should be able to log into your system, where X is your serverX (( hint:where X is your domain number),
+		but will not have a home directory, until you have completed the autofs requirement, below all LDAP users have a password of "password".
+		
+	 Skip the task will perform on the machine.
+	 
+14. Configure your system so that it is an NTP client of classroom.example.com
+	Step 1 - 
+		yum install chrony
+	Step 2 -
+		vi /etc/chrony.conf
+	Step 3 - Add this line in the file
+		server classroom.example.com iburst and save 
+	Step 4 - Restart the service
+		systemctl restart chronyd
+	Step 5 - Enabled the service 
+		systemctl enabled chronyd
+		
+15. Create a new volume group in the name of datavg, and physical volume extent is 16.00MB
+	* Create a new logical volume in the name of datacopy with the size of 50 extent and file system must ext4 then mount it under /datasource
+	
+	Skip the task will perform on the machine.
+	
+16. The user andrew must configure a cron job that runs daily at 14:30 local time and execute /bin/echo hello
+	Step 1 - Install the package
+		crontab -e andrew and edit the file like 30 14 * * * /bin/echo hello and save .
+	Step 2 - Apply command
+		crontab -l -u andrew
+
+17. Locate and copy the files
+	* Find all files that is greater than 4MB in the /etc directory and copy them to /find/largefiles directory.
+	Step 1 - Make a directory
+		mkdir -p /find/largefiles
+	Step 2 - Execute find command
+		find /etc/ -size +4MB -type f -exec cp {} /find/largefiles/ \;
+	Step 3 - List and verify the files
+		ls -lh /find/large
+
+18. Assign the sudo privilage for group admin and group member can administrate without any password.
+	Step 1 - Go to the Folder
+		vi /etc/sudoers
+	Step 2 - Edit the file
+		%admin ALL=(ALL)NOPASSWD=ALL
+
+19. Create a bash script program for:
+	* Create a mysearch script to locate file under /usr/share having size less than 1M.
+	* After executing the mysearch script file and listed (searched) files has to be copied under /root/myfiles.
+	Step 1 - First make directory
+		mkdir /root/myfiles
+	Step 2 - Create a file to write a script
+		vim mysearch
+		#! /bin/bash
+		find /usr/share -type f -size -1M -exec cp {} /root/myfiles \;
+	Step 3 - Give the permission to that file
+		chmod +x mysearch
+	Step 4 - Execute the script
+		./mysearch
+
+20. Create a swap partition 512MB size.
+	- lsblk
+	- fdisk /dev/sdb
+	n (for new)
+	Press enter (for primary)
+	Press enter (for partition)
+	Press enter (for starting size)
+	+512 (need to provide size as given in question)
+	t (type)
+	82 (for swap)
+	W (to save and exit)
+	partprobe (To assign the changes)
+	mkswap /dev/sdb1 (You will get UUID)
+	lsblk -f (to check)
+	vi /etc/fstab (To enter the UUID Which we get and type (swap) (default) (00))
+	swapon -a (To add)
+
+21. Create a vectra volume using the VDO with the logical size 50GB and mount under test directory.
+	- yum install vdo kmod-kvdo -y
+	- systemctl enable vdo --now
+	- lsblk
+	- wipefs -a /dev/sdc
+	- vdo create --name=vectra --device=/dev/sdc --vdoLogicalSize=50G
+	- vdo list
+	- mkfs.xfs /dev/mapper/vectra
+	- mkdir /test
+	- vim /etc/fstab
+	- /dev/mapper/vectra/test xfs defaults,x-systemd.requires=vdo.se
+ 
+22. Resize the logical volume size of +100 extents on /mnt/database directory.
+	- lvdisplay
+	- lvs
+	- lvextent -l 100 -r /dev/datastore/database
+	- lvs
+
+23. Set the recommended tuned profile for your system.
+	- yum install tuned -y
+	- systemctl start tuned
+	- systemctl enable tuned
+	- tuned-adm recommend
+	- tuned-adm profile virtual-guest
+	- systemctl restart tuned
+	- tuned-adm active
+
+24. Create a container as a system startup service.
+	* Create a container name as logserver with the images rsyslog are stored in docker on paradise user.
+	* The container should be configured as system startup services.
+	* The container directory is container_journal should be created as paradise user.
+	
+	
+	
+
+
+ 
+arshuuqureshi..
+
+./manageprofiles.sh -create –profileName Sample –profilePath /appprofiles/Sample –templatePath /apps/IBM/WebSphere/AppServer/profileTemplates/default –serverName TEST_SERVER  –nodeName MYPROFILENode1 –hostName mqnode.test.com –enableAdminSecurity true –adminUserName wasadmin –adminPassword wasadmin@12
+
+
+
+*4C-BB-58-2A-EB-BD ----------> MAC address
+
+* 4C:BB:58:2A:EB:BE
+
+*00-FF-DE-25-B4-22 ----> maC Addres of laptop
+
+* 4C-BB-58-2A-EB-BD

@@ -1,0 +1,35 @@
+//Docker Installation
+
+sudo yum check-update
+
+curl -fsSL https://get.docker.com/ | sh
+
+sudo systemctl start docker
+
+sudo systemctl status docker
+
+sudo systemctl enable docker
+
+Docker: Docker is light weight. Docker is flexible and portable. Docker is scaleable.
+	
+
+Docker Container:-   
+	
+	[ Docker Commands ]
+docker container ls - List of container.
+docker image ls - List of Image
+docker network ls - List of network.
+To Create a Docker container command: docker container run nginx
+To remove the container command: docker container id or name. 
+To detach the container command: docker container run -d nginx
+To go in the container command: docker container run -it nginx /bin/bash
+To inspect the container and get infornamtion command: docker container inspect 17177112 its ID
+To see the logs of nginx server logs command: docker container logs 23232 ID
+To see the process running command: docker container top 2323 ID 
+To see the cpu and ram usage command: docker container stat
+To kill the container command: docker container kill 2323 ID
+To pause the container command: docker container pause 2323 ID
+To see the file system command: docker container diff
+To watch and Monitor the container command: 'docker container diff 232 ID'
+To copy file from container command: docker container cp test/ 3232:/tmp/
+To go inside the container command: docker container attach 2323 ID

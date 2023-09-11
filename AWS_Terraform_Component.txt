@@ -1,0 +1,22 @@
+1) Terraform Resource Block
+2) Terraform Data Block
+3) Dynamic Block
+4) Terraform Statefile
+5) S3 Backend
+6) Terraform Filter
+7) State Locking
+8) File Provisioner
+9) Local/Remote Provisioner
+10) Terraform Output
+===========================
+1) VPC
+2) SG
+3) S3 
+4) ELB
+5) Cloud Front
+6) EC2
+7) Auto-Scaling
+** Route 53
+** RDS
+** Elastic Bean
+** Amazon Aurora

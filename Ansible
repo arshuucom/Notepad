@@ -1,0 +1,811 @@
+
+
+
+[    Ansible Installation in Linux ]
+
+*sudo yum update
+*sudo yum install epel-release
+*sudo yum install ansible
+*ansible --version
+
+ansible-navigator run playbook.yml -m stdout -i inventory
+
+
+* dnf install python3-pip ----------> To install python package
+
+[	Connectivity with Control to Managed Machine	]
+
+*sudo yum install openssh-server
+*ssh-keygen
+*ssh-copy-id <username>@<managed-node-ip>
+*ssh <username>@<managed-node-ip>
+
+[	Important Module	]
+	* ansible-doc module name -------------> To list the Module information.
+	
+- Copy ---------------> For Copying the files form 1 node to another.
+- Command ---------------> To see the node content or to verify that the changes has been done or not, using command we can check from control node.
+- Raw ---------------> 
+- Shell
+- Fetch
+- Get_url
+- Lineinfile
+- Replace
+- File
+- User
+- Group
+- Yum
+- Update
+- Package
+- Stat
+- Mount
+- Setup
+
+
+
+
+
+
+ansible-vault encrypt_string --vault-id @prompt (secure_password) = String
+ansible-playbook ngnix.yml --ask-vault-pass = vault Password
+ansible-playbook nginx.yml --ask-vault-password =/home/Ansible/filename 
+
+ansible-vault encrypt filename
+ansible-vault decrypt filename
+ansible-vault view	filename
+ansible-vault edit	filename
+
+ansible-playbook ngnix.yml --vault-id dev@~/.vaultpassword.yml --vault-id prod@prompt
+
+
+1.File vaultpassowrd
+2.pawssword:123
+3.encrypt
+4.ansible-playbook xyz.yml path
+
+
+
+ansible-playbook nginx.yml --vault-password-file ~/.vaultPassword
+ansible-playbook nginx.yml --vault-id /home/Ansible@~/.vaultPassword
+
+
+/home/Ansible
+
+vault_password_file =/home/Ansible/test123.txt (Config file)
+sudo mv -v /root/Ansible_Playbooks/Ansible /home
+
+
+//Config File 
+[defaults]
+inventory=inventory
+remote_user=Ansible
+
+[privilege_escalation]
+become=true
+become_user=root
+become_method=sudo
+become_ask_pass=false
+
+
+//Host FIle
+
+[Arshad01]
+192.168.30.19
+
+  [ Msg Debug ]
+
+ register: user_facts
+
+   - debug:
+      msg: "{{ user_facts.host_out }}"
+
+
+
+https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz (Zip File) Tomcat-9
+https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.22/bin/apache-tomcat-10.0.22.tar.gz (Zip File ) Tomcat-10
+https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65-fulldocs.tar.gz (Document file )
+
+
+
+---
+  - name: nginx install & start services
+    hosts: Arshad01
+    become: true
+    remote_user: Ansible
+
+    tasks:
+    - name: install nginx
+      yum:
+        name: nginx
+        state: latest
+		
+---
+- name: This sets up an httpd webserver
+  hosts: Localhost
+  tasks:
+  - name: Install apache packages
+    yum:
+      name: httpd
+      state: present
+  - name: ensure httpd is running
+    service:
+      name: httpd
+      state: started
+  - name: Open port 80 for http access
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+  - name: Restart the firewalld service to load in the firewall changes
+    service:
+      name: firewalld
+      state: restarted
+
+
+
+yum remove httpd (Remove packages)
+ansible-playbook handlers.yml --check (Dry Run)
+
+
+
+---
+ - name: Automation
+   hosts: Password
+   become: yes
+   tasks:
+   - name: Fetch Url
+     ansible.builtin.get_url:
+      url: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: /root/auto
+   - name: Unzip Tarfile
+     ansible.builtin.unarchive:
+      src: /root/auto/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: /root/auto
+   - name: Add User
+     ansible.builtin.user:
+      name: nodeusr
+      shell: /bin/false
+   - name: Move File
+     shell:
+      cmd: "mv node_exporter /usr/local/binfoo.txt"
+   - name: Replace lines
+     ansible.builtin.replace:
+      path: /etc/systemd/system/node_exporter.service
+
+
+
+
+
+---
+ - name: Automation
+   hosts: Password
+   become: yes
+   tasks:
+   - name: Fetch Url
+     ansible.builtin.get_url:
+      url: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: /root/auto
+   - name: Unzip Tarfile
+     ansible.builtin.unarchive:
+      src: /root/auto/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: /root/auto
+   - name: Add User
+     ansible.builtin.user:
+      name: nodeusr
+      shell: /bin/false
+   - name: Move File
+     shell:
+      cmd: "mv node_exporter /usr/local/binfoo.txt"
+   - name: Replace lines
+     ansible.builtin.replace:
+      path: /etc/systemd/system/node_exporter.service
+      regexp: '^ExecStart
+      replace: '\1 ExecStart=/usr/local/bin/node_exporter --collector.systemd'
+   - name: Daemon reload
+     shell:
+      cmd: systemctl daemon-reload
+   - name: Start node exporter
+     shell:
+      cmd: systemctl start node_exporter
+   - name: Enable node exporter
+     shell:
+      cmd:systemctl enable node_exporter
+   - name: Status node exporter
+     shell:
+      cmd: systemctl status node_exporter
+
+
+
+
+
+---
+- name: Tomcat Installation on Linux.
+  hosts: localhost
+  vars_files:
+   - Tomcat_User.yaml
+  tasks:
+   - name: Download Tomcat Setup
+     ansible.builtin.get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.64/bin/apache-tomcat-9.0.64.tar.gz   
+      dest: /root/Tomcat_setup
+   - name:
+     ansible.builtin.unarchive:
+      src: /root/Tomcat_setup/apache-tomcat-9.0.64.tar.gz
+      dest: /root/Tomcat_setup
+   - name: Add Tomcat User in tomcat-users.xml.
+     shell:
+      chdir: /root/Tomcat_setup/apache-tomcat-9.0.64/conf
+      cmd: sed -i '56 i <role rolename="manager-script"/>' tomcat-users.xml ; sed -i '57 i <role rolename="manager-gui"/>' tomcat-users.xml ; sed -i '58 i <user username="{{ Tomcat_User }}" password="{{ Tomcat_Password }}" roles="manager-script,manager-gui"/>' tomcat-users.xml
+   - name: Comment out values from context.xml
+     shell:
+      chdir: /root/Tomcat_setup/apache-tomcat-9.0.64/webapps/manager/META-INF
+      cmd: sed -i '21 i <!-- ' context.xml ; sed -i '24 i --> ' context.xml
+   - name: Start Tomcat.
+     shell:
+      chdir: /root/Tomcat_setup/apache-tomcat-9.0.64/bin
+      cmd: ./startup.sh ; systemctl stop firewalld
+     register: output
+   - debug:
+      var: output.stdout_lines
+	  
+	  
+	  
+	  
+	  //Task 1
+---
+ - name: Automation
+   hosts: Password
+   become: yes
+   tasks:
+   - name: Fetch Url
+     ansible.builtin.get_url:
+      url: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: /root/fetchdata
+   - name: Unzip Tarfile
+     ansible.builtin.unarchive:
+      src: /root/fetchdata/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: /root/fetchdata
+      remote_src: yes
+     register: output
+   - debug:
+      var: output.stdout_lines
+   - name: Add User
+     ansible.builtin.user:
+      name: nodeusr
+      shell: /bin/false
+   - name: Move File
+     shell:
+      cmd: "mv /root/fetchdata/node_exporter-0.17.0.linux-amd64/node_exporter /usr/local/bin/"
+   - name: Replace lines
+     ansible.builtin.replace:
+      path: /etc/systemd/system/node_exporter.service
+      regexp: ExecStart=/root/prometheus/node_exporter/node_exporter
+      replace: ExecStart=/usr/local/bin/node_exporter --collector.systemd
+   - name: Daemon reload
+     shell:
+      cmd: systemctl daemon-reload
+   - name: Start node exporter
+     shell:
+      cmd: systemctl start node_exporter
+   - name: Enable node exporter
+     shell:
+      cmd: systemctl enable node_exporter
+   - name: Status node exporter
+     shell:
+      cmd: systemctl status node_exporter
+
+
+
+     notify:
+      - Restarted httpd
+   handlers:
+    - name: Restarted httpd
+      service:
+       name: httpd
+       state: restarted
+
+
+//Issue Windows command
+winrm set winrm/config/client/auth '@{Basic="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
+
+ansible -i inventory Windows -m win_ping
+
+ansible all -m ping
+
+//Windows
+Registery-Windows-Unistall-Sublime Text 3
+
+
+diskmode = lsilogic
+scsi_type= parav
+---
+ - name: Unistall program from windows server.
+   hosts: Windows
+   become_method: runas
+   tasks:
+   - name: Uninstall 7zip without specifying the path
+     win_package:
+      path: C:\Program Files\Sublime Text 3\unins000.exe
+      product_id: UninstallString
+	  
+	  
+      state: absent
+      arguments: /S
+
+
+//Ritu Code
+
+$INSTALLED = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |  Select-Object DisplayName, UninstallString
+$INSTALLED += Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, UninstallString
+$INSTALLED | ?{ $_.DisplayName -ne $null } | sort-object -Property DisplayName -Unique | Format-Table -AutoSize
+
+$SEARCH = 'Sublime'
+$RESULT =$INSTALLED | ?{ $_.DisplayName -ne $null } | Where-Object {$_.DisplayName -match $search } 
+$RESULT
+
+if ($RESULT.uninstallstring -like "msiexec*") {
+$ARGS=(($RESULT.UninstallString -split ' ')[1] -replace '/I','/X ') + ' /q'
+Start-Process msiexec.exe -ArgumentList $ARGS -Wait 
+} else {
+echo "yes" | Start-Process $RESULT.UninstallString -Wait 
+}
+
+
+reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v  
+
+
+---
+ - name: Loops
+   hosts: Password
+   connection: ssh
+   become: yes
+   tasks:
+        - name: add list of users in my nodes
+          user: name='{{item}}' state=present
+          with_items:
+                - Arshad
+                - Faizan
+                - Saif
+
+
+//Looping
+---
+ - name: Looping
+   hosts: Windows
+   tasks:
+   - name: Uninstall Application
+     ansible.windows.win_regedit:
+      path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{{ item }}
+      state: absent
+     loop:
+     - Notepad++
+     - Sublime Text 3_is1
+     - 7-Zip
+     - Google Chrome
+	 
+	 
+// Multiple Looping
+---
+ - name: Looping
+   hosts: Windows
+   tasks:
+   - name: Uninstall Application from 64 bit
+     ansible.windows.win_regedit:
+      path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{{ item }}
+      state: absent
+     loop:
+     - Notepad++
+     - Sublime Text 3_is1
+     - 7-Zip
+     - Google Chrome
+
+   - name: Uninstall Application from 32 bit
+     ansible.windows.win_regedit:
+      path: HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{{ item }}
+      state: absent
+     loop:
+     - Notepad++
+     - 7-Zip
+     - Google Chrome
+
+
+//Print
+
+---
+ - name: Looping
+   hosts: Windows
+   tasks:
+   - name: Uninstall Application
+     ansible.windows.win_regedit:
+      path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{{ item }}  
+      state: absent
+     loop:
+      - Notepad++
+      - 7-Zip
+      - Sublime Text 3is_1
+   - name: Print msg
+     ansible.builtin.debug:
+      msg: Application Uninstall = {{ item }}
+     loop:
+      - Notepad++                                                                
+      - 7-Zip
+      - Sublime Text 3is_1
+	  
+	  
+//Using Array List
+	 	  
+---
+ - name: Looping
+   hosts: Windows
+   vars:
+    LIST: [Sublime Text 3_is1, Notepad++, 7-Zip]
+   tasks:
+   - name: Uninstall Application
+     ansible.windows.win_regedit:
+      path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{{ item }}
+      state: absent
+     with_items:
+      - "{{ LIST }}"
+	  
+
+
+
+     win_shell: (Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender").DisableAntiSpyware
+
+Powershell Scripting For Status Check...
+
+[Sublime Text 3_is1, Notepad++, 7-Zip]
+
+
+ansible-playbook multipleApplicationArrayDeletion.yml --extra-vars='{"applicationList": [Sublime Text 3_is1, Notepad++, 7-Zip]}'
+
+
+
+$software = "Microsoft .NET Core Runtime - 3.1.0 (x64)";
+$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
+
+If(-Not $installed) {
+	Write-Host "'$software' is NOT installed.";
+} else {
+	Write-Host "'$software' is installed."
+}
+
+
+
+
+
+
+$software = "Notepad++ (64-bit x64)";
+$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
+
+If(-Not $installed) {
+	Write-Host "'$software' is NOT installed.";
+} else {
+	Write-Host "'$software' is installed."
+}
+
+
+
+---
+ - name: Loops
+   hosts: Windows
+   become_method: runas
+   tasks:
+   - name: add list of users in my nodes
+     ansible.windows.win_powershell:
+      script: |
+       $software = "Notepad++ (64-bit x64)";
+       $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
+        If(-Not $installed) {
+        Write-Host "'$software' is NOT installed.";
+        } else {
+        Write-Host "'$software' is installed."
+        }
+   - name: Print msg
+     ansible.builtin.debug:
+      msg: "software {{installed}}"
+
+...
+
+     register: user_facts
+
+   - debug:
+      msg: "{{ user_facts.host_out }}"
+
+ //Network Architecture
+  1.Peer to Peer Connection
+  2. Client server architecture
+
+
+	1. ACI Network Module
+	ACI will allow the network team to have visibility into both physical and virtual workloads on the network (with VMM integration, fabric can see VM attributes).
+	You can also integrate Containers for microservices management. It improves the ease and speed of deployment.
+	
+	2. Aireos Network Module
+	It is a WiFi Alliance certification designed to optimize WiFi network resources,
+	environment and enable MBO supporting devices to respond ot changing WiFi network condition
+	
+	3. Aurba Network Module
+	Aruba provides small businesses with affordable wired and wireless solutions that are secure and reliable. 
+	They can be supported by limited IT resources and are simple to set-up and manage.
+	
+	4.Asa Network Module
+	And AAS and ASA are the properties through which we can prove the two triangles congruent if they are congruent. 
+	
+	5. Avi Network Module
+	Avi Networks provides application services including local and global load balancing,
+	application acceleration, security, application visibility, performance monitoring, service discovery, and container networking services.
+	
+	6. Big Switch Network Module
+	Big Switch Networks is the leader in open source Software-Defined Networking (SDN) products,
+	delivering unmatched network agility, choice in networking hardware, and optimized network operations.
+	
+	7. CheckPoint Network Module
+	Checkpoints are most commonly used to create backups before conducting updates.
+	Should an update fail or cause problems, the administrator can return the virtual machine to its state prior to the update.
+	
+	
+	ansible-playbook -i 192.168.30.19, -u admin -k -e ansible_network_os=vyos.vyos.vyos first_playbook.yml
+	
+	Cisco IOS (Internewtworking Operating System)
+	The Internetwork Operating System is a family of proprietary network operating systems used on several router and network switch models manufactured by Cisco Systems.
+	The system is a package of routing, switching, internetworking, and telecommunications functions integrated into a multitasking operating system
+	
+	[routers]
+	R1 ansible_host=192.168.0.19
+	
+	[routers:vars]
+	ansible_connection=network_cli
+	ansible_network_os=ios
+	ansible_user=admin
+	ansible_password=admin
+	
+	LAN - Local Area Netwrork
+	
+	[ Network Devices ]
+	
+	Switch connects Devices within same network.
+	Routers is a networking device that forwards data packets between different computer networks.
+	Subnet define your local area network range.
+	Gateway -IP Address of the routers.
+	Firewall -Set of passive rules to protect network from unauthorized access.
+	Hub - A hub job is to connect the network devices together. Hub has security risks. Hubs are old technologies and are replaced with Switches.
+	Bridge - Bridge understand and learn mack address.Data can be sent and recieve on each section of the network of the same time. Bridge is replaced by Switches.
+	
+	
+	[Switch Types]
+	L1 - operates at the physical layer of the OSI (Open System Interconnection) model. 
+	L2 - A layer 2 switch is a type of network switch or device that works on the data link layer (OSI Layer 2),
+	and utilizes MAC Address to determine the path through where the frames are to be forwarded.
+	L3 - A Layer 3 switch is basically a switch that can perform routing functions in addition to switching
+	
+	L1 switches dont exist.. switches operate at layer 2. 
+	L1 switches are hubs.. nothing more.
+	When a device on a hub transmits.. everything hooked to that hub sees it.
+
+    L2 switches - these keep track of the mac addresses in a table, and only connect the two ports that are needed to communicate.
+	If computers on port 1 and 3 are communicating with eachother, the computers on the rest of the ports dont see the traffic.
+	If a broadcast is sent, everyone sees it.
+
+    L3 switches - these switches have the ability to do some basic routing functions.
+	They can assign an IP address to the vlans, and even route between them.
+	Different L3 switches have different capabilities.
+	Switches like the old and venerable cisco 3750 lines did dynamic routing (ospf, eigrp, rip) or static routing.
+	
+	
+	[Routers Types]
+	1.wired routers
+	2.wireless routers
+	3.core routers 
+	4.edge routers
+	5.VPN routers.
+	
+	[VLAN]
+    Vlans can logically create several virtual network to seprate the network brodcast traffic.
+	The network traffic between the departments are seprated.
+ 	
+	Lines: To add lines in network module
+	Switches creates a network and Routers connects the networks
+	
+	
+  with_items:
+    - <role rolename="manager-script"/>
+    - <role rolename="manager-gui"/>
+    - <user username="tomcatmanager" password="tomcatmanager" roles="manager-script,manager-gui"/>
+	
+	
+	// VMware Vpshere
+	1.Create a virtual machine and give name to that.
+	2.Choose the Host.
+	3.Select Storage.
+	4.Choose OS and the Version.
+	5.Set the Virtual Hardware As per user requirement.
+	    1.CPU :2
+		2.Memory :2GB
+		3.New Hard disk: 16GB
+		4.New network: VM network
+		5.New CD/DVD Drive: Datastore IOS file
+		6.Finish
+	
+	/var/lib/awx/projects/ansibleAutomationAWX
+	
+
+  [ Arshad Code ]
+  
+---
+ - name: Tomcat Installation
+   hosts: Password
+   gather_facts: true
+   become: yes
+   tasks:
+   - name: Fetch Url
+     ansible.builtin.get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz
+      dest: /root/apache
+   - name: Unzip Tarfile
+     ansible.builtin.unarchive:
+      src: /root/apache/apache-tomcat-9.0.65.tar.gz
+      dest: /root/apache
+      remote_src: yes
+   - name: Add User in tomcat-users.xml
+     lineinfile:
+          path: /root/apache/apache-tomcat-9.0.65/conf/tomcat-users.xml
+          line: "{{ item }}"
+          state: present
+     with_items:
+      - <role rolename="manager-script"/>
+      - <role rolename="manager-gui"/>
+      - <user username="tomcatmanager" password="tomcatmanager" roles="manager-script,manager-gui"/>
+   - name: Comment out values from context.xml
+     shell:
+      chdir: /root/apache/apache-tomcat-9.0.65/webapps/manager/META-INF
+      cmd: sed -i '21 i <!-- ' context.xml ; sed -i '24 i --> ' context.xml
+   - name: Start Tomcat.
+     shell:
+      chdir: /root/apache/apache-tomcat-9.0.65/bin
+      cmd: ./startup.sh ; systemctl stop firewalld
+     register: output
+
+   - debug:
+      msg: "{{ output.end }}"
+
+    [ War File Deployment ]
+	
+	
+---
+ - name: War File Deplyoment using Tomcat
+   hosts: Prince
+   gather_facts: no
+   tasks:
+   - name: Get war file from Github
+     ansible.builtin.git:
+      repo: https://github.com/arshuucom/Arshad.git
+      dest: /root/WarFile
+
+   - name: Stop Tomcat
+     shell:
+      chdir: /root/Destination/apache-tomcat-9.0.67/bin
+      cmd: ./shutdown.sh
+     register: stop
+   - debug:
+      var: stop.stdout_lines
+
+   - name: Move war to Webapps Folder
+     ansible.builtin.copy:
+      src: /root/WarFile/Project.war
+      dest: /root/Destination/apache-tomcat-9.0.67/webapps/Project.war
+      remote_src: yes
+     register: move
+   - debug:
+      var: move.stdout_lines
+
+   - name: Start Tomcat
+     shell:
+      chdir: /root/Destination/apache-tomcat-9.0.67/bin
+      cmd: sudo nohup ./startup.sh
+     register: start
+
+   - debug:
+      var: start.stdout_lines
+...
+
+
+  [ Docker Installation ]
+
+---
+  - name: Docker Installation using Playbook
+    hosts: Password
+    gather_facts: false
+    become: yes
+    tasks:
+     - name: Install Docker
+       shell:
+        cmd: yum check-update
+     - name: Package Install
+       shell:
+        cmd: curl -fsSL https://get.docker.com/ | sh
+     - name: Start Docker
+       shell:
+        cmd: sudo systemctl start docker
+     - name: Status Docker
+       shell:
+        cmd: sudo systemctl status docker
+     - name: Enable Docker
+       shell:
+        cmd: sudo systemctl enable docker
+       register: checkout
+     - debug:
+        var: checkout.stdout_lines
+...
+
+
+ [Add Lines in Config Files ]
+ 
+ <role rolename="manager-script"/>
+<role rolename="manager-gui"/>
+<user username="tomcatmanager" password="tomcatmanager" roles="manager-script,manager-gui"/>
+
+  [ Manual Steps ]
+  1.wget tomcat-tar.gz url
+  2. unzip the tar.gz by tar -xvf tar-name
+  3.cd to apache folder that is tar.gz unzipped folder
+  4.go to conf folder --> open tomcat-user.xml and add user in that file
+  5.go to webapps folder then go to META-INF folder and open context.xml file and add comment to <value ....... /> = Here Add the above lines
+  6.Then go to bin folder and and start tomcat by using ./startup.sh
+  7.Then Access your IP..
+  
+  
+  
+[defaults]
+inventory=inventory
+remote_user=root
+interpreter_python = auto_silent
+host_key_checking = False
+
+[privilege_escalation]
+become=false
+become_user=root
+become_method=sudo
+become_ask_pass=false
+
+
+ yum-config-manager --disable InstallMedia = When Loaded plugins: product-id, search-disabled-repos
+file:///iso/repodata/repomd.xml: [Errno 14] curl#37 - "Couldn't open file /iso/repodata/repomd.xml"
+Trying other mirror.
+
+
+ One of the configured repositories failed (Red Hat Enterprise Linux 7.9),
+ and yum doesn't have enough cached data to continue. At this point the only
+ safe thing yum can do is fail. There are a few ways to work "fix" this:
+
+     1. Contact the upstream for the repository and get them to fix the problem.
+
+     2. Reconfigure the baseurl/etc. for the repository, to point to a working
+        upstream. This is most often useful if you are using a newer
+        distribution release than is supported by the repository (and the
+        packages for the previous distribution release still work).
+
+     3. Run the command with the repository temporarily disabled
+            yum --disablerepo=InstallMedia ...
+
+     4. Disable the repository permanently, so yum won't use it by default. Yum
+        will then just ignore the repository until you permanently enable it
+        again or use --enablerepo for temporary usage:
+
+            yum-config-manager --disable InstallMedia
+        or
+            subscription-manager repos --disable=InstallMedia
+
+     5. Configure the failing repository to be skipped, if it is unavailable.
+        Note that yum will try to contact the repo. when it runs most commands,
+        so will have to try and fail each time (and thus. yum will be be much
+        slower). If it is a very temporary problem though, this is often a nice
+        compromise:
+
+            yum-config-manager --save --setopt=InstallMedia.skip_if_unavailable=true
+
+failure: repodata/repomd.xml from InstallMedia: [Errno 256] No more mirrors to try.
+
+
+subscription-manager register --username u.anand.su@gmail.com --password Secure@123 --auto-attach

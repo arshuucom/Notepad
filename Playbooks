@@ -1,0 +1,439 @@
+
+
+
+172.25.111.208
+Download=/devops/supportal/app
+backupdir=/devops/supportal/backup
+copydestination=/opt/supportal/hybris/hybris/bin/custom/
+platformpath=/opt/supportal/hybris/hybris/bin/platform/  
+config_path=/opt/hybsup/hybris/config/ backup_keep=15
+
+
+[	Asian paints deployment playbook	]
+
+---
+- hosts: all
+  become: true
+  become_user: hybrisadmin
+  tasks:
+    - name: Delete files from /devops/supportal/app
+      file:
+        name: "{{ Download}}/"
+        state: "{{item}}"
+      with_items:
+          - absent
+          - directory
+
+    - name: Download package from Nexus
+      maven_artifact:
+        group_id: Supplier-Portal
+        artifact_id: Supplier-Portal-UAT
+        extension: zip
+        repository_url: 'http://172.25.10.239:8081/repository/Supplier-Portal/'
+        classifier: "{{ class.split('-')[-1]}}"
+        verify_checksum: never
+        version:  "{{ '-'.join(class.split('-')[:-1])}}"
+        username: admin
+        password: admin
+        mode: 0755
+        owner: hybrisadmin
+        group: hybrisadmin
+        dest: "{{ Download }}"
+
+    - name: making backup of config and custom folder
+      archive:
+        path:
+          - "{{ copydestination }}"
+          - "{{ config_path }}"
+        dest: "{{ backupdir }}/{{ class }}-{{ lookup('pipe', 'date +%Y-%m-%d-%H-%M-%S') }}.zip"
+        format: zip
+        remote_src: 'true'
+
+    - name: unzip files
+      unarchive:
+        src: "{{ Download }}/Supplier-Portal-UAT-{{ class }}.zip"
+        dest: "{{ Download }}/"
+        remote_src: True
+		
+    - find:
+        path: "{{ backupdir }}"
+      register: result
+    - set_fact:
+        files_rm: "{{ (result.files|
+                      sort(attribute='mtime', reverse=true)|
+                      map(attribute='path')|
+                      list)[backup_keep:] }}"
+    - debug:
+        var: files_rm
+		
+    - file:
+        state: absent
+        path: "{{ item }}"
+      loop: "{{ files_rm }}"
+
+    - name: searching file for delete files
+      stat:
+        path: /devops/supportal/app/Delete.txt
+      register: found
+	  
+    - name: delete file
+      file:
+        path: "/opt/supportal/hybris/hybris/bin/{{item}}"
+        state: absent
+      with_lines: ssh "{{ inventory_hostname }}" ' cat /devops/supportal/app/Delete.txt'
+      when: found.stat.exists
+      ignore_errors: True
+
+    - name: stoping server
+      shell: |
+         cd "{{ platformpath }}"
+         ./hybrisserver.sh stop
+      register: psa
+      remote_user: root
+    - debug: var=psa.stdout_lines
+	
+    - stat:
+        path: "{{ Download }}/custom"
+      register: optional_file1
+
+    - name: Deploy content(custom) from package
+      shell: |
+        cd "{{ Download }}/custom"
+        rsync -av --exclude='*.zip' .  "{{ copydestination }}"
+      register: psb1
+      when: optional_file1.stat.exists
+    - debug: var=psb1.stdout_lines
+
+    - stat:
+        path: "{{ Download }}/config"
+      register: optional_file2
+
+    - name: Deploy content(config) from package
+      shell: |
+        cd "{{ Download }}/config"
+        rsync -av --exclude='*.zip' .  "{{ config_path }}"
+      register: psb2
+      when: optional_file2.stat.exists
+    - debug: var=psb2.stdout_lines
+
+    - name: execute ant clean all command
+      shell: |
+         cd "{{ platformpath }}"
+         . ./setantenv.sh
+         ant clean all
+      register: psc
+      when: antmethod == "clean all"
+    - debug: var=psc.stdout_lines
+
+    - name: execute ant all command
+      shell: |
+         cd "{{ platformpath }}"
+         . ./setantenv.sh
+         ant all
+      register: pse
+      when: antmethod == "all"
+    - debug: var=pse.stdout_lines
+
+    - name: starting server
+      shell: |
+         cd "{{ platformpath }}"
+         ./hybrisserver.sh start
+      register: psd
+    - debug: var=psd.stdout_lines
+	
+    - name: waiting for creation of log file
+      wait_for: timeout=20
+    - name: Get files in a logs folder
+      find:
+        paths: /opt/supportal/hybris/hybris/log/tomcat/
+        pattern: '[console]*'
+      register: found_files
+
+    - name: Get latest log file
+      set_fact:
+         latest_file: "{{ found_files.files | sort(attribute='mtime',reverse=true) | first }}"
+    - name: Create tempfile for log tailing
+      tempfile:
+         state: file
+      register: tempfile
+    - debug:
+          msg: "{{ latest_file.path }}"
+
+    - name: Asynchronous tail log to temp file
+      shell: tail -n 0 -f "{{ latest_file.path }}" > {{ tempfile.path }}
+      async: 600
+      poll: 0
+    - block:
+
+         - name: Wait for regex in log
+           wait_for:
+             path: "{{ tempfile.path }}"
+             search_regex: 'INFO: Server startup'
+             msg: Timeout to find file string
+             timeout: 600
+      always:
+         - shell: cat "{{ tempfile.path }}"
+           register: tem
+         - debug: var=tem.stdout_lines
+         - name: Remove tempfile
+           file:
+             path: "{{ tempfile.path }}"
+             state: absent
+			 
+			 
+			 
+			 
+			 [	Variable Playbook	]
+			 
+---
+- name: Deploy and start Apache HTTPD service
+  hosts: webserver
+  vars:
+    web_pkg: httpd
+    firewall_pkg: firewalld
+    web_service: httpd
+    firewall_service: firewalld
+    python_pkg: python3-PyMySQL
+    rule: http
+
+  tasks:
+    - name: Required packages are installed and up to date
+      ansible.builtin.dnf:
+        name:
+          - "{{ web_pkg  }}"
+          - "{{ firewall_pkg }}"
+          - "{{ python_pkg }}"
+        state: latest
+
+    - name: The {{ firewall_service }} service is started and enabled
+      ansible.builtin.service:
+        name: "{{ firewall_service }}"
+        enabled: true
+        state: started
+
+    - name: The {{ web_service }} service is started and enabled
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        enabled: true
+        state: started
+
+    - name: Web content is in place
+      ansible.builtin.copy:
+        content: "Example web content"
+        dest: /var/www/html/index.html
+
+    - name: The firewall port for {{ rule }} is open
+      ansible.posix.firewalld:
+        service: "{{ rule }}"
+        permanent: true
+        immediate: true
+        state: enabled
+
+- name: Verify the Apache service
+  hosts: workstation
+  become: false
+  tasks:
+    - name: Ensure the webserver is reachable
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com
+        status_code: 200
+		
+		
+		
+* Define a second task to start the mariadb service. The full playbook should consist of the following content:
+
+- name: MariaDB server is running
+  hosts: database_dev
+  vars:
+    mariadb_packages:
+      - mariadb-server
+      - python3-PyMySQL
+
+  tasks:
+    - name: MariaDB packages are installed
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ mariadb_packages }}"
+
+    - name: Start MariaDB service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: true
+		
+		
+* Handlers Playbook
+
+---
+- name: Web application server is deployed
+  hosts: webapp
+  vars:
+    packages:
+      - nginx
+      - php-fpm
+    web_service: nginx
+    app_service: php-fpm
+    resources_dir: /home/student/control-handlers/files
+    web_config_src: "{{ resources_dir }}/nginx.conf.standard"
+    web_config_dst: /etc/nginx/nginx.conf
+    app_config_src: "{{ resources_dir }}/php-fpm.conf.standard"
+    app_config_dst: /etc/php-fpm.conf
+
+  tasks:
+    - name: "{{ packages }} packages are installed"
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: present
+
+    - name: Make sure the web service is running
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: true
+
+    - name: Make sure the application service is running
+      ansible.builtin.service:
+        name: "{{ app_service }}"
+        state: started
+        enabled: true
+
+    - name: The {{ web_config_dst }} file has been deployed
+      ansible.builtin.copy:
+        src: "{{ web_config_src }}"
+        dest: "{{ web_config_dst }}"
+        force: true
+      notify:
+        - restart web service
+
+    - name: The {{ app_config_dst }} file has been deployed
+      ansible.builtin.copy:
+        src: "{{ app_config_src }}"
+        dest: "{{ app_config_dst }}"
+        force: true
+      notify:
+        - restart app service
+
+  handlers:
+    - name: restart web service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: restarted
+
+    - name: restart app service
+      ansible.builtin.service:
+        name: "{{ app_service }}"
+        state: restarted
+		
+* Implementing Task control playbook
+
+---
+- name: Playbook Control Lab
+  hosts: webservers
+  vars_files: vars.yml
+  tasks:
+    #Fail Fast Message
+    - name: Show Failed System Requirements Message
+      ansible.builtin.fail:
+        msg: "The {{ inventory_hostname }} did not meet minimum reqs."
+      when: >
+        ansible_facts['memtotal_mb'] < min_ram_mb or
+        ansible_facts['distribution'] != "RedHat"
+
+    #Install all Packages
+    - name: Ensure required packages are present
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: latest
+
+    #Enable and start services
+    - name: Ensure services are started and enabled
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ services }}"
+
+    #Block of config tasks
+    - name: Setting up the SSL cert directory and config files
+      block:
+        - name: Create SSL cert directory
+          ansible.builtin.file:
+            path: "{{ ssl_cert_dir }}"
+            state: directory
+
+        - name: Copy Config Files
+          ansible.builtin.copy:
+            src: "{{ item['src'] }}"
+            dest: "{{ item['dest'] }}"
+          loop: "{{ web_config_files }}"
+          notify: restart web service
+
+      rescue:
+        - name: Configuration Error Message
+          ansible.builtin.debug:
+            msg: >
+              One or more of the configuration
+              changes failed, but the web service
+              is still active.
+
+    #Configure the firewall
+    - name: ensure web server ports are open
+      ansible.builtin.firewalld:
+        service: "{{ item }}"
+        immediate: true
+        permanent: true
+        state: enabled
+      loop:
+        - http
+        - https
+
+  #Add handlers
+  handlers:
+    - name: restart web service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: restarted
+		
+		
+-------------------------------- Lab Deploying
+
+---
+- name: Configure system
+  hosts: all
+  remote_user: devops
+  become: true
+  tasks:
+    - name: Configure a custom /etc/motd
+      ansible.builtin.template:
+        src: templates/motd.j2
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Check file exists
+      ansible.builtin.stat:
+        path: /etc/motd
+      register: motd
+
+    - name: Display stat results
+      ansible.builtin.debug:
+        var: motd
+
+    - name: Copy custom /etc/issue file
+      ansible.builtin.copy:
+        src: files/issue
+        dest: /etc/issue
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Ensure /etc/issue.net is a symlink to /etc/issue
+      ansible.builtin.file:
+        src: /etc/issue
+        dest: /etc/issue.net
+        state: link
+        owner: root
+        group: root
+        force: yes

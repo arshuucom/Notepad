@@ -1,0 +1,28 @@
+
+
+-------------------[Jenkins Infromation Gathering From Member]----------------------------------
+					For sending any mail inform Lokesh.
+					Lokesh and sumit in every mail.
+					
+* For Jira related issue contact Pranita/Tejas..
+* Requesting view access in Jenkins contact Lokesh.
+* For aborting the job contact DCInfraTeam.
+* Adding the Member for Gitlab Access contact ADHelpdesk.
+* Vinay Ranmajaya 
+* Fortify related doubts contact Mriyank Baranwal.
+* Network head For Disk is Full and if sanitary reports is full contact sohail.
+* New Application onboard drop a mail to that guy and put lokesh in CC.
+* Citrix not login contact saurabh.
+
+
+
+*To approve the application (in Fortify Dashboard) when the Fortify job (in Jenkins) is in a pending state.
+After the approval from fortify dashboard, it will start the job.
+
+
+*When a QA build job trigger from jira, the first stage will checkout the source code from gitlab.
+Then it will move to next stage and retrieve the changeset.
+In next stage It will goes to nexus package and stored in it.
+
+
+	

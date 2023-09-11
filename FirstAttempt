@@ -1,0 +1,123 @@
+
+
+[230-120-255]----ID REDHAT
+
+*GREP -O :TO SEARCH FOR A PARTICULAR STING IN A FILE.
+
+*FIND / -USER ARHAAN -EXEC CP -PFR {} /ROOT/SHOWDETAILS/ \;
+
+*lvextend -L +512M -r /dev/volume_group/lv_group
+
+[FOR ADDING NEW CONNECTION]
+*nmcli con add con-name lab ifname eth0 type ethernet ipv4.method manual ipv4.dns 172.25.250.254 ipv4.addresses 172.25.250.11/24 ipv4.gateway 172.25.250.254 connection.autoconnect yes
+
+	[IF CONNECTION NAME IS NOT PROVIEDED THE FOR EXISTING CONNECTION]
+**nmcli con modify "lab" ipv4.addresses 172.25.250.11/24 ipv4.gateway 172.25.250.254 ipv4.dns 172.25.250.254 ipv4.method manual connection.autoconnect yes
+
+[QUESTION]
+
+1.INSTALL NTP CLIENT AND CHRONY.
+- hostnamectl
+- ip address : to check the ip.
+- ping: to check 
+- vim /etc/hosts : to edit the file
+- 192.168.220.200 serverb.lab.example.com : add a entry in it.
+- vim /etc/chrony.conf : open file for chrony service
+- comment line that starts with pool
+- below that add line : add servername according to the question. eg:- server rhel9svr.example.com iburst
+- chrony sources -v : to check wheather its added or not.
+
+2.BUILD CONTAINER IMAGE FROM URL HTTP:22323232332 NAME WATCHER
+
+3.LDAP
+
+4.shell script to find the size from 50m the user arshad with gid and uid and store in root/lines
+	- find / -user arshad -type f -size +50M -printf "%s %g %u\n" > /lines
+
+	-find / -user arhaan -type f -size +50c -exec stat -c "File with size 50 bytes found: %n (GID: %g, UID: %u)" {} \; > /root/PractiseRHCSA/new
+
+5.CONTAINER CREATE FROM IMAGE WATCHER AND NAME AND CREATE SYSTEMD SERVICE AND STORE LOGS.
+
+6. CREATE LOGICAL VOULUME NAME DATABASE AND VOULUME GROUP NAMED BACKUP AND FILESYSTEM FSAT.
+
+7. SWAP PARTITION OF 512MIB .
+
+8. TAR FILE FOR BZIP2
+
+9.CONFIGURE THE NTP  CONFIGURE YOUR SYSTEM SO THAT IT IS AN NTP CLIENT OF CLASSROOM.EXAMPLE.COM : https://github.com/chlebik/rhcsa-practice-questions/blob/master/questions/023_configure_ntp_on_the_client.md
+
+10.THEY WILL ASK US TO CREATE AN CONTAINER IMAGE NAMED SOME XYZ
+
+11.AND THEY WILL ASK US CONTAINER  SERVICES CONFIGURATIONS
+
+12.CONFIGURE AUTOFS TO AUTOMOUNT THE HOME DIRECTORIES OF PRODUCTION5 DOMAIN USERS. NOTE THE FOLLOWING: 
+SERVERA.LAB.EXAMPLE.COM (172.25.250.10) NFS -EXPORTS /USER-HOMES TO YOUR SYSTEM.
+REMOTEUSER15 HOME DIRECTORY IS NODE1.LAB.EXAMPLE.COM:/USER-HOMES/REMOTEUSER15
+REMOTEUSER15 HOME DIRECTORY SHOULD BE AUTOMOUNTED LOCALLY MAPPED TO /RUSER IN YOUR SYSTEM  
+HOME DIRECTORIES MUST BE WRITABLE BY THEIR USERS. 
+WHILE YOU ARE ABLE TO LOG IN AS ANY OF THE USERS PRODUCTION1 THROUGH PRODUCTION30, THE ONLY HOME DIRECTORY THAT IS ACCESSIBLE FROM YOUR SYSTEM IS PRODUCTION5.
+
+12.A]Configure autofs to automount the home directories of LDAP users as follows: host.domain11.example.com NFS-exports /home to your system.
+This filesystem contains a pre-configured home directory for the user ldapuser11 ldapuser11's home directory is host.domain11.example.com /rhome/ldapuser11 ldapuser11's home directory should be automounted locally beneath /rhome as /rhome/ldapuser11
+Home directories must be writable by their users
+ldapuser11's password is 'password'.
+
+vim /etc/auto.master /rhome /etc/auto.misc
+:wq!
+# vim /etc/auto.misc
+ldapuser11 --rw,sync host.domain11.example.com:/rhome/ldpauser11 :wq!
+#service autofs restart
+service autofs reload
+chkconfig autofs on
+su -ldapuser11
+Login ldapuser with home directory
+# exit
+
+[IMPORTANT QUESTION]
+13. BUILD A CONTAINER AS USER STUDENT
+USING THE URL(HTTPS://XYZ.COM) TO BUILD THE CONTAINER IMAGE WITH NAME MONITOR. 
+DO NOT MODIFY THE CONTAINER FILE 
+
+
+14.CONFIGURE THE CONTAINER AS A SYSTEM START-UP SERVICE AND MOUNT VOLUMES PERSISTENTLY  
+CREATE THE CONTAINER NAME AS ASCII2PDF AS STUDENT USER
+RUN THE CONTAINER BY USING IMAGE MONITOR WHICH ONE WAS ALREADY DONE IN PREVIOUS 
+CREATE THE CONTAINER AS A SYSTEM START-UP SERVICE, WHILE REBOOT IT WILL AUTOMATICALLY START THE SERVICE WITHOUT ANY HUMAN INTERVENTION. 
+THE SYSTEM SERVICE SHOULD BE CONTAINER-ASCII2PDF. 
+THE LOCAL DIRECTORY /OPT/FILES SHOULD BE PERSISTENTLY MOUNT ON CONTAINER’S /OPT/INCOMING DIRECTORY. 
+THE LOCAL DIRECTORY /OPT/PROCESSED SHOULD BE PERSISTENTLY MOUNT ON CONTAINER’S /OPT/OUTCOMING DIRECTORY. 
+IN WORKING OF SERVICE STARTS, ANY FILE CREATE/STORE UNDER THE /OPT/FILES AUTOMATICALLY CREATES INTO PDF ON /OPT/OUTCOMING DIRECTORY. 
+
+-------------------------------------NODE 2--------------------------------------
+*ASSIGN ROOT USER PASSWORD AS GENGULGE. 
+ 
+*CREATE A REPOSITORY FILE   HTTP://CONTENT/RHEL9.0/X86_64/DVD/APPSTREAM   HTTP://CONTENT/RHEL9.0/X86_64/DVD/BASEOS
+ 
+*CREATE A SWAP PARTITION 512MB SIZE. 
+ 
+*CREATE ONE LOGICAL VOLUME NAMED DATABASE AND IT SHOULD BE ON DATASTORE VOLUME GROUP WITH SIZE 50 EXTENT AND ASSIGN THE FILESYSTEM AS EXT3. 
+(I) THE DATASTORE VOLUME GROUP EXTENT SHOULD BE 16MIB. (II)MOUNT THE LOGICAL VOLUME UNDER MOUNT POINT /MNT/DATABASE. 
+ 
+*RESIZE THE LOGICAL VOLUME SIZE OF 100 EXTENT ON /MNT/DATABASE DIRECTORY. 
+
+*SET THE RECOMMEND TUNED PROFILE FOR YOUR SYSTEM. 
+
+*RESIZE THE GIVEN LOGICAL VOLUME TO 300MIB OR IN BETWEEN THE RANGE 240 TO 330.  
+
+THIS IS NODE2
+
+[SWAP PARTITION]
+FIRSTLY
+LSBLK
+FDISK /DEV/VDB
+N
+2
+T
+SWAP
+W
+MKSWAP /DEV/VDB2
+VIM /ETC/FSTAB 
+THEN
+/DEV/VDB SWAP SWAP DEFAULTS 0 0
+:WQ!
+MOUNT -A

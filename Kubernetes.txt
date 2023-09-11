@@ -1,0 +1,900 @@
+
+
+
+	[ Volume ]
+	
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-hostpath
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi=================================================
+	  
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-hostpath
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  persistentVolumeReclaimPolicy: Delete    #Default is Retain
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/kube"
+#  nfs:
+#    path: "/srv/nfs/kube"
+#    server: 172.16.16.100  
+  
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  volumes:
+  - name: host-volume
+    persistentVolumeClaim:
+      claimName: pvc-hostpath
+  containers:
+  - image: nginx
+    name: nginx-container
+    volumeMounts:
+    - name: host-volume
+      mountPath: /mydata
+	  
+	  
+	  [ NodePort ]
+	  
+	 #NodePort
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynpservice
+  labels:
+    type: frontend
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30008
+  selector:
+    type: frontend
+---
+#ClusterIp
+apiVersion: v1
+kind: Service
+metadata:
+  name: myclusterip
+  labels:
+    type: frontend
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    type: frontend
+	
+	
+	[ Secrets ]
+	
+	apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    type: frontend
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: kodekloud/webapp-color
+      env:
+        - name: APP_COLOR
+          valueFrom:
+            secretKeyRef:
+              name: clsecret
+              key: clr
+              
+---
+
+apiVersion: v1
+data:
+  ssubodh: ZGVyZQ==
+immutable: true    # secrets cant be edited if we enable this setting
+kind: Secret
+metadata:
+  name: s1
+  namespace: default
+type: Opaque
+
+
+    [ Scheduling ]
+	
+	apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+    - key: subodh1
+      value: dere1
+      effect: NoSchedule
+      operator: Equal                      ##OR Exists
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p2
+spec:
+  containers:
+  - name: nginxconainer
+    image: nginx
+  nodeSelector:
+    disk: ssd
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p1
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disk
+            operator: In
+            values:
+            - ssd1
+            - ssd2
+  containers:
+  - name: with-node-affinity
+    image: nginx
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p1
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: disk
+            operator: In
+            values:
+            - ssd1
+            - ssd2
+  containers:
+  - name: affinity-prefferd
+    image: nginx
+	
+	
+	
+	[ Creatation of Pods ]
+	
+	apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx2
+  name: nginx2
+spec:
+  containers:
+  - image: nginx
+    name: nginx1
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: abcd
+  labels:
+    type: frontend
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+	  
+	  [ NFS Setup ]
+	  
+	  kmaster:
+apt update
+apt install nfs-kernel-server
+apt install nfs-common
+mkdir -p /srv/nfs/kubedata
+chmod 777 /srv/nfs/kubedata
+chown nobody: /srv/nfs/kubedata
+echo "/srv/nfs/kubedata *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)" >> /etc/exports
+systemctl enable --now nfs-server
+exportfs -rav
+showmount -e localhost
+
+kworker:
+apt update
+apt install nfs-common
+mkdir -p /srv/nfs/kubedata
+chmod 777 /srv/nfs/kubedata
+sudo mount -t nfs 172.16.16.100:/srv/nfs/kubedata /srv/nfs/kubedata
+
+GitHub:
+git clone https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner.git  #v4.0.2 branch
+
+
+
+	[ NFS Dynamic Prov Rbac]
+	
+	
+	kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: nfs-client-provisioner
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfs-client-provisioner-runner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: run-nfs-client-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: nfs-client-provisioner-runner
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-nfs-client-provisioner
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-nfs-client-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    # replace with namespace where provisioner is deployed
+    namespace: default
+roleRef:
+  kind: Role
+  name: leader-locking-nfs-client-provisioner
+  apiGroup: rbac.authorization.k8s.io
+  
+  
+  
+  [ NFS Dynamic Prov PVC ]
+  
+  kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-claim
+spec:
+  storageClassName: managed-nfs-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+	  
+	  
+	  [ NFS Dynamic Prov Deployment ]
+	  
+	  kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: gcr.io/k8s-staging-sig-storage/nfs-subdir-external-provisioner:v4.0.1
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: example.com/nfs
+            - name: NFS_SERVER
+              value: 172.16.16.100
+            - name: NFS_PATH
+              value: /srv/nfs/kubedata
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 172.16.16.100
+            path: /srv/nfs/kubedata
+			
+			
+	[ Limit Range ]
+	apiVersion: v1
+kind: LimitRange
+metadata:
+  name: lr
+  namespace: dev1
+spec:
+  limits:
+  - default:
+      cpu: 200m
+      memory: 200Mi
+    defaultRequest:
+      cpu: 100m
+      memory: 100Mi
+    min:
+      cpu: 10m
+      memory: 10Mi
+    max:
+      cpu: 300m
+      memory: 300Mi
+    maxLimitRequestRatio:
+      memory: 2
+    type: Container
+	
+	
+	[ Resource Quota ]
+	apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myrq
+  namespace: sd
+spec:
+  hard:
+    pods: 2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx1
+  name: nginx2
+  namespace: sd
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        cpu: 200m
+        memory: 200Mi
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myrq1
+  namespace: sd
+spec:
+  hard:
+    requests.cpu: 500m
+    requests.memory: 500Mi
+    limits.cpu: "1"
+    limits.memory: 1Gi
+	
+	
+	[ Stateful ]
+	apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-pv0
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.16.16.100
+    path: "/srv/nfs/kubedata/pv0"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-pv1
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.16.16.100
+    path: "/srv/nfs/kubedata/pv1"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-pv2
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.16.16.100
+    path: "/srv/nfs/kubedata/pv2"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-headless
+  labels:
+    run: nginx-sts-demo
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    run: nginx-sts-demo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-sts
+spec:
+  serviceName: "nginx-headless"
+  replicas: 2
+  selector:
+    matchLabels:
+      run: nginx-sts-demo
+  template:
+    metadata:
+      labels:
+        run: nginx-sts-demo
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: www
+          mountPath: /var/www/
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      storageClassName: manual
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+
+
+## Note : nslookup nginx-headless.default.svc.cluster.local
+
+	[ Config Map ]
+	apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app1
+  labels:
+    type: frontend
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: subodhdere/webapp-color
+      envFrom:
+      - configMapRef:
+          name: cmenv
+      env:
+        - name: APP_COLOR
+          valueFrom:
+            configMapKeyRef:
+              name: cm1
+              key: mycolor
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app1
+  labels:
+    type: frontend
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+      - name: test
+        mountPath: "/config"
+  volumes:
+  - name: test
+    configMap:
+      name: cmenv
+---
+apiVersion: v1
+data:
+  key1: value1
+immutable: true
+kind: ConfigMap
+metadata:
+  name: cm1
+  
+  
+  [ Deployment ]
+	  
+	  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydep
+  labels:
+    type: frontend
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: mypod
+      labels:
+        type: frontend
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  selector:
+    matchLabels:
+      type: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydep
+  labels:
+    type: frontend
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: mypod
+      labels:
+        type: frontend
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  selector:
+    matchLabels:
+      type: frontend      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydep
+  labels:
+    type: frontend
+spec:
+  replicas: 8
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0%
+      maxUnavailable: 75%
+  template:
+    metadata:
+      name: mypod
+      labels:
+        type: frontend
+    spec:
+      containers:
+        - name: nginx-container
+          image: subodhdere77/success-story:v2
+  selector:
+    matchLabels:
+      type: frontend
+	  
+	  
+	  [ Replica Set ]
+	  apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myrs
+  labels:
+    type: frontend
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: mypod
+      labels:
+        type: frontend
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  selector:
+    matchLabels:
+      type: frontend
+	  
+	  
+	  [ Init Container ]
+	  apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  initContainers:
+  - name: install
+    image: busybox
+    command: ["sleep","20"]
+	
+	
+	[ Ingress ]
+	apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: days-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: minikube-example.com
+      http:
+        paths:
+          - path: /v1
+            pathType: Prefix  
+            backend:
+              service:
+                name: static-web-service-v1
+                port:
+                  number: 80
+          - path: /v2
+            pathType: Prefix  
+            backend:
+              service:
+                name: static-web-service-v2
+                port:
+                  number: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-web-service-v1
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-web-service-v2
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: v2
+---
+apiVersion: v1                          
+kind: Pod                               
+metadata:  
+  name: p1
+  labels:
+    app: v1                              
+spec:                                   
+  containers:                           
+  - image: subodhdere/k8sdemo:v1
+    name: c1
+---
+apiVersion: v1                          
+kind: Pod                               
+metadata:  
+  name: p2
+  labels:
+    app: v2                              
+spec:                                   
+  containers:                           
+  - image: subodhdere/k8sdemo:v2
+    name: c2
+	
+	
+	[ Daemonset ]
+	apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: nginx
+  name: ds1
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+		
+		
+		
+		
+		
+	===================Command For Kubernetes=================================
+	
+	
+	kubectl get nodes
+kubectl describe node <nodename>
+kubectl get nodes -o wide  
+
+
+[ Pod ]
+
+kubectl run nginx-pod --image nginx
+kubectl get pod
+kubectl get pod -o wide
+kubectl describe pod nginx-pod
+kubectl logs nginx-pod
+kubectl logs -f nginx-pod
+kubectl get pod --show-labels
+kubectl get pod -l tier=frontend
+kubectl delete pod --all
+kubectl exec -it nginx-pod -- bash
+kubectl delete pod nginx-podd
+kubectl run nginx-pod --image nginx --dry-run=client
+kubectl run nginx-pod --image nginx --dry-run=client -o yaml
+kubectl run nginx-port --image=nginx --port=80
+kubectl apply -f pod.yaml
+kubectl delete -f pod.yaml
+
+[ Service ]
+
+kubectl expose pod <pod_name> --type NodePort --port 80 --name frontend-service
+kubectl expose pod <pod_name> --type LoadBalancer --port 80 --name frontend-service
+kubectl expose pod <pod_name> --type ClusterIp --port 80 --name backend-service
+kubectl get svc
+kubectl describe svc <service_name>
+minikube service <service_name> --url
+k exec bz1 -- nslookup 192-168-41-151.default.pod
+kubectl edit svc <service_name>
+kubectl delete svc <service_name>
+curl mysvc.default.svc.cluster.local
+
+
+[Replica Set ]
+
+
+kubectl apply -f rs_definition.yml
+kubectl get replicaset
+kubectl describe replicaset <replicaset_name>
+kubectl edit replicaset <replicaset_name>
+kubectl delete replicaset <replicaset_name>
+
+[ Deployment ]
+
+kubectl apply -f deployment_definition.yml
+kubectl apply -f deployment_definition.yml --record=true
+kubectl get deployment
+kubectl describe deployment <deployment_name>
+kubectl edit deployment <deployment_name>
+kubectl delete deployment <deployment_name>
+kubectl rollout status deployment <deployment_name>
+kubectl rollout history deployment <deployment_name>
+kubectl rollout undo deployment <deployment_name>
+kubectl rollout undo deployment <deployment_name> --to-revision=<revision_number>
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl autoscale deployment <deployment_name> --cpu-percent=50 --min=1 --max=10
+kubectl get hpa
+
+Note : Edit metrics server deployment with below to ignore ssl
+    command:
+    - /metrics-server
+    - --kubelet-insecure-tls
+
+while :
+do
+    curl kmaster:30007
+done
+
+
+
+[ Config Map ]
+
+
+kubectl create cm <cm_name> --from-literal city=pulgaon
+kubectl create cm <cm_name> --from-env-file <file_name>
+kubectl create cm <cm_name> --from-literal city=pulgaon --dry-run=client -o yaml
+kubectl get cm
+kubectl describe cm <cm_name>
+kubectl edit cm <cm_name>  
+kubectl delete cm <cm_name>
+
+
+[ Secret ]
+kubectl create secret generic <secret_name> --from-literal city=pulgaon
+kubectl create secret generic <secret_name> --from-env-file <file_name>
+kubectl create secret generic <secret_name> --from-literal city=pulgaon --dry-run=client -o yaml
+kubectl get secret
+kubectl describe secret <secret_name>
+kubectl edit secret <secret_name>
+aws ecr get-login OR docker login -u username -p password
+kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username=subodhdere --docker-password=Docker@11 --docker-email=subodh.dere.7@gmail.com
+kubectl delete secret <secret_name>
+
+[ Resource Quota ]
+
+
+kubectl get quota -n <namespace_name>
+kubectl describe quota <ResourceQuota_name> -n <namespace_name>
+kubectl describe quota <ResourceQuota_name> -n <namespace_name>
+kubectl delete quota <ResourceQuota_name> -n <namespace_name>
+
+[ Limit Range ]
+
+kubectl describe limits -n <namespace_name>
+kubectl describe limits <LimitRange_name> -n <namespace_name>
+kubectl describe limits <LimitRange_name> -n <namespace_name>
+kubectl delete limits <LimitRange_name> -n <namespace_name>
+
+
+
+

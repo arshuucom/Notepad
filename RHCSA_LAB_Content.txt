@@ -1,0 +1,1241 @@
+ssh student@serverb
+All student computer systems have a standard user account, student, which has the password student. The root password on all student systems is redhat.
+lab action exercise
+172.25.250.9 = Workstation
+172.25.250.10 = Node 1
+172.25.250.11 = Node 2
+Student password is 55TurnK3y
+
+Table 2.1. Useful Command-line Editing Shortcuts
+
+Shortcut	Description
+Ctrl+A	Jump to the beginning of the command line.
+Ctrl+E	Jump to the end of the command line.
+Ctrl+U	Clear from the cursor to the beginning of the command line.
+Ctrl+K	Clear from the cursor to the end of the command line.
+Ctrl+LeftArrow	Jump to the beginning of the previous word on the command line.
+Ctrl+RightArrow	Jump to the end of the next word on the command line.
+Ctrl+R	Search the history list of commands for a pattern.
+
+-------------------------------Lab Question1--------------------------------------------------------------------
+*Use the date command to display the current time and date.
+*Display the current time in 24-hour clock time (for example, 13:57). Hint: The format string that displays that output is %R.
+*What kind of file is /home/student/zcat? Is it readable by humans?
+*Use the wc command and Bash shortcuts to display the size of zcat.
+*Display the first 10 lines of the zcat file.
+*Display the last 10 lines of the zcat file.
+*Repeat the previous command exactly with four or fewer keystrokes.
+*Use the tail command with the -n 20 option to display the last 20 lines in the file. Use command-line editing to accomplish this with a minimal number of keystrokes.
+*Use the shell history to run the date +%R command again.
+
+-----------------------------------END-----------------------------------------------
+
+To Copy Multipe:
+cp ~/Music/song1.mp3 ~/Music/song2.mp3 \
+~/Pictures/snap1.jpg ~/Pictures/snap2.jpg ~/Videos/film1.avi \
+~/Videos/film2.avi .
+
+* Match Link
+* touch tv_season{1..2}_episode{1..6}.ogg
+
+-----------------------------------------------Lab Question2----------------------------------------------------------------------------------------------------------------------------------------
+*Use the ssh command to log in to the serverb machine as the student user. The system's configuration supports the use of SSH keys for authentication.
+
+*Create a directory called project_plans in the Documents directory. The Documents directory should be placed in the student user's home directory. Create two empty files in the project_plans directory called season1_project_plan.odf and season2_project_plan.odf. Hint: If the ~/Documents directory does not exist, then use the mkdir command -p option to create it.
+
+*Create sets of empty practice files to use in this lab. If you do not immediately recognize the intended shell expansion shortcut, then use the solution to learn and practice. Use shell tab completion to locate file path names easily. Create 12 files with names tv_seasonX_episodeY.ogg in the /home/student directory. Replace X with the season number and Y with that season's episode, for two seasons of six episodes each.
+
+*As the author of a successful series of mystery novels, you are editing your next bestseller's chapters for publishing. Create eight files with names mystery_chapterX.odf. Replace X with the numbers 1 through 8.
+
+*Use a single command to create two subdirectories called season1 and season2 under the Videos directory to organize the TV episodes. Move the appropriate TV episodes into the season subdirectories. Use only two commands, and specify destinations with relative syntax.
+
+*Create a two-level directory hierarchy with a single command to organize the mystery book chapters. Create the my_bestseller subdirectory under the Documents directory, and the chapters subdirectory under the new my_bestseller directory. Create three more subdirectories directly under the my_bestseller directory with a single command. Name these subdirectories editor, changes, and vacation. You do not need to use the mkdir -p command to create parents because the my_bestseller parent directory exists.
+
+*Change to the chapters directory. Use the tilde (~) home directory shortcut to move all book chapters to the chapters directory, which is now your current directory. Use the simplest syntax to specify the destination directory.
+
+You want to send the first two chapters to the editor for review. Move only those two chapters to the editor directory to avoid modifying them during the review. Starting from the chapters subdirectory, use brace expansion with a range to specify the chapter file names to move and a relative path for the destination directory.
+
+While on vacation, you intend to write chapters 7 and 8. Use a single command to move the files from the chapters directory to the vacation directory. Specify the chapter file names by using brace expansion with a list of strings and without using wildcard characters.
+
+*Change your working directory to ~/Videos/season2, and then copy the first episode of the season to the vacation directory. Use a single cd command to change from your working directory to the ~/Documents/my_bestseller/vacation directory. List its files. Use the previous working directory argument to return to the season2 directory. (This argument succeeds if the last directory change with the cd command used one command rather than several cd commands.) From the season2 directory, copy the episode 2 file into the vacation directory. Use the shortcut again to return to the vacation directory.
+
+*The authors of chapters 5 and 6 want to experiment with possible changes. Copy both files from the ~/Documents/my_bestseller/chapters directory to the ~/Documents/my_bestseller/changes directory to prevent these changes from modifying original files. Navigate to the ~/Documents/my_bestseller directory. Use square-bracket pattern matching to specify which chapter numbers to match in the filename argument of the cp command.
+
+*Change your current directory to the changes directory and use the date +%F command with command substitution to copy mystery_chapter5.odf to a new file that includes the full date. Use the mystery_chapter5_YYYY-MM-DD.odf name format.
+
+By using command substitution with the date +%s command, make another copy of mystery_chapter5.odf, and append the current time stamp (as the number of seconds since the epoch, 1970-01-01 00:00 UTC) to ensure a unique file name.
+
+*After further review, you decide that you do not need the plot changes. Delete the changes directory.
+
+If it is necessary, then navigate to the changes directory and delete all the files within the directory. You cannot delete a directory while it is the current working directory.
+
+Change to the parent directory of the changes directory. Try to delete the empty directory by using the rm command without the -r recursive option. This attempt should fail. Finally, use the rmdir command to delete the empty directory, which succeeds.
+
+When the vacation is over, you no longer need the vacation directory. Delete it by using the rm command with the recursive option.
+
+When finished, return to the student user's home directory.
+*Create a hard link to the ~/Documents/project_plans/season2_project_plan.odf file called ~/Documents/backups/season2_project_plan.odf.back. A hard link protects against accidental deletion of the original file and keeps the backup file updated as you change the original file. Hint: If the ~/Documents/backups directory does not exist, then use the mkdir command to create it.
+----------------------------------------------------END-----------------------------------------------
+
+
+*Create two subdirectories called season1 and season2 under the Videos directory by using a single command.
+mkdir -p Videos/season{1..2}
+
+*Create three directories called editor, changes, and vacation, under the my_bestseller directory by using a single command.
+mkdir Documents/my_bestseller/{editor,changes,vacation}
+
+*find -iname '*.mp3' -exec cp {} /home/sk/test2/ \; ------------> Find command to copy file from a word and redirect to a file.
+
+
+---------------------------------------Lab Question3--------------------------------------------------------------------
+
+*On the workstation machine, determine how to prepare a man page for printing. Specifically, find which is the default format or rendering language for printing.
+
+*Create a PostScript formatted output file of the passwd man page. Call the file passwd.ps and place it in the student user's home directory. Determine the file content format. Inspect the contents of the passwd.ps file by using the less command.
+
+*By using the man pages, find which commands you can use for viewing and printing PostScript files.
+
+*Learn how to use the evince(1) viewer in preview mode. Also, determine how to open a document to start on a specific page. Open your PostScript file by using evince three times: first by using the default mode, then with the preview mode option, and finally to start at page 3. Close your document file when you finish.
+
+*By using the man pages, research lp(1) to determine how to print any document to start on a specific page. Without entering any commands (in the absence of printers), learn the syntax, in one command, to print only pages 2 and 3 of your PostScript file.
+
+*Use the Firefox browser to open the system's man page directory (/usr/share/doc) and browse into the man-db package subdirectory. View the provided manuals. After you finish reviewing the man-db manuals, locate and browse to the kexec-tools package subdirectory. View the kexec-kdump-howto.txt file, which describes important system configuration options that are stored in the /etc/sysconfig directory.
+
+-------------------------------------Lab Question4--------------------------------------------------------------------
+
+*On workstation, create the lab_file shell variable and assign editing_final_lab.txt as the value. List the student home directory, including hidden directories and files, and redirect the output to the editing_final_lab.txt file by using the shell variable.
+
+*Use Vim to edit the editing_final_lab.txt file. Use the lab_file shell variable.
+
+*Enter the line-based visual mode of Vim. Your screen output may be different than these examples. Remove the first three lines of the editing_final_lab.txt file.
+
+*Enter the visual mode of Vim. Remove the last seven characters from the first column on the first line. Preserve only the first four characters of the first column.
+
+Use the arrow keys to position the cursor at the last character of the first column on the first line. Delete the selection by typing x.
+
+*Enter the visual block mode of Vim. Repeat the operation of the previous step, but this time select from the second to the last line. Preserve only the first four characters of the first column.
+
+*Enter the visual block mode of Vim and remove the fourth column of the file.
+
+*Enter the visual block mode of Vim to remove the time column, leaving the month and day columns on all lines.
+
+*Enter the visual line mode of Vim and remove the rows that contain the Desktop and Public strings.
+
+*Save your changes and exit the file.
+
+*Back up the editing_final_lab.txt file and append the date (in seconds) at the end of the file name preceded with an underscore (_) character. Use the lab_file shell variable.
+
+*Append a dashed line to the editing_final_lab.txt file. The dashed line should contain 12 dash (-) characters for this lab to be graded correctly. Use the lab_file shell variable.
+
+*List the content of the Document directory, and append the output to the editing_final_lab.txt file, displaying the output in the terminal. Use the tee command and the lab_file shell variable.
+
+*Confirm that the directory listing is at the bottom of the lab file. Use the lab_file shell variable.
+
+*List and append the output to the file.
+	ls Documents/ | tee -a $lab_file
+	
+*The following example demonstrates the chage command to change the password policy of the sysadmin05 user. 
+The command defines a minimum age (-m) of zero days, a maximum age (-M) of 90 days, a warning period (-W) of 7 days,
+ and an inactivity period (-I) of 14 days.
+
+------------------------------------------Lab Question5--------------------------------------------------------------------
+
+*From the workstation machine, open an SSH session to the serverb machine as the student user and switch to the root user.
+
+*On the serverb machine, ensure that newly created users must change their passwords every 30 days.
+
+*Create the consultants group with a GID of 35000.
+
+*Configure administrative rights to enable all consultants group members to execute any command as any user. Avoid using visudo to edit the /etc/sudoers file, instead, follow the best practice of placing the configuration file in the /etc/sudoers.d directory.
+
+*Create the consultant1, consultant2, and consultant3 users with the consultants group as their supplementary group.
+
+*Set the consultant1, consultant2, and consultant3 passwords to redhat.
+
+*Set the consultant1, consultant2, and consultant3 accounts to expire in 90 days from the current day.
+
+*Change the password policy for the consultant2 account to require a new password every 15 days.
+
+*Additionally, force the consultant1, consultant2, and consultant3 users to change their passwords on the first login.
+
+----------------------------------------Lab Question6--------------------------------------------------------------------
+
+*Log in to serverb as the student user. Run the sudo -i command at the shell prompt to become the root user. Use student as the student user password.
+
+*Create a /home/techdocs directory.
+
+*Change the group ownership of the /home/techdocs directory to the techdocs group.
+
+*Verify that users in the techdocs group cannot create files in the /home/techdocs directory.
+
+*Set permissions on the /home/techdocs directory. On the /home/techdocs directory, configure setgid (2); read, write, and execute permissions (7) for the owner/user and group; and no permissions (0) for other users.
+
+*Verify that the permissions are set properly.
+
+The techdocs group now has write permission.
+
+*Confirm that users in the techdocs group can now create and edit files in the /﻿home/﻿techdocs directory. Users that are not in the techdocs group cannot edit or create files in the /﻿home/﻿techdocs directory. The tech1 and tech2 users are in the techdocs group. The database1 user is not in that group.
+
+*Modify the /etc/login.defs file to adjust the default umask for login shells. Normal users should have a umask setting that allows the user and group to create, write and execute files and directories, while preventing other users from viewing, modifying, or executing new files and directories.
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+*Use the fg command to bring a background job to the foreground. 
+fg %1
+
+*The ps j command displays information about jobs
+ ps j
+ 
+*Use the bg command with the job ID to start running the suspended process.
+ bg %1
+ 
+ ---------------------------------------------Lab Question7--------------------------------------------------------------------
+ *On workstation, open two terminal windows side by side. In this section, these terminals are referred to as left and right. On each terminal window, log in to serverb as the student user.
+
+Create the process101 script in the /home/student/bin directory. The process101 script generates artificial CPU load.
+
+#!/bin/bash
+while true; do
+  var=1
+  while [[ var -lt 50000 ]]; do
+    var=$(($var+1))
+  done
+  sleep 1
+done
+
+*In the right terminal shell, run the top utility.
+
+*In the left terminal shell, verify the number of logical CPUs on the virtual machine. Run the process101 script in the background.
+
+*In the right terminal shell, observe the top display. Note the process ID (PID) and view the CPU percentage that the process101 process uses. The CPU percentage that the process uses should hover around 10% to 15%. Toggle the top utility display between load, threads, and memory. Return to the CPU usage display of the top utility.
+
+*Turn off the use of bold in the display. Save this configuration for reuse when top is restarted. Confirm that the changes are saved.
+
+*Copy the process101 script to a new process102 file, and increase the artificial CPU load to one hundred thousand in the new script. Start the process102 process in the background
+
+*In the right terminal shell, verify that the process is running and uses the most CPU resources. The load should hover between 25% and 35%.
+
+*Notice that the load average is below 1. Copy the process101 script to a new script called process103. Increase the addition count to eight hundred thousand. Start process103 in the background. Confirm that the load average is above 1. It may take a few minutes for the load average to change.
+
+*In the left terminal shell, switch to the root user. Suspend the process101 process. List the remaining jobs. Observe that the process state for process101 is now in the T state.
+
+*Resume the process101 process.
+
+*Terminate process101, process102, and process103 from the command line. Verify that the processes are no longer displayed in top.
+
+*Stop processes and return to the workstation machine.
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------Lab Question8--------------------------------------------------------------------
+
+*Use the ssh command to log in to the serverb machine as the student user. On the serverb machine, start the psacct service.
+
+*Configure the psacct service to start at system boot.
+
+*Stop the rsyslog service.
+
+*Configure the rsyslog service so that it does not start at system boot.
+
+*Reboot the serverb machine before evaluating the lab.
+
+----------------------------------------------------------------------------------------------------------
+
+script to deploy war file in jboss deployment path
+
+* Path for CLI War files Deployment.
+	cp Project.war /root/JBOSS/jboss-eap-8.0/standalone/deployments
+	
+* Jboss Appication Deployment using GUI.
+
+* Jboss Appication Deployment using CLI.
+
+* Jboss Appication Deployment using Shell scripting.
+
+* Jboss Appication Deployment in multicluster.
+
+* Node and Cluster 
+
+* Tomcat is for single server, where as Jboss, weblogic is for multiple node and clusters.
+
+*First we have to create node and the server and then process for deployment.
+
+*We have to create deployment groups.
+
+*BIB Group is on 2 servers, and Flipbook group is also on 2 servers.
+-------------------------------------------------Lab Question9--------------------------------------------------------------------
+
+*From the workstation machine, log in to the servera machine as the student user.
+
+*Switch to the production1 user on the servera machine. Enter redhat as the password.
+
+*Generate passphrase-less SSH keys for the production1 user on the servera machine.
+
+*Send the public key of the SSH key pair to the production1 user on the serverb machine.
+
+*Verify that the production1 user can successfully log in to the serverb machine with the SSH keys.
+
+*Configure the sshd service on serverb to prevent users from logging in as the root user. Use redhat as the root password.
+
+*Configure the sshd service on the serverb machine to allow users to authenticate with SSH keys only, rather than with their passwords.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------Lab Question10--------------------------------------------------------------------
+
+*Log in to the serverb machine as the student user.
+
+*Pretend that the serverb machine is relocated to Jamaica and that you must update the time zone to America/Jamaica. Verify that you correctly set the appropriate time zone.
+
+*View the recorded log events in the previous 30 minutes on the serverb machine.
+
+*Create the /etc/rsyslog.d/auth-errors.conf file. Configure the rsyslog service to write the message Logging test authpriv.alert to the /var/log/auth-errors file. Use the authpriv facility and the alert priority.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------Lab Question11--------------------------------------------------------------------
+
+*Log in to the serverb machine as the student user. Switch to the root user.
+
+*Create a connection with a static network configuration by using the settings in the table.
+
+Parameter	Setting
+Connection name	lab
+Interface name	enX (might vary; use the interface with 52:54:00:00:fa:0b as its MAC address)
+IP address	172.25.250.11/24
+Gateway address	172.25.250.254
+DNS address	172.25.250.254
+
+*Configure the new connection to start automatically. Other connections should not start automatically.
+
+*Modify the new connection so that it also uses the IP address 10.0.1.1/24.
+
+*Configure the hosts file so that you can reference the 10.0.1.1 IP address with the private name.
+
+*Reboot the system.
+
+*Verify that the serverb machine is initialized.
+
+----------------------------------------------------------------------------------------------------------
+	[FOR ADDING NEW CONNECTION]
+*nmcli con add con-name lab ifname eth0 type ethernet ipv4.method manual ipv4.dns 172.25.250.254 ipv4.addresses 172.25.250.11/24 ipv4.gateway 172.25.250.254 connection.autoconnect yes
+
+	[IF CONNECTION NAME IS NOT PROVIEDED THE FOR EXISTING CONNECTION]
+**nmcli con modify "lab" ipv4.addresses 172.25.250.11/24 ipv4.gateway 172.25.250.254 ipv4.dns 172.25.250.254 ipv4.method manual connection.autoconnect yes
+
+*-c or --create : Create an archive file.
+
+*-t or --list : List the contents of an archive.
+
+*-x or --extract : Extract an archive.
+
+*-j : TO create bzip2
+
+*-J : To create a xz.
+
+*-z or --gzip : Use the gzip compression algorithm, resulting in a .tar.gz suffix.
+
+*-v or --verbose : Show the files being archived or extracted during the tar operation.
+
+-----------------------------------------------------------------------Lab Question12--------------------------------------------------------------------
+
+*On serverb, synchronize the /etc directory tree from servera to the /configsync directory.
+
+*Create a configfile-backup-servera.tar.gz archive with the /configsync directory contents.
+
+*Securely copy the /root/configfile-backup-servera.tar.gz archive file from serverb to the /home/student directory on workstation.
+
+*On workstation, extract the contents to the /tmp/savedconfig/ directory.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+*DNF
+The dnf repolist all command lists all available repositories and their statuses.
+
+*dnf config-manager --enable rhel-9-server-debug-rpms
+The dnf config-manager command can enable and disable repositories.
+
+*dnf config-manager --add-repo="https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/"
+The dnf config-manager command can also add repositories to the machine.
+
+--------------------------------------------------------------Lab Question13--------------------------------------------------------------------
+
+*On the serverb machine, configure a software repository to obtain updates.
+Name the repository errata and configure the repository in the /etc/yum.repos.d/errata.repo file.
+Configure the errata.repo file to use the http://content.example.com/rhel9.0/x86_64/rhcsa-practice/errata repository. Do not check GPG signatures.
+
+* yum clean all ----------> To clean the repo.
+* yum repolist -------> TO check the repolist.
+
+*On serverb, install the rht-system package.
+
+*For security reasons, the serverb machine must not be able to connect to a paper printer. You can achieve this effect by removing the cups package. When finished, exit from the root shell.
+
+*The start script downloads the rhcsa-script-1.0.0-1.noarch.rpm package in the /home/student directory on the serverb machine.
+
+Confirm that the rhcsa-script-1.0.0-1.noarch.rpm package is available on serverb and install it using root privileges. Verify that the package is installed. Exit from the serverb machine.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+*Java Path.
+java: /usr/bin/java /usr/lib/java /etc/java /usr/share/java /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java /usr/share/man/man1/java.1.gz
+
+*nohup ./domain.sh > /dev/null 2>&1 &
+
+*nohup ./standalone.sh > /dev/null 2>&1 &
+
+*<secret value="QXJzaGFk" /> = To add secret key.
+
+*sh /opt/jboss-eap-7.2/bin/add-user.sh = To add user for Management.
+
+*scp = Transfer the File from one machine to another.
+
+*JBOSS/jboss-eap-8.0/bin/jboss-cli.sh -c --controller=192.168.30.10:9990 --command="/server-group=GroupHA:add(profile=ha,socket-binding-group=ha-sockets)"
+	Command to create group from master to slave in Jboss.
+
+
+./host-controller.sh --host=192.168.30.10 --port=9999 --start-server=my-server-four
+
+*./domain.sh -b 192.168.30.10 -Djboss.domain.base.dir=/opt/jboss/domain/configuration
+http://<IP address or hostname>:9990/console.
+
+-----------------------------------------------------------------Lab Question14--------------------------------------------------------------------
+
+*On the serverb machine as the root user, identify the UUID for the /dev/vdb1 device, and mount it by using its UUID on the /mnt/freespace directory.
+
+*Generate a disk usage report for the /usr/share directory. Save the result in the /mnt/freespace/results.txt file.
+
+*Locate all the files that match the rsyslog.conf keyword, and store the result in the /mnt/freespace/search1.txt file.
+
+*Store the search result of all files in the /usr/share directory that are greater than 50 MB and less than 100 MB in the /mnt/freespace/search2.txt file.
+
+*Return to the workstation system as the student user.
+
+------------------------------------------------------------------------------------------------------------------------
+
+/server-group=myservergroup/cluster=mycluster:add()
+jboss-cli.sh --controller=Arshad:8066
+
+
+*To copy the line in VIM mode, at last press yy and then press ctrl+p to paste..
+
+
+-------------------------------------------------------------------RHCSA Review1-----------------------------------------------------
+Specifications
+
+*Log in to serverb as the student user.
+
+*Create the /home/student/grading directory.
+	mkdir grading
+
+*Create three empty files in the /home/student/grading directory called grade1, grade2, and grade3.
+	touch grading/grade{1,2,3}
+
+*Capture the first five lines of the /home/student/bin/manage file in the /home/student/grading/review.txt file.
+	head -5 bin/manage > grading/review.txt
+
+*Append the last three lines of the /home/student/bin/manage file to the /home/student/grading/review.txt file. Do not overwrite any existing text in the /home/student/grading/review.txt file.
+	tail -3 bin/manage >> grading/review.txt
+	
+*Copy the /home/student/grading/review.txt file to the /home/student/grading/review-copy.txt file.
+	cp review.txt review-copy.txt
+	
+*Edit the /home/student/grading/review-copy.txt file so that the Test JJ line appears twice.
+	vim grading/review-copy.txt
+
+*Edit the /home/student/grading/review-copy.txt file to remove the Test HH line.
+	vim grading/review-copy.txt - And press dd twice to delete
+
+*Edit the /home/student/grading/review-copy.txt file so that a A new line line exists between the Test BB line and the Test CC line.
+	vim grading/review-copy.txt - Add new line 
+	
+*Create the /home/student/hardcopy hard link to the /home/student/grading/grade1 file. You must do this after completing the earlier step to create the /home/student/grading/grade1 file.
+	ln grading/grade1 hardcopy
+	
+*Create the /home/student/softcopy symbolic link to the /home/student/grading/grade2 file.
+	ln -s grading/grade2 softcopy
+
+*Save the output of a command that lists the contents of the /boot directory to the /home/student/grading/longlisting.txt file. The output should be a "long listing" that includes file permissions, owner and group owner, size, and modification date of each file. The output should omit hidden files.
+	ls -l /boot > grading/longlisting.txt
+----------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------RHCSA Review2-----------------------------------------------------
+
+*Log in to serverb as the student user.
+	ssh student@serverb
+*Identify and terminate the process that currently uses the most CPU time.
+	top
+*Create the database group with a GID of 50000.
+	groupadd -g 50000 database
+*Create the dbadmin1 user and configure it with the following requirements:
+
+*Add the database group as a supplementary group.
+	- useradd -G database dbadmin1
+
+*Set the password to redhat and force a password change on first login.
+	- passwd dbadmin1
+	- chage -d 0 dbadmin1
+*Allow the password to change after 10 days since the day of the last password change.
+	- chage -m 10 dbadmin1
+	
+*Set the password expiration to 30 days since the day of the last password change.
+	- chage -M 30 dbadmin1
+
+*Allow the user to use the sudo command to run any command as the superuser.
+	- vim /etc/sudoers.d/dbadmin1
+		dbadmin1 ALL=(ALL) ALL
+
+*Configure the default umask as 007 for the dbadmin user.
+	- su - dbadmin1
+	- echo "umask 007" >> .bashrc
+	- source ~/.bashrc
+	
+*Create the /home/dbadmin1/grading/review2 directory with dbadmin1 as the owning user and the database group as the owning group.
+	- mkdir -p /home/dbadmin1/grading/review2
+	- chown -R dbadmin1:database /home/dbadmin1/
+	- chmod -R g+x /home/dbadmin1
+*Configure the /home/dbadmin1/grading/review2 directory so that the database group owns any file that is created in this directory, irrespective of which user created the file. Configure the permissions on the directory to allow members of the database group to access the directory and to create contents in it. All other users should have read and execute permissions on the directory.
+	- chmod g+s /home/dbadmin1/grading/review2
+	- chmod 775 /home/dbadmin1/grading/review2
+	
+*Ensure that users are allowed to delete only files that they own from the /home/dbadmin1/grading/review2 directory.
+	- chmod o+t /home/dbadmin1/grading/review2
+------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------RHCSA Review3-----------------------------------------------------
+
+*Log in to serverb as the student user.
+
+*Generate SSH keys for the student user. Do not protect the private key with a passphrase. Save the private and public keys as the /home/student/.ssh/review3_key and /home/student/.ssh/review3_key.pub files respectively.
+
+*Configure the student user on servera to accept logins authenticated by the review3_key SSH key pair. The student user on serverb should be able to log in to servera using SSH without entering a password.
+
+*On serverb, configure the sshd service to prevent the root user from logging in.
+
+*On serverb, configure the sshd service to prevent users from using their passwords to log in. Users should still be able to authenticate logins using an SSH key pair.
+
+*Create a /tmp/log.tar tar archive containing the contents of the /var/log directory on serverb. Remotely transfer the tar archive to the /tmp directory on servera, authenticating as the student user with the review3_key private key.
+
+*Configure the rsyslog service on serverb to log all debug priority messages or higher to the /var/log/grading-debug file. Define the configuration in the /etc/rsyslog.d/grading-debug.conf file. Generate a syslog message with debug priority, by using any facility, and that contains the "Debug Testing" text.
+
+*Install the zsh package on the serverb machine.
+
+*Set the time zone of serverb to Asia/Kolkata.
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------RHCSA Review4-----------------------------------------------------
+
+*On serverb, determine the name of the Ethernet interface and its active connection profile.
+
+*On serverb, create and activate a static connection profile for the available Ethernet interface. 
+The static profile statically sets network settings and does not use DHCP.
+Configure the static profile to use the network settings in the following table:
+
+Parameter	Setting
+IPv4 address	172.25.250.111
+Netmask	255.255.255.0
+Gateway	172.25.250.254
+DNS Server	172.25.250.254
+
+	- nmcli connection add con-name static type ethernet \
+ifname ethX ipv4.addresses '172.25.250.111/24' ipv4.gateway '172.25.250.254' \
+ipv4.dns '172.25.250.254' ipv4.method manual
+
+*Set the serverb hostname to server-review4.lab4.example.com.
+
+	- hostnamectl hostname server-review4.lab4.example.com
+
+*On serverb, set client-review4 as the canonical hostname for the servera 172.25.250.10 IPv4 address.
+
+	- 172.25.250.10 client-review4 -----> Add in host file
+	
+*Configure the static connection profile with an additional IPv4 address of 172.25.250.211 with a netmask of 255.255.255.0. Do not remove the existing IPv4 address. Ensure that serverb responds to all addresses when the static connection is active.
+
+	-  nmcli connection modify static \
++ipv4.addresses '172.25.250.211/24'
+
+*On serverb, restore the original network settings by activating the original network connection profile.
+	- nmcli connection up "Wired connection 1"
+
+
+-------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------RHCSA Review5-----------------------------------------------------
+
+
+*Log in to serverb as the student user and switch to the root user.
+
+*Identify the unmounted block device that contains an XFS file system on the serverb machine. Mount the block device on the /review5-disk directory.
+
+*Locate the review5-path file. Create the /review5-disk/review5-path.txt file that contains a single line with the absolute path to the review5-path file.
+
+	- find / -iname review5-path 2>/dev/null
+	
+*Locate all the files that the contractor1 user and the contractor group own. The files must also have the octal permissions of 640. Save the list of these files in the /review5-disk/review5-perms.txt file.
+
+	- find / -user contractor1 -group contractor -perm 640 2>/dev/null
+
+*Locate all files with a size of 100 bytes. Save the absolute paths of these files in /review5-disk/review5-size.txt.
+
+	- find / -size 100c 2>/dev/null
+---------------------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------RHCSA RH134 ------------------------------------------------------------------
+
+*Shell Scripting
+To match only at the beginging on the line, use carer character (^).
+To match only at the end on the line, use carer character ($).
+
+*Option	Function
+-i	Use the provided regular expression but do not enforce case sensitivity (run case-insensitive).
+-v	Display only lines that do not contain matches to the regular expression.
+-r	Search for data that matches the regular expression recursively in a group of files or directories.
+-A NUMBER	Display NUMBER of lines after the regular expression match.
+-B NUMBER	Display NUMBER of lines before the regular expression match.
+-e	If multiple -e options are used, then multiple regular expressions can be supplied and are used with a logical OR.
+-E	Use extended regular expression syntax instead of basic regular expression syntax when parsing the provided regular expression.
+
+
+-------------------------------------------------------------------RHCSA RH134 Lab Question1--------------------------------------------------------------------
+
+*Create the executable /home/student/bin/bash-lab script file on the workstation machine. The initial content in the script must use the shebang interpreter directive.
+
+*Edit your newly created script file to store the following information from the servera and serverb machines on the workstation machine. The systems use SSH keys for authentication, and therefore you do not require a password. Store the output of the listed commands from the following table in the /home/student/output-servera and /home/student/output-serverb files respectively on the workstation machine. Use the hash sign (#) for differentiating the output of the successive commands in the output file.
+
+Command or file	Content requested
+hostname -f	Store the entire output.
+echo "#####"	Append the hash signs to differentiate the following command.
+lscpu	Get only the lines that start with the CPU string.
+echo "#####"	Append the hash signs to differentiate the following command.
+/etc/selinux/config	Ignore empty lines. Also, ignore lines that start with the # character.
+echo "#####"	Append the hash signs to differentiate the following command.
+/var/log/secure	Get all "Failed password" entries.
+echo "#####"	Append the hash signs to differentiate the following command.
+Save the required information to the output-servera and output-serverb files in the /home/student directory on workstation.
+
+Shell Script for Answer:
+
+#!/usr/bin/bash
+USR='student'
+OUT='/home/student/output'
+#
+for SRV in servera serverb; do
+  ssh ${USR}@${SRV} "hostname -f" > ${OUT}-${SRV}
+  echo "#####" >> ${OUT}-${SRV}
+  ssh ${USR}@${SRV} "lscpu | grep '^CPU'" >> ${OUT}-${SRV}
+  echo "#####" >> ${OUT}-${SRV}
+  ssh ${USR}@${SRV} "grep -v '^$' /etc/selinux/config|grep -v '^#'" >> ${OUT}-${SRV}
+  echo "#####" >> ${OUT}-${SRV}
+  ssh ${USR}@${SRV} "sudo grep 'Failed password' /var/log/secure" >> ${OUT}-${SRV}
+  echo "#####" >> ${OUT}-${SRV}
+done
+
+*Execute the /home/student/bin/bash-lab script, and review the output content on workstation.
+
+-------------------------------------------------------------------------------------------------------------
+
+*Table 2.1. Examples of the crontab command
+
+Command	Intended use
+crontab -l	List the jobs for the current user.
+crontab -r	Remove all jobs for the current user.
+crontab -e	Edit jobs for the current user.
+
+qureshi4438@gmail.com
+
+* systemd-tmpfiles --clean  --------> To clean the files.
+
+* tuned-adm profile throughput-performance --------------> To change the profile for tuning
+
+--------------------------------------------------------------------------------------------------------------
+
+*Selinux Modes.
+	- Permissive = 0, Enforcing = 1, Disable.
+
+*Selinux Boolean.
+	- -a : will give you the list of all the boolean.
+* getsebool -a | grep "httpd" : To list .
+* -P : It will save after reboot.
+
+*Selinux Port.
+	- semanage port -a -t http_port_t -p tcp 82 : To change the port.
+	
+*Selinux Context.
+	- semanage fcontext -a -t httpd_sys_content_t /test(.*)? : To change the selinux context.
+	- restorecon -Rv /test : To change the context at run time.
+	
+* Change the path of directory of www/var/html.
+	- vim /etc/httpd/conf/httpd.conf : Go to this file and edit here for the changes.
+	- Change the line of DocumentRoot : "/test"
+	
+*Lastly restart the service.
+	-systemctl restart httpd.
+	
+-----------------------------------------------------------------RHCSA RH134 Lab Question2--------------------------------------------------------------------
+	
+*Change the current tuning profile for the serverb machine to the balanced profile, a general non-specialized tuned profile. List the information for the balanced tuning profile when it is the current tuning profile.
+
+*Two processes on serverb are consuming a high percentage of CPU usage. Adjust each process's nice level to 10 to allow more CPU time for other processes.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------RHCSA RH134 Lab Question3-----------------------------------------------------------
+
+*Log in to the serverb machine as the student user and switch to the root user.
+
+*From a web browser on the workstation machine, view the http://serverb/lab.html web page. You see the error message: You do not have permission to access this resource.
+
+*Research and identify the SELinux issue that prevents the Apache service from serving web content.
+
+*Display the SELinux context of the new HTTP document directory and the original HTTP document directory. Resolve the SELinux issue that prevents the Apache server from serving web content.
+
+*Verify that the Apache server can now serve web content.
+
+*Return to the workstation machine as the student user.
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+*Two types of partition
+	- MBR(Master Boot Record) Support for 4 partiton, 3 primary and 1 extended.Using MBR we can make 15 partition maximum.
+	Partion is stored in 32 bit, It have a maximum disk and partition size of 2 TB.
+	- GPT() RHEL 9 support. A GPT uses a global unique identifier (GUID) to identify each disk and partition.
+	A GPT provide maximum of 128 partition.GPT allocate 64 bits. Disk partition information is store in first and last.
+
+*Parted - Its is a editor to create a disk partition, deleting and changing the partition types.
+	By default, parted display all the sizes in power of 10(KB, MB, GB).
+	
+*Partition Label - To partition a new drive, you first have to write a disk label to it. The disk label indicates which partition schema is used.
+	- For MBR disk label to a disk
+		- parted /dev/vda mklabel msdos
+	- For GPT disk label
+		- parted /dev/vda mklabel gpt.
+		
+* Creating a MBR partition.
+	- Specify the disk
+		- parted /dev/vda
+	- Use the mkpart subcommand to create  a new primary or extended partition.
+		- mkpart
+		- partition type? primary/extended.
+	- Define the file system.
+		- File system tpye? ext/xfs.
+	- Specfiy the sector on the disk, for first sector start with.
+		- 2048s.
+	- End the sector
+		- 1000MB.
+	- Exit parted
+		- quit
+
+*udevadm settle 
+	- This command wait for the system to detect the new partition and to create the associated device file under the /dev directory.It only returns when it is done.
+
+*Creating MBR (Alternative)
+	- parted /dev/vda mkpart primart xfs 2048s 1000MB
+	
+* Creating the GPT partition .
+	- Specify the disk
+		- parted /dev/vda
+	- Use the mkpart subcommand to create  a new primary or extended partition.
+		- mkpart
+		- partition type? userdata.  -------------> Difference
+	- Define the file system.
+		- File system tpye? ext/xfs.
+	- Specfiy the sector on the disk, for first sector start with.
+		- 2048s.
+	- End the sector
+		- 1000MB.
+	- Exit parted
+		- quit
+		
+* Deleting the partition.
+	- Specfiy the disk that contains the partition to be removed
+		- parted /dev/vda
+	- Identify the partiton number of the partition to delete
+		- print
+	- Delete the partition.
+		- rm 1
+	- Exit the parted.
+		- quit.
+		
+* Creating the file system.
+	- To apply the file system to a block device. For XFS.
+		- mkfs.xfs
+	- For ext4
+		- mkfs.ext4
+
+* Mounting File system.
+	- Manual mounting 
+	- Persistent mounting.
+	
+	- Manual mounting.
+		- mount /dev/vda /directory
+	- To view the mounting.
+		- mount | grep vdb1
+		
+	- Persistent mounting.
+		- Entry in the file /etc/fstab.
+
+* when we add or remove any entry in the /etc/fstab run the command .
+	- systemctl daemon reload.
+	
+* Managing Swap Space - A swap space is the area of a disk under the control of the linux kernel memory managemet subsystem.
+	
+	- provide the support for the RAM, Additionally memory for RAM.
+
+* Creating the swap space.
+	- Specify the disk
+		- parted /dev/vda
+	- Use the mkpart subcommand to create  a new primary or extended partition.
+		- mkpart
+		- partition type? swap.  -------------> Difference or swap partition.
+	- Define the file system.
+		- File system tpye? ext/xfs.
+	- Specfiy the sector on the disk, for first sector start with.
+		- 2048s.
+	- End the sector
+		- 1000MB.
+	- Exit parted
+		- quit
+		
+* Formatting the swap storage device.
+	- The mkswap command applies a swap signature to the device.
+		- mkswap /dev/vda2.
+
+* Activating the swap space.
+	- swapon command to active a formatted  swap space.
+	- List in the /etc/fstab.
+	- use the swapon --show and free command to list the avaibale swap space.
+
+* Deativating the swap space.
+	- swapoff.
+	
+	
+-------------------------------------------------------------------RHCSA RH134 Lab Question4-----------------------------------------------------------
+
+*The serverb machine has several unused disks. On the first unused disk, create a GPT partition label and a 2 GB GPT partition named backup.
+
+Because it is difficult to set an exact size, a size between 1.8 GB and 2.2 GB is acceptable.
+
+Configure the backup partition to host an XFS file system.
+
+*Format the 2 GB backup partition with an XFS file system and persistently mount it to the /backup directory.
+
+*On the same disk, create two 512 MB GPT partitions with the names swap1 and swap2.
+
+A size between 460 MB and 564 MB is acceptable.
+
+Configure the file-system types of the partitions to host swap spaces.
+
+*Initialize the two 512 MB partitions as swap spaces and configure them to activate at boot. Set the swap space on the swap2 partition to be preferred over the other. Note that 512 MB is equivalent to approximately 488 MiB.
+
+*To verify your work, reboot the serverb machine. Confirm that the system automatically mounts the first partition onto the /backup directory. Also, confirm that the system activates the two swap spaces.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+*LVM (Logical volume manager)
+	- Flow f LVM creation.
+		- Physical Block device ---> /dev/vdb
+		- Physical Volume (PV)
+		- Volume group (VG)
+		- Logical Volume (LV)
+
+* Prepare physical device  ----------1.
+	- First make partition on RAW Block device ---> /dev/vdb
+	- Do partion of that device 
+		- parted /dev/vdb mklabel gpt mkpart primary 1MiB 769MiB
+	- Creating the LVM partion
+		- parted /dev/vdb set 1 lvm on.
+	- Do udevadm
+		- udevadm settle.
+	
+* Create Physical Volume --------------2.
+	- To create physical volume.
+		- pvcreate /dev/vdb /dev/vdb2
+		
+* Create volume group --------------3.
+	- To create volume group.
+		- vgcreate vg01 dev/vdb /dev/vdb2
+
+* Create Logical Volume ----------------4.
+	- lvcreate -n lv01 -L 300M vg01
+	
+* After Logical volume creation, we can craete a file system on the logical volume.
+	- mkfs -t xfs /dev/vg01/lv01 --------------> New path.
+	
+* Create a mount point.
+	- mkdir /mnt
+
+* Now make it persistent .
+	- vim /etc/fstab -------> Make entry.
+	
+* Mount the LV by using the mount point
+	- mount /mnt
+
+	
+* 1 physical extent (PE) is equal to 4Mb.
+
+* 1MiB-1048Bytes 
+  1MB-1000Bytes
+  
+----------------------------------------------------------------RHCSA RH134 Lab Question5--------------------------------------------------------------------
+
+
+* Create a 512 MiB partition on the /dev/vdb disk. Initialize this partition as a physical volume, and extend the serverb_01_vg volume group to use this partition.
+
+* Extend the serverb_01_lv logical volume to 768 MiB.
+
+* In the existing volume group, create the new serverb_02_lv logical volume with 128 MiB. Add an XFS file system and mount it persistently on the /storage/data2 directory.
+
+* Verify that the newly created LV is mounted with the desired size.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Network file system (NFS)
+	- The network file system is an internet standard protocol that linux, unix, and similar operating system use as their native network file system.
+	- Manual mount, Persisit mount, Unmounted NFS Directories.
+
+* Automounter
+	- It is for temporariy , it is similar to temporary purpose if accesing the data then mount is used if not then removed from mount point.
+	It uses autofs service and the systemd.automount.
+	
+* Direct and Indirect Map.
+	- The automounter support both:
+		- Direct
+		- Indirect
+		
+* Direct 
+	- A direct mount is when a file system mounts to an unchanging known  mount point location.
+
+* Indirect
+	- An indirect mount is when the mount point location is not known until the mount demand occurs.
+	
+* Configure the automounter service.
+	- sudo dnf install autofs nfs-utils -------------------> Install 
+	- sudo vim /etc/auto.master.d/demo.autofs -------------------------------> Create a master map 
+	
+* Creation of AutoFs.
+	- Direct Map steps.
+		- vim /etc/auto.master.d/direct.autofs ------------------> Direct Map creation.
+		- /-	/etc/auto.direct --------------------> Insert the content for mapping.
+		- vim etc/auto.direct --------------------> Create a direct map 
+		- /external	-rw,sync,fstype=nfs4	serverb.lab.example.com:/shares/direct/external -------------------------- Inster the content and save .
+	
+	- InDirect Map Steps.
+		- vim /etc/auto.master.d/indirect.autofs ----------------> Indirect map creation.
+		- /internal	/etc/auto.indirect ----------------> Insert the following content.
+		- vim /etc/auto.indirect --------------------> Create a Indirect map.
+		- *	-rw,sync,fstype=nfs4	serverb.lab.example.com:/shares/indirect/& ----------------- Insert the content and save.
+	
+----------------------------------------------------------------RHCSA RH134 Lab Question6--------------------------------------------------------------------
+	
+* Procedure 7.3. Instructions
+
+An IT support company uses a central server, serverb, to host some exported directories on /shares for their groups and users. Users must be able to log in and have their exported directories mounted on demand and ready to use, under the /remote directory on servera.
+
+Environment Characteristics:
+
+The serverb machine is sharing the /shares directory, which in turn contains the management, production, and operation subdirectories.
+
+The managers group consists of the manager1 and manager2 users. They have read and write access to the /shares/management exported directory.
+
+The production group consists of the dbuser1 and sysadmin1 users. They have read and write access to the /shares/production exported directory.
+
+The operators group consists of the contractor1 and consultant1 users. They have read and write access to the /shares/operation exported directory.
+
+The main mount point for servera is the /remote directory.
+
+Use the /etc/auto.master.d/shares.autofs file as the master map file and the /etc/auto.shares file as the indirect map file.
+
+The /shares/management exported directory is automounted on /remote/management on servera.
+
+The /shares/production exported directory is automounted on /remote/production on servera.
+
+The /shares/operation exported directory is automounted on /remote/operation on servera.
+
+All user passwords are set to redhat.
+
+1.Log in to servera and install the required packages.
+
+2.Configure an automounter indirect map on servera with exports from serverb. Create an indirect map with files that are named /etc/auto.master.d/shares.autofs for the master map and /etc/auto.shares for the mapping file. Use the /remote directory as the main mount point on servera. Reboot servera to determine whether the autofs service starts automatically.
+
+3.Test the autofs configuration with the various users. When done, log out from servera.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Reset the password .
+
+* Boot Process
+
+* Select a Sytemd Target.
+	- A systemd target is a set of systemd units that the system should start to reach a desired state.
+	- Graphical (GUI), Multiuser (CMD), Resue (Is safe mode when failure happen that time we use), Emergency (Perform operation at the time of booting procees).
+	- systemctl list-dependencies graphical.target | grep target -----------> To list the dependencies of that target.
+	- systemctl list-units --type=target-all --------------> To list the available targets.
+	- systemctl isolate multi-user.target ----------------> To switch the target.
+	- systemctl set-default graphical.target---------------------------> To set the target.
+	
+** Steps for reset the root password from the boot load.
+	- Rebbot the system
+	- Interrupt the boot-loader countdown by pressing any key, Except enter.
+	- Move the cursor to the resue kernel entry to boot (the one with the word resue in its name)
+	- Press e to edit the selected entry
+	- Move the cursor to the kernel command line(the line that starts with linux)
+	- Append rd.break. 
+	- Press Ctrl+x to boot with the changes
+	- Press Enter to perform maintance when prompted.
+	
+* Remount for the permission to read and write.
+	- mount -o remount,rw /sysroot
+
+* Switch into the chroot where /sysroot is created as the root of the file-system.
+	- chroot /sysroot.
+	
+* Set a new password
+	- password root
+	
+* To know the changes in /etc/shadow we will relabel it.
+	- touch /.autorelabel
+	
+* Inspect log
+	- To identify the booting process is failed.
+	- vim /etc/systemd/journald.conf Storage=persistent. ---------------------------> To make the logs persistent permanently.
+	-  journalctl -b -1 -p ---------------> Display the logs of 1 boot process.
+	
+* Repair Systemd Boot Issue.
+	- To check the reason why failed and to deal with it..
+	- systemctl enable debug-shell.service ----------------> To enable debug service.
+	
+---------------------------------------------------------------------------------------------------------
+	
+-------------------------------------------------------RHCSA RH134 Lab Question7--------------------------------------------------------------------
+	
+* On the serverb machine, reset the password to redhat for the root user.
+
+Locate the icon for the serverb machine console as appropriate for your classroom environment, then open the console.
+
+* In the boot-loader menu, select the default kernel boot-loader entry. The system fails to boot because a start job does not complete successfully. Fix the issue from the console of the serverb machine.
+
+* Change the default systemd target on the serverb machine for the system to automatically start a graphical interface when it boots.
+
+No graphical interface is installed on the serverb machine. Only set the default target for this exercise and do not install the packages.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+* Firewall Commands
+	- firewall-cmd--get-default-zone ----------------> To check the default zone.
+	- firewall-cmd--set-default-zone=ZONE ----------------> To set and speecify the zone.
+	- firewall--get-zone -----------> To list the zones.
+	- firewall-cmd--get-active-zone -------------> To check the active zone.
+
+*firewall-cmd --permanent --add-service=https
+
+*firewall-cmd --set-default-zone public
+
+*firewall-cmd --permanent --add-port=82/tcp
+
+redhat
+usermod -aG operators operator1
+
+* setfacl -m u:natasha:rw /var/log
+
+* * * * * * su admin -c 'logger "ex 300"'
+
+-------------------------------------------------------------RHCSA RH134 Review1-----------------------------------------------------
+
+* On workstation, run the /tmp/rhcsa-break1 script. This script causes an issue with the boot process on serverb and then reboots the machine. Troubleshoot the cause and repair the boot issue. When prompted, use redhat as the password of the root user.
+
+* On workstation, run the /tmp/rhcsa-break2 script. This script causes the default target to switch from the multi-user target to the graphical target on the serverb machine and then reboots the machine. On serverb, reset the default target to use the multi-user target. The default target settings must persist after reboot without manual intervention. As the student user, use the sudo command for performing privileged commands. Use student as the password, when required.
+
+* On serverb, schedule a recurring job as the student user that executes the /home/student/backup-home.sh script hourly between 7 PM and 9 PM every day except on Saturday and Sunday. Download the backup script from http://materials.example.com/labs/backup-home.sh. The backup-home.sh script backs up the /home/student directory from serverb to servera in the /home/student/serverb-backup directory. Use the backup-home.sh script to schedule the recurring job as the student user. Run the command as an executable.
+
+* Reboot the serverb machine and wait for the boot to complete before grading.
+
+---------------------------------------------------------------RHCSA RH134 Review2-----------------------------------------------------
+
+* On serverb, configure a new 1 GiB vol_home logical volume in a new 2 GiB extra_storage volume group. Use the unpartitioned /dev/vdb disk to create the partition.
+	- ssh student@serverb
+	- sudo -i
+	- parted /dev/vdb mklabel msdos
+	- parted /dev/vdb mkpart primary 1MiB 2GiB
+	- parted /dev/vdb set 1 lvm on
+	- pvcreate /dev/vdb1
+	- vgcreate extra_storage /dev/vdb1
+	- lvcreate -L 1GiB -n vol_home extra_storage
+	
+* Format the vol_home logical volume with the XFS file-system type, and persistently mount it on the /user-homes directory.
+	- mkdir /user-homes
+	- mkfs -t xfs /dev/extra_storage/vol_home
+	- echo "UUID=988c...0ab6 /user-homes xfs defaults 0 0" >> /etc/fstab
+	- mount /user-homes
+	
+* On serverb, persistently mount the /share network file system that servera exports on the /local-share directory. The servera machine exports the servera.lab.example.com:/share path.
+	- mkdir /local-share
+	- echo "servera.lab.example.com:/share /local-share nfs rw,sync 0 0" >> /etc/fstab
+	- mount /local-share
+	
+* On serverb, create a new 512 MiB swap partition on the /dev/vdc disk. Persistently mount the swap partition.
+	- parted /dev/vdc mklabel msdos
+	- parted /dev/vdc mkpart primary linux-swap 1MiB 513MiB
+	- mkswap /dev/vdc1
+	- echo "UUID=cc18...1b69 swap swap defaults 0 0" >> /etc/fstab
+	- swapon -a
+
+* Create the production user group. Create the production1, production2, production3, and production4 users with the production group as their supplementary group.
+	- groupadd production
+	- for i in 1 2 3 4; do useradd -G production production$i; done
+	
+* On serverb, configure the /run/volatile directory to store temporary files. If the files in this directory are not accessed for more than 30 seconds, then the system automatically deletes them. Set 0700 as the octal permissions for the directory. Use the /etc/tmpfiles.d/volatile.conf file to configure the time-based deletion of the files in the /run/volatile directory.
+	- vim /etc/tmpfiles.d/volatile.conf :   d /run/volatile 0700 root root 30s
+	- systemd-tmpfiles --create /etc/tmpfiles.d/volatile.conf
+----------------------------------------------------------------RHCSA RH134 Review3-----------------------------------------------------
+
+* On serverb, generate an SSH key pair for the student user. Do not protect the private key with a passphrase.
+
+* Configure the student user on servera to accept login authentication with the SSH key pair that you generated on the serverb machine. The student user on serverb must be able to log in to servera via SSH without entering a password.
+
+* On servera, check the /user-homes/production5 directory permissions. Then, configure SELinux to run in the permissive mode by default.
+
+* On serverb, verify that the /localhome directory does not exist. Then, configure the production5 user's home directory to mount the /user-homes/production5 network file system. The servera.lab.example.com machine exports the file system as the servera.lab.example.com:/user-homes/production5 NFS share. Use the autofs service to mount the network share. Verify that the autofs service creates the /localhome/production5 directory with the same permissions as on servera.
+
+* On serverb, adjust the appropriate SELinux Boolean so that the production5 user may use the NFS-mounted home directory after authenticating with an SSH key. If required, use redhat as the password of the production5 user.
+
+* On serverb, adjust the firewall settings to reject all connection requests from the servera machine. Use the servera IPv4 address (172.25.250.10) to configure the firewall rule.
+
+* On serverb, investigate and fix the issue with the failing Apache web service, which listens on port 30080/TCP for connections. Adjust the firewall settings appropriately so that the port 30080/TCP is open for incoming connections.
+
+-------------------------------------------------------------------RHCSA RH134 Review4-----------------------------------------------------
+
+* On serverb, configure the podmgr user with redhat as the password and set up the appropriate tools for the podmgr user to manage the containers for this comprehensive review. Configure the registry.lab.example.com as the remote registry. Use admin as the user and redhat321 as the password to authenticate. You can use the /tmp/review4/registries.conf file to configure the registry.
+	- ssh student@serverb
+	- sudo dnf install container-tools
+	- sudo useradd podmgr
+	- sudo passwd podmgr
+	- exit
+	- ssh podmgr@serverb
+	- mkdir -p ~/.config/containers
+	- cp /tmp/review4/registries.conf ~/.config/containers/
+	- podman login registry.lab.example.com
+	- Username: admin
+	- Password: redhat321
+
+* The /tmp/review4/container-dev directory contains two directories with development files for the containers in this comprehensive review. Copy the two directories under the /tmp/review4/container-dev directory to the podmgr home directory. Configure the /home/podmgr/storage/database subdirectory so that you can use it as persistent storage for a container.
+	- cp -r /tmp/review4/container-dev/* .
+	- mkdir -p storage/database
+	- chmod 0777 storage/database
+* Create the production DNS-enabled container network. Use the 10.81.0.0/16 subnet and 10.81.0.1 as the gateway. Use this container network for the containers that you create in this comprehensive review.
+	- podman network create --gateway 10.81.0.1 --subnet 10.81.0.0/16 production
+	- podman network inspect production
+	
+* Create the db-app01 detached container based on the registry.lab.example.com/rhel8/mariadb-103 container image with the lowest tag number in the production network. Use the /home/podmgr/storage/database directory as persistent storage for the /var/lib/mysql/data directory of the db-app01 container. Map the 13306 port on the local machine to the 3306 port in the container. Use the values of the following table to set the environment variables to create the containerized database.
+
+Variable	Value
+MYSQL_USER	developer
+MYSQL_PASSWORD	redhat
+MYSQL_DATABASE	inventory
+MYSQL_ROOT_PASSWORD	redhat
+
+	- skopeo inspect docker://registry.lab.example.com/rhel8/mariadb-103
+	- podman run -d --name db-app01 \
+-e MYSQL_USER=developer \
+-e MYSQL_PASSWORD=redhat \
+-e MYSQL_DATABASE=inventory \
+-e MYSQL_ROOT_PASSWORD=redhat \
+--network production -p 13306:3306 \
+-v /home/podmgr/storage/database:/var/lib/mysql/data:Z \
+registry.lab.example.com/rhel8/mariadb-103:1-86
+	- podman ps -a
+
+* Create a systemd service file to manage the db-app01 container. Configure the systemd service so that when you start the service, the systemd daemon keeps the original container. Start and enable the container as a systemd service. Configure the db-app01 container to start at system boot.
+	- mkdir -p ~/.config/systemd/user/
+	- podman generate systemd --name db-app01 --files
+	- mv container-db-app01.service ~/.config/systemd/user/
+	- podman stop db-app01
+	- podman ps -a
+	- systemctl --user daemon-reload
+	- systemctl --user enable --now container-db-app01
+	- systemctl --user status container-db-app01
+	- loginctl enable-linger
+	
+* Copy the /home/podmgr/db-dev/inventory.sql script into the /tmp directory of the db-app01 container and execute it inside the container. If you executed the script locally, then you would use the mysql -u root inventory < /tmp/inventory.sql command.
+	- podman cp /home/podmgr/db-dev/inventory.sql db-app01:/tmp/inventory.sql
+	- podman exec -it db-app01 sh -c 'mysql -u root inventory < /tmp/inventory.sql'
+* Use the container file in the /home/podmgr/http-dev directory to create the http-app01 detached container in the production network. The container image name must be http-client with the 9.0 tag. Map the 8080 port on the local machine to the 8080 port in the container.
+	- podman build -t http-client:9.0 http-dev/
+	- podman run -d --name http-app01 --network production -p 8080:8080 localhost/http-client:9.0
+* Use the curl command to query the content of the http-app01 container. Verify that the output of the command shows the container name of the client and that the status of the database is up.
+	- curl 127.0.0.1:8080
+---------------------------------------------------------------------------------------------------------------------------------
+
+* dnf install container-tools ------------------> To install containers packages.
+
+* podman search registry.lab.example.com/ ------------------> To search the images from registry.
+
+* skopeo inspect docker://registry.lab.example.com/ubi8/python-38 ---------------> To inspect the image.
+
+* podman pull registry.lab.example.com/ubi8/python-38 --------------------> To pull the image.
+
+* podman run -d --name python38 registry.lab.example.com/ubi8/python-38 sleep infinity -----------------> To start the container.
+
+* podman build -t python39:1.0 /home/student/python39/. -------------------> Create a container image from a container file.
+
+* podman create --name python39 localhost/python39:1.0 ------------------> Create a new container.
+
+* podman start python39 -------------> To start a new container.
+
+* podman stop python39 python38 --------> Stop the conttainer.
+
+* podman rm python39 python38 -------------> Remove the container.
+
+* podman rmi localhost/python39:1.0 registry.lab.example.com/ubi8/python-38:latest registry.lab.example.com/ubi9-beta/ubi ------------> Remove both conatiners images.
+
+* podman network create --subnet 10.89.1.0/24 --gateway 10.89.1.1 frontend ----------> To create container network.
+
+* podman run -d --name db_01 \
+--network frontend \
+-e MYSQL_USER=dev1 \
+-e MYSQL_PASSWORD=devpass \
+-e MYSQL_DATABASE=devdb \
+-e MYSQL_ROOT_PASSWORD=redhat \
+registry.lab.example.com/rhel8/mariadb-105 ------------------> Create container with envirnoment variable.
+
+* mkdir -p ~/.config/containers/ -------------> Configuration acess for containers
+
+* mkdir -p ~/.config/systemd/users/ ---------------> Configuration access for services .
+
+* cp /tmp/containers-services/registries.conf ~/.config/containers/ -----------> Copy the configuration file from tmp/containers-services/registries.
+
+* podman generate --name inventorydb --files --new
+
+* 1min	1hour Saturday	March
+
+* 2GB creation -----> Starts with 2048s
+
+* 2GiB creation -------> Starts with 1MiB
+
+* 512MiB creation --------> Starts with 1MiB 
+
+
+	[NTP]
+*CONFIGURE THE NTP  CONFIGURE YOUR SYSTEM SO THAT IT IS AN NTP CLIENT OF CLASSROOM.EXAMPLE.COM : HTTPS://GITHUB.COM/CHLEBIK/RHCSA-PRACTICE-QUESTIONS/BLOB/MASTER/QUESTIONS/023_CONFIGURE_NTP_ON_THE_CLIENT.MD
+
+# rpm -qa | grep chronyd
+# yum install chronyd-* -y
+# vi /etc/chrony.conf
+# pool 2.centos.pool.ntp.org iburst (Comment this line in config file)
+server 172.24.2.72 iburst (IP address)
+OR
+server node.net2.example.com iburst (Hostname)
+:wq!
+# systemctl restart chronyd.service
+# systemctl enable chronyd.service
+# systemctl status chronyd.service
+
+Verify Ans:-
+# chronyc sources -v
+# timedatectl
+# # systemctl status chronyd.service

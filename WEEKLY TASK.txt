@@ -1,0 +1,173 @@
+
+
+		[Week 1]
+
+This week i have covered the linux basic of networking of lan routers and also worked on some the playbook with networks and disk management ,
+also started shell scripting done with the basic of shell scripting and also done with the task of shell scripting which is given by gaurav
+
+	[ Week 2 ]
+	Worked on the task given by gaurav to implement the file changes using shell scripting and worked on the jouranlctl and systemctl in linux to see thr logs and services runnig on the machine and also worked on the issue of ansible playbook.
+
+	[ Week 3 ]
+	Written playbooks for creation of users and add permission and also written the same using shell script , Work on Linux Services and learn how to see the logs using systemctl , working on the task of shell script of file management and checking , Also see the error which comes while playbook and resolve ..
+
+	[ Ansible errors Message ]
+	
+	1..ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:
+JSON: No JSON object could be decoded
+
+
+
+Syntax Error while loading YAML.
+  could not find expected ':'
+
+The error appears to be in '/root/ansibleAutomation/useCase.yml': line 14, column 1, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+ 
+
+Solution: Syntax is not allign proper in the task module..
+
+
+
+
+2..The offending line appears to be:
+
+      FILE="/root/Demo.txt"
+    if [[ -e "${FILE}" ]]; then
+    ^ here
+
+Issue: In shell script module the yaml file is not written proper.
+
+
+
+3...fatal: [192.168.30.19]: FAILED! => 
+{"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python"}, "changed": true,
+ "cmd": "# FILE=\"/root/numberLooping\"\nFile=\"/root/numberLooping/test\"\nif [[ -f \"${File}\" ]];
+ then\n  rm -rf \"$File\"\n", "delta": "0:00:00.005922", "end": "2022-10-21 15:41:29.091164",
+ "msg": "non-zero return code", "rc": 1, "start": "2022-10-21 15:41:29.085242",
+ "stderr": "/bin/sh: -c: line 4: syntax error: unexpected end of file",
+ "stderr_lines": ["/bin/sh: -c: line 4: syntax error: unexpected end of file"], "stdout": "", "stdout_lines": []}
+ 
+ 
+ Issue: It comes when the script is not allign properly and the syntax is missedmatch in playbook.
+ 
+ 
+ 4.fatal: [192.168.30.19]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python"},
+ "changed": true, "cmd": "File=\"/root/numberLooping/docker.txt\"\nif
+ [[ -f \"${File}\" ]]; then\n    awk 'NR==3 || {gsub(/[[:space:]]/,\"\");} 1' \"${File}\"\nfi\n",
+ "delta": "0:00:00.006371", "end": "2022-10-24 16:07:29.306670", "msg": "non-zero return code", "rc": 1, "start": "2022-10-24 16:07:29.300299", "stderr": "awk: cmd. line:1: NR==3 || {gsub(/[[:space:]]/,\"\");} 1\nawk: cmd. line:1:          ^ syntax error", "stderr_lines": ["awk: cmd. line:1: NR==3 || {gsub(/[[:space:]]/,\"\");} 1", "awk: cmd. line:1:          ^ syntax error"], "stdout": "", "stdout_lines": []}
+
+
+Issue: In Playbook shell scripting error 
+
+
+
+5.["sed: -e expression #1, char 21: Invalid character class name"], "stdout": "", "stdout_lines": []}
+
+
+Isuue: Character is not valid check the character.
+
+
+6.ERROR! conflicting action statements: shell, cmd..
+
+Issue: It comes when both comes are not properly assign.
+
+
+7.*fatal: [192.168.30.19]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python"}, "changed": false, "msg": "no command given", "rc": 256}
+
+Issue: for Change directory use chdir and then apply the script.
+
+
+8.[WARNING]: Consider using the yum module rather than running 'yum'.  If you need to use command because yum is insufficient you can add
+'warn: false' to this command task or set 'command_warnings=False' in ansible.cfg to get rid of this message.
+fatal: [192.168.30.10]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python"}, "changed": true, "cmd": "yum check-update", "delta": "0:00:19.989328", "end": "2022-11-08 11:26:04.888755", "msg": "non-zero return code", "rc": 100, "start": "2022-11-08 11:25:44.899427", "stderr": "file:///iso/repodata/repomd.xml: [Errno 14] curl#37 - \"Couldn't open file /iso/repodata/repomd.xml\"\nTrying other mirror.", "stderr_lines": ["file:///iso/repodata/repomd.xml: [Errno 14] curl#37 - \"Couldn't open file /iso/repodata/repomd.xml\"", "Trying other mirror."], "stdout": "Loaded plugins: product-id, search-disabled-repos\n\ncode.x86_64                      1.73.0-1667318873.el7                      code", "stdout_lines": ["Loaded plugins: product-id, search-disabled-repos", "", "code.x86_64                      1.73.0-1667318873.el7                      code"]}
+
+Issue: Check update of machine .
+
+9."Packages for RHEL are currently only available for s390x."]}
+
+Issue : package is not available try with another way.
+
+
+10.ERROR! this task 'cmd' has extra params, which is only allowed in the following modules: ansible.builtin.raw, ansible.legacy.add_host, ansible.builtin.meta, ansible.legacy.include, ansible.legacy.import_role, script, ansible.legacy.raw, group_by, ansible.builtin.shell, ansible.legacy.win_command, include, shell, include_vars, ansible.builtin.import_tasks, add_host, ansible.builtin.include_vars, ansible.legacy.include_role, ansible.builtin.include_role, ansible.legacy.include_vars, ansible.legacy.win_shell, ansible.legacy.group_by, import_tasks, ansible.builtin.set_fact, ansible.builtin.command, ansible.builtin.include_tasks, include_tasks, ansible.builtin.script, ansible.builtin.include, raw, meta, ansible.legacy.set_fact, ansible.builtin.add_host, ansible.legacy.script, ansible.legacy.import_tasks, win_command, ansible.builtin.win_shell, include_role, win_shell, set_fact, ansible.legacy.shell, ansible.legacy.command, import_role, ansible.legacy.meta, ansible.builtin.import_role, ansible.legacy.include_tasks, ansible.builtin.group_by, ansible.builtin.win_command, command
+
+The error appears to be in '/root/ansibleAutomation/makeDirectory.yml': line 8, column 6, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+   tasks:
+   - name: Create Directory in Worker Machine
+     ^ here
+
+Issue: Use cmd buitlen module for cmd..
+
+11.Shared connection to 192.168.30.10 closed.\r\n", "module_stdout": "/bin/sh: powershell: command not found\r\n", "msg": "MODULE FAILURE\nSee stdout/stderr for the exact error", "rc": 127}
+
+Issue: It occurs due to wrong cmd command module..
+
+
+
+
+
+
+cat <<EOF>> /etc/hosts
+192.168.30.19 master-node
+192.168.30.27 node-1
+EOF
+
+
+kubeadm join 192.168.30.19:6443 --token tjls8w.thwrvxnd83oykq9u \
+        --discovery-token-ca-cert-hash sha256:ff60341cacec9f1b10faa7be9454c5666e1c4a77bbc8416e4305e8624aa38b10
+
+
+kubeadm join 192.168.30.19:6443 --token tjls8w.thwrvxnd83oykq9u \
+        --discovery-token-ca-cert-hash sha256:ff60341cacec9f1b10faa7be9454c5666e1c4a77bbc8416e4305e8624aa38b10
+
+
+kubeadm join 192.168.30.19:6443 --token fw8gth.nfupnvini0kq7yan \
+        --discovery-token-ca-cert-hash sha256:d07437f77c5d1d5fae21e818db81aec21090fbc2277ee18a5a089409e597054a
+
+
+
+
+	Ansible Windows Taks List....
+	
+	1. Setup the Ansible with Windows machine..
+	   Done the setup of phython then used WINRM for windows and create a configuration file and inventory file .
+	
+	2. Write a playbook which will delete all the aplication from registery .
+	   In playbook i have used regedit module so that it will find in the registry module and delete the application according to the requirement.
+	
+	3. Write a playbook which will delete the application using Looping .
+	   In looping i have used regedit module in windows for looping purpase using items.
+	
+	4. Get the information about the current user and process.
+	   
+	5. Create a directory and copy the file and paste in that directory in windows machine.
+	   In that playbook i have Directory module which used in creating and copying the files.
+	
+	6. Search and delete only 32bit application from registry using playbook.
+	   In this playook using regedit module and using currentversion path directoy it search and delete only 32 bit application.
+	
+	7. Copying the Files on windows machine.
+	   In that playook i have used copy module ..
+	   
+	8. Write a playbook which will remove all the application which is of 32/64 bit in windows machine..
+	   In this playook using regedit module and using currentversion path directoy it search and delete only 32/64 bit application.
+
+
+	docker.service
+	   systemctl stop containerd.service && systemctl disable containerd.service && rm /etc/systemd/system/docker.service &&  systemctl daemon-reload && systemctl reset-failed
+
+
+
+https://github.com/subodhdere?tab=repositories
+
+
+https://github.com/subodhdere/SuccessStory/tree/master/kubernetes
+
+
+C9004400=IBM Certification

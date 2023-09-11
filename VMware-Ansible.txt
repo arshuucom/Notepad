@@ -1,0 +1,430 @@
+
+
+ [Add New Hard Disk Code]
+   
+---
+vcenter_hostname: "192.168.30.15"
+vcenter_datacenter: "Datamato"
+vcenter_username: "Administrator@vsphere.local"
+vcenter_password: "Datamato@123"
+vcenter_datastore: "datastore1(1)"
+vm_name: "Arshad-VM"
+vcenter_validate_certs: false
+vm_disk_gb: 10
+vm_disk_type: "thin"
+vm_disk_scsi_controller: 1
+vm_disk_scsi_unit: 1
+vm_disk_scsi_type: 'paravirtual'
+vm_disk_mode: 'persistent'
+
+VM UUID: 500d884d-a205-b81b-045e-cc5d9cfbe02c
+
+
+  [ Add Hard Disk]
+  
+---
+- name: vm disk demo
+  hosts: localhost
+  become: false
+  gather_facts: false
+  collections:
+  - community.vmware
+  pre_tasks:
+  - include_vars: vars.yml
+  tasks:
+  - name: add disk to vm
+    vmware_guest_disk:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: "{{ vcenter_validate_certs }}"
+        datacenter: "{{ vcenter_datacenter }}"
+        name: "{{ vm_name }}"
+        disk:
+          - size_gb: "{{ vm_disk_gb }}"
+            type: "{{ vm_disk_type }}"
+            datastore: datastore1 (1)
+            state: present
+            scsi_controller: "{{ vm_disk_scsi_controller }}"
+            unit_number: "{{ vm_disk_scsi_unit }}"
+            scsi_type: "{{ vm_disk_scsi_type }}"
+            disk_mode: "{{ vm_disk_mode }}"
+    delegate_to: localhost
+    register: disk_facts
+...
+
+
+
+   [ Memory and CPU Count ]
+
+---
+ - name: Start VM Demo
+   hosts: localhost
+   gather_facts: no
+   become: false
+   connection: local
+   collections:
+    - community.windows
+   pre_tasks:
+   - include_vars: vars.yml
+   tasks:
+   - name: Set the state of a virtual machine to poweroff
+     vmware_guest_powerstate:
+       hostname: "{{ vcenter_hostname }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       folder: /{{ vcenter_datacenter }}/v
+       name: "{{ vm_name }}"
+       validate_certs: false
+       state: powered-off
+   - name: Extend RAM and CPU Count
+     vmware_guest:
+       hostname: "{{ vcenter_hostname }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       datacenter: "{{ vcenter_datacenter }}"
+       name: "{{ vm_name }}"
+       validate_certs: false
+       datastore: "{{ vcenter_datastore }}"
+       hardware:
+        memory_mb: 5120
+        num_cpus: 4
+        num_cpu_cores_per_socket: 2
+        hotadd_memory: yes
+
+   - name: Set the state of a virtual machine to poweron
+     vmware_guest_powerstate:
+       hostname: "{{ vcenter_hostname }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       folder: /{{ vcenter_datacenter }}/v
+       name: "{{ vm_name }}"
+       validate_certs: false
+       state: powered-on
+
+     delegate_to: localhost
+     register: deploy
+	 	 
+	 [ Network Interface Card (NIC)]
+
+---
+ - name: Add NIC
+   hosts: localhost
+   gather_facts: no
+   become: true
+   connection: local
+   pre_tasks:
+   - include_vars: vars.yml
+   tasks:
+   - name: Set the state of a virtual machine to poweroff
+     vmware_guest_powerstate:
+       hostname: "{{ vcenter_hostname }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       folder: /{{ vcenter_datacenter }}/v
+       name: "{{ vm_name }}"
+       validate_certs: false
+       state: powered-off
+
+   - name: add a nic on network with vlan
+     vmware_guest_network:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      datacenter: "{{ vcenter_datacenter }}"
+      validate_certs: False
+      name: "{{ vm_name }}"
+      gather_network_info: False
+      networks:
+       - name: VM Network
+         state: absent
+         label: "Network adapter 1"
+         state: new
+
+   - name: Set the state of a virtual machine to poweroff
+     vmware_guest_powerstate:
+       hostname: "{{vcenter_hostname }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       folder: /{{ vcenter_datacenter }}/v
+       name: "{{ vm_name }}"
+       validate_certs: false
+       state: powered-on
+     delegate_to: localhost
+...
+
+
+  [ VM PowerOff and PowerON]
+
+
+---
+ - name: Start VM Demo
+   hosts: localhost
+   gather_facts: no
+   become: false
+   connection: local
+   pre_tasks:
+   - include_vars: vars.yml
+   tasks:
+   - name: Set the state of a virtual machine to poweroff
+     vmware_guest_powerstate:
+       hostname: "{{ vcenter_hostname }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       folder: /{{ vcenter_datacenter }}/v
+       name: "{{ vm_name }}"
+       validate_certs: false
+       state: powered-off  // poweron
+     delegate_to: localhost
+     register: deploy
+	 
+	 
+	 [ Dynamic VMWare Creation ]
+	 
+	 ---
+ - hosts: localhost
+   gather_facts: no
+   connection: local
+   pre_tasks:
+   - include_vars: vars.yml
+   tasks:
+   - name: Clone the template
+     vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: False
+      name: MachineB
+      template: Linux-Template
+      datacenter: "{{ vcenter_datacenter }}"
+      folder: /{{ vcenter_datacenter }}/vm
+      esxi_hostname: 192.168.30.12
+      datastore: "{{ vcenter_datastore }}"
+      networks:
+       - name: VM Network
+         device_type: vmxnet3
+         type: dhcp
+        #  ip: 192.168.31.200
+        #  netmask: 255.255.254.0
+         gateway: 192.168.30.1
+         dns_server:
+         - 192.168.30.2
+         - 192.168.30.1
+
+      state: poweredon
+      wait_for_ip_address: yes
+     delegate_to: localhost
+
+    [ Static VMWare Creation ]
+	
+---
+ - hosts: localhost
+   gather_facts: no
+   connection: local
+   vars:
+    vcenter_server: "192.168.30.15"
+    vcenter_username: "Administrator@vsphere.local"
+    vcenter_password: "Datamato@123"
+    datacenter_name: "Datamato"
+   tasks:
+   - name: Clone the template from Vsphere Client
+     vmware_guest:
+       hostname: "{{ vcenter_server }}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       validate_certs: False
+
+       name: Template
+       template: Linux-Template
+       datacenter: "{{ datacenter_name }}"
+       folder: /{{ datacenter_name }}/vm
+       esxi_hostname: 192.168.30.12
+       datastore: "datastore(1)"
+       networks:
+       - name: VM Network
+         device_type: vmxnet3
+         type: static
+         ip: 192.168.31.200
+         netmask: 255.255.254.0
+         gateway: 192.168.30.1
+         dns_server:
+         - 192.168.30.2
+         - 192.168.30.1
+
+       state: poweredon
+       wait_for_ip_address: yes
+     delegate_to: localhost
+
+
+
+//Multiple VM Vpshere
+
+
+---
+ - hosts: localhost
+   gather_facts: no
+   connection: local
+   vars:
+    vcenter_server: "192.168.30.15"
+    vcenter_username: "Administrator@vsphere.local"
+    vcenter_password: "Datamato@123"
+    datacenter_name: "Datamato"
+    #cluster_name: "Cluster" uncomment this if you have a cluster
+   tasks:
+   - name: Clone the template 
+     vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: False
+      name: "{{ item }}"
+      template: Linux-Template
+      datacenter: "{{ datacenter_name }}"
+      folder: /{{ datacenter_name }}/vm
+      esxi_hostname: 192.168.30.12
+      datastore: "datastore(1)"
+      # networks:
+      #  - name: VM Network
+      #    device_type: vmxnet3
+      #    type: static
+      #    ip: 192.168.31.200
+      #    netmask: 255.255.254.0
+      #    gateway: 192.168.30.1
+      #    dns_server:
+      #    - 192.168.30.2
+      #    - 192.168.30.1
+
+      state: poweredon 
+      wait_for_ip_address: yes
+     delegate_to: localhost
+     with_items:
+      - Arshad
+      - Prince
+      - Vaibhav
+	  
+
+	[ AWX Setup ]
+	1. Organisation = AWXSETUP
+	2. Host = 192.168.30.179
+	3. Inventory = AwxInventory
+	4. Credentials = AwxCredentials
+	5. Project = AwxProject
+	6. Template
+	
+	
+ssh-copy-id -i /root/.ssh/id_rsa.pub root@192.168.30.27
+root@123
+ansible all -m ping --ask-pass = To Communicate For proxy
+ansible_ssh_common_args:'-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q root@192.168.30.19"' = Proxy Middle ware Command to add on Target machine in control node file.
+private_key_file=/root/.ssh/id_rsa_middle = ConfigFile and Middle Ware proxy machine Private Key added
+
+Control machine : Public key, Private key and middle machine public key
+Machine Middle: Public key, Private key and control machine public key and Target machine private key.
+Target machine: Public key, Private key  and middle ware machine public key.
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+<!--
+  By default, no user is included in the "manager-gui" role required
+  to operate the "/manager/html" web application.  If you wish to use this app,
+  you must define such a user - the username and password are arbitrary.
+
+  Built-in Tomcat manager roles:
+    - manager-gui    - allows access to the HTML GUI and the status pages
+    - manager-script - allows access to the HTTP API and the status pages
+    - manager-jmx    - allows access to the JMX proxy and the status pages
+    - manager-status - allows access to the status pages only
+
+  The users below are wrapped in a comment and are therefore ignored. If you
+  wish to configure one or more of these users for use with the manager web
+  application, do not forget to remove the <!.. ..> that surrounds them. You
+  will also need to set the passwords to something appropriate.
+-->
+<!--
+  <user username="admin" password="<must-be-changed>" roles="manager-gui"/>
+  <user username="robot" password="<must-be-changed>" roles="manager-script"/>
+-->
+<!--
+  The sample user and role entries below are intended for use with the
+  examples web application. They are wrapped in a comment and thus are ignored
+  when reading this file. If you wish to configure these users for use with the
+  examples web application, do not forget to remove the <!.. ..> that surrounds
+  them. You will also need to set the passwords to something appropriate.
+-->
+<!--
+  <role rolename="tomcat"/>
+  <role rolename="role1"/>
+  <user username="tomcat" password="<must-be-changed>" roles="tomcat"/>
+  <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
+  <user username="role1" password="<must-be-changed>" roles="role1"/>
+-->
+
+<role rolename="manager-script"/>
+<user username="tomcattest" password="passwordtest" roles="manager-script,manager-gui"/>
+<role rolename="manager-gui"/>
+<user username="tomcatmanager" password="tomcatmanager" roles="manager-script,manager-gui"/>
+
+---
+ - name: Loops
+   hosts: Windows
+   gather_facts: true
+   become_method: runas
+   vars:
+    LIST: [Notepad++]
+   tasks:
+   - name: add list of users in my nodes
+     ansible.windows.win_powershell:
+      script: |
+       $software = "Notepad++ (64-bit x64)";
+       $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
+        If(-Not $installed) {
+        Write-Host "'$software' is NOT installed.";
+        } else {
+        Write-Host "'$software' is installed."
+        }
+     register: user_facts
+
+   - debug:
+      msg: "{{ user_facts.host_out }}"
+
+   - name: Uninstall Application
+     ansible.windows.win_regedit:
+      path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{{ item }}
+      state: absent
+     with_items:
+      - "{{ LIST }}"
+
+
+  [Windows Machine ]
+  First Ip : 192.168.31.138
+  Second Ip: 192.168.31.138  username: Administrator  Password: Datamato@123
+  
+  
+  Requirement:
+  1.create Log File and store.
+  2.grep harddisk details from log file.
+  3.compare grep details with our variable.
+  
+  
+  
+  

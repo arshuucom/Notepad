@@ -1,0 +1,64 @@
+ [Git]
+- Git is version control system.
+
+	[GitHub]
+- It is used to host and collabrate.
+
+- [Readme]
+- Tell what is the repo and information.
+
+- [git.ignore]
+	- It is used to not store the credentails file which constists of username and passoword.
+ 
+*Git is a version control system, gives you whenever your code is modified and created and deleted.
+*git init
+	- Initializes an empty git repository.
+*git status
+	- we can check the status to check the branch.
+*git add
+	- To push in stagging area.
+*git log
+	- To check the commits
+*git commit
+	- git commit -m "initial message"
+	
+*git push
+	- To push the new changes.
+	
+	[Branching git]
+
+*git branch
+	- git branch branchname ----------> to create a new branch
+	
+* Switch Branch.
+	- git checkout branchname ---------> To switch the branch.
+
+*git status
+	- we can check the status to check the branch.
+*git add
+	- git add .  --------> To push in stagging area.
+
+*git commit
+	- git commit -m "initial message"
+	
+*git push
+	- git push -u origin branchname -----------> To push the new changes.
+	
+	Shell script - to redirect any command into variable.
+		- result=$(cat $filename | sed -n 1p)
+
+	
+
+
+	
+------[Copying the repoistry to our repositry]--------------
+
+* Create a empty directory --------> Open git bash ------------> git clone --------->
+
+August 2019 Joined Datamato Work for 1 year
+Joined 1 year at BNT soft for 1 year.
+Then Joined Datamato.
+
+Company time
+Current Time
+Project name

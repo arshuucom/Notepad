@@ -1,0 +1,43 @@
+
+
+[ Devops Tool Ansible Update ]
+
+* ansible --version
+
+* sudo apt update
+
+* sudo yum update
+
+* sudo apt upgrade ansible - For Ubuntu
+
+* sudo yum upgrade ansible - For Centos
+
+* ansible --version
+
+[Nexus Tool Updates]
+* Identify the specific Nexus DevOps tool you want to update: Determine which Nexus DevOps tool you are using, such as Nexus Repository Manager or Nexus Lifecycle.
+
+* Check the current version: Log in to your Linux console and find out the current version of the Nexus DevOps tool. This information can usually be found within the tool's documentation or by accessing the web interface of the respective tool.
+
+* Download the latest version: Visit the Nexus website or the official distribution channels for the specific Nexus DevOps tool you are using. Download the latest version of the tool for Linux.
+
+*Stop the running service: Before updating, stop the currently running Nexus DevOps tool service. The specific command to stop the service may vary depending on the tool and your system configuration. Here's an example of stopping the Nexus Repository Manager service:
+
+arduino
+Copy code
+* sudo systemctl stop nexus
+* Back up your data: It is essential to back up your data before performing any updates. Create backups of the necessary files and configurations, including repositories, artifacts, and any other important data managed by the Nexus DevOps tool.
+
+* Install the latest version: Install the downloaded latest version of the Nexus DevOps tool. The installation process may vary depending on the tool and the package format (e.g., RPM, DEB, or TAR). Consult the tool's documentation for specific installation instructions. Here's an example using the RPM package format:
+
+Copy code
+* sudo rpm -Uvh nexus-tool-version.rpm
+* Start the service: Once the installation is complete, start the Nexus DevOps tool service. Again, the command to start the service may vary depending on the tool and your system configuration. Here's an example for Nexus Repository Manager:
+
+sql
+Copy code
+* sudo systemctl start nexus
+* Verify the update: After starting the service, verify that the updated version of the Nexus DevOps tool is functioning correctly. Test the key functionality and ensure that your data and configurations are intact.
+
+* Please note that the specific commands and steps may differ depending on the Nexus DevOps tool you are using and your Linux distribution. Always refer to the official documentation provided by Nexus for detailed instructions on updating ea
+

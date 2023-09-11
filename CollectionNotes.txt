@@ -1,0 +1,837 @@
+
+
+What is ansible navigator?
+* Text-based user Interface (TUI).
+* Creating, reviewing, and troubleshooting Ansible content.
+* Makes it easier to use execution envirnoments.
+* Bye Bye ansible-playbook, Hello ansible-navigator.
+
+* The Ansible Automation Platform installer only supports Red Hat Enterprise Linux and CentOS.
+
+* While Automation Platform depends on Ansible Playbooks and requires the installation of the latest stable version of Ansible before installing Tower.
+
+*What is a defining characteristic of FIPS compliant "ENABLED" offerings? This type of compliance applies to many IBM Cloud Paks and Cloud Paks Foundational Services.
+- These offerings support only FIPS connections for outbound communications.
+- * They support both FIPS and non-FIPS connections for outbound communications.
+- Inbound communications are *not* FIPS encrypted.
+- Outbound communications are prohibited.
+
+*The architecture of IBM Cloud Paks has changed from a series of siloed "verticals" to...
+-Disconnected environments
+-*Horizontally-integrated environments
+-Always-online containers
+-Discrete architectures
+
+3   *Foundational Services interoperate and sit between which layers of the Cloud Paks Platform architecture?
+-Foundational Services are only available on-premises (private Infrastructure).
+-*Between individual IBM Cloud Paks only.
+-*Between Red Hat OpenShift and IBM Cloud Paks.
+-Between Infrastructure and Red Hat OpenShift.
+
+4 *Why did IBM choose to re-organize the Cloud Paks and Foundational Services architecture into 4 core pillars?
+-*Conversations with customers should first focus on what are the use cases and who are the personas of interest, then afterwards identify the relevant Cloud Paks.
+-*Going forward, there will only be 4 IBM Cloud Paks offered to the market.
+-One pillar is targeted at "do it yourself" (DIY) deployments, a second pillar at customer-managed deployments, and a third pillar is for IBM-managed deployments.
+-One pillar is for on-premises, a second for public cloud, a third pillar is for hybrid multicloud, and a fourth pillar for edge devices.
+
+*The "Red Hat Hybrid Cloud Platform" consists of three main parts. Which of the following is NOT a part of that trio?
+-*Cloud Object Storage
+-Red Hat Enterprise Linux
+-Ansible Automation Platform
+-OpenShift Container Platform
+
+6*Which one of the following statements is NOT a core "pillar" or aggregate of Cloud Paks capabilities?
+-*Automate
+-*Analyze
+-Modernize
+-Secure
+
+*Why does IBM consider earlier iterations of the IBM Cloud Paks architecture as too "vertical"?
+-Infrastructure requirements to run early versions of Cloud Paks were too expensive.
+-Customers were getting too lost in the depth of capabilities packed into every Cloud Pak.
+-*The individual Cloud Paks were too siloed and not as tightly integrated as our customers desired.
+-The early Cloud Paks had such a steep learning curve that few were able to get started.
+
+*What is the best way to sell IBM Cloud Paks Foundational Services?
+-*Since the Foundational Services aren't something we sell directly, it's best to focus on their value to the IBM Cloud Paks and improved customer experience they offer.
+-Look up the cost per API call to Foundational Services on Seismic.
+-Look up the SKU numbers in the IBM Catalog.
+-Email your IBM sales representative for pricing information.
+
+*The notion of "write once, run anywhere" is key to IBM's strategic vision of Cloud Paks, Foundational Services, and Red Hat OpenShift. Which statement best summarizes our approach to the hybrid multicloud market?
+-Cloud only makes sense for businesses that are cloud-native and born-in-the-cloud.
+-Cloud investments need to be all-in on a single vendor in order to be successful.
+-Cloud is outdated.
+-*Cloud is not a place or destination, but a capability.
+
+*Red Hat OpenShift administrators set resource-access and other permissions for pods running on the cluster using what? Note: this technology applies to the Cloud Paks Foundational Services that run on OpenShift, too!
+-Downstream Distribution of Security (DDoS)
+-Distributed Diagnostic Levers (DDLs)
+-*Security Context Constraints (SCCs)
+-Integrated Access Management (IAM)
+
+*Foundational Services can be organized into five pillars or grouping of capabilities, services, and components. Which pillar focuses on metering and licensing?
+-Data and Event Services
+-Application Services
+-*Operational Services
+-User Experience Services
+
+*Foundational Services can be organized into five pillars or grouping of capabilities, services, and components.  Which pillar focuses on repositories and engines?
+-Application Services
+-User Experience Services
+-*Data and Event Services
+-Operational Services
+
+
+*When talking to customers and to the marketplace about the common set of services that support IBM Cloud Paks, we must always refer to them by their proper name: IBM Cloud Paks Foundational Services (or "Foundational Services" for short). However, internally at IBM you may come across old documentation that references them by a different name. Of the following, which one is another common— but outdated —name for the Foundational Services?
+-Summit
+-Alpine
+-Slate
+-*Bedrock
+
+*Which core pillar does the "Data Fabric" play and use case belong to?
+-Secure
+-Modernize
+-*Data-Driven Insights
+-Analyze
+
+
+*There are three core axioms in IBM and Red Hat's philosophy towards the Cloud Paks Platform we are building towards. Of the four statements below, which is NOT one of those core values?
+-*Run transparently
+-Run in containers
+-Run anywhere
+-Run any workload
+
+16*Which of the following priorities helps to provide Cloud Paks and Foundational Services with consistency in operations and delivery?
+-Metered API usage.
+-Community-sourced projects.
+-*Blockchain provenance.
+-*Standards and certification.
+
+*Foundational Services can be organized into five pillars or grouping of capabilities, services, and components. Which pillar focuses on APIs and endpoint libraries?
+-Data and Event Services
+-Operational Services
+-*Application Services
+-User Experience Services
+
+18*You're talking to an existing IBM customer who had previously invested in IBM Cloud Paks.  As you bring up the substantial evolution of our Cloud Paks architecture, you see some skeptical looks across the room — perhaps the customer is concerned this might mean having to learn a whole new interface or scrap everything they've learned about the platform already? How would you describe the benefit of the next generation of Cloud Paks and put your customer's mind at ease?
+-Cloud Pak capabilities will be less siloed. Foundational Services will make it easier to integrate and work across multiple Cloud Paks.
+-*Every Cloud Pak will now run on a separate OpenShift cluster.
+-Cloud Paks can no longer be purchased individually and will instead come bundled through a single purchase order.
+-*Future iterations of Cloud Paks will all have identical (uniform) pricing.
+
+*Which core pillar does the "AIOps" play and use case belong to?
+-Predict
+-Data-Driven Insights
+-Analyze
+-*Automate
+
+20*What statement best describes the new generation of IBM Cloud Paks?
+-*A complete reboot
+-A logical evolution
+-Just another rebranding
+-*A return to the drawing board
+
+21*Foundational Services inherit enterprise-centric features like metering, monitoring, and IAM from what earlier version of the service?
+-*ICP
+-RHEL
+-PaaS
+-*NoSQL
+
+*What is the name of the platform that IBM and Red Hat are ultimately building towards?
+-Private Foundational Services
+-*Platform of Digital Transformation
+-Foundational Services Pak
+-Cloud Paks Private
+
+*Which core pillar does the "Zero Trust" play and use case belong to?
+-Analyze
+-*Secure
+-Modernize
+-Predict
+
+24*Many of you will have worked with enterprise customers who have apprehensions about modernizing their legacy applications and services using containers. To demonstrate the benefits of containers, we as sellers need to first identify the sources of concern for our customers. What is a common misconception to moving applications into containers that you should be prepared to dispell?
+-*The customer believes that virtual machines (VMs) will always be superior to containers.
+-*The customer has no desire to operate in the cloud.
+-The customer has unique requirements for availability, resiliency, and security — and they are uncertain whether containers are up to the task.
+-The customer believes that non-fungable tokens (NFTs) are a superior option to containers.
+
+*What is the name of the service which has made it possible for IBM to untangle the string of dependencies for current and future releases of the common Foundational Services?
+-CRUD Operations
+-Istio
+-Red Hat OpenShift
+-*Red Hat Operators
+
+
+------------------------------Section 2 -------------------------------------------------
+
+
+1*You are looking to execute targeted outreach activities to develop pipeline for Cloud Pak for Integration. What is the best resource to use?
+-Competitive Insights assets
+-Expert Labs Modernization Client Journey
+-Cloud Pak for Integration prospecting guide
+-*Grab-and-Go campaign Blitz kits
+
+
+*Your client is looking for a solution that helps them to share APIs securely with client applications that want to use them. What is the Cloud Pak for Integration core capability that provides it?
+-Event Streaming
+-Application Integration
+-Enterprise Messaging
+-*API Management
+
+
+3*You are addressing data administrators and data analysts that are struggling with increased amount of data in their organization. How does AI-powered automation help compared to traditional automation?
+-2***AI powered automation helps with unstructured data but not structured data.
+-3***AI powered automation helps collect, organize, and classify vast amounts of structured and unstructured data.
+-*AI powered automation helps with structured data but not unstructured data.
+-AI powered automation is only applicable for new business scenarios. Traditional automation is used for existing data.
+
+
+*If your client is having problems with driving engagement models and digital transformation, what are the key pain points to listen for?
+-"It takes too long for updates to propagate through all my systems: Building, deploying and updating integrations is a manual process."
+-"Traditional monolithic integration architectures are complex to manage and slow to change: Maintaining multiple products with limited integration and overlapping capabilities is inefficient and costly"
+-*"We have an inconsistent user experience across channels: We have many systems with copies of data, but they’re often out of sync."
+-"Trying to comply with new regulations that protect client data impacts every step of our development process: I’m unable to deploy new applications because of stability concerns of backend systems."
+
+
+4*You are presenting Cloud Pak for Integration to an existing IBM MQ client that is only familiar with messaging solutions. The CIO said due to COVID they have a pent up demand for rolling out new applications quickly to the market. What is your recommendation?
+-Replace messaging solutions with ETL (Extract, Transform, and Load) tools
+-2Leverage multiple integration styles
+-Replace messaging solutions with event streaming
+-*Replace messaging solution with API management
+
+
+*What integration competitors are you likely to run into when a client is trying to reduce exposure to business and security risks?
+-MuleSoft and Software AG
+-Tibco and Apigee
+-*Tibco and Software AG
+-Apigee and MuleSoft
+
+*Business processes depend on the movement of data between applications. It is about getting data moved from where it is created to where it needs to be consumed. How can businesses achieve this?
+-Creating custom solutions that manipulate and transform the data from different environments.
+-*By employing integration capabilities that are reliable, secure, and that scale as the business need demands.
+-Creating custom workflows and pipelines to move data between applications as necessary.
+-Buying cloud solutions to extract, transform, load data between different solutions and providers.
+
+
+5*When we compare IBM Cloud Pak for Integration with the General Market, Forrester recently named IBM a leader in the API Space. Why should your clients care about it?
+-3****API management is critical because APIs drive digital business. IBM continues to invest and rapidly innovate in this space.
+-*Deploying integrations rapidly, seamlessly, and reliably allows companies to continue to innovate at scale.
+-2**Cloud platform providers are eroding the dominant position of traditional vendors and challenging them for market leadership.
+-Comply with latest in security and privacy regulations with consistent security policies applied to network traffic and content.
+
+*Which IBM Partner delivers event streaming capability for Cloud Pak for Integration?
+-*Confluent
+-StreamSets
+-Akka Platform
+-Kinesis
+
+*Your client is complaining that their digital transformation project failed due to lack of integration quality. What makes an integration project successful?
+-Using a single style of integration solution offered by Integration Platform as a Service vendors.
+-Hiring specialized integration specialists to develop manual integration solutions created for each request and demands.
+-*Identifying where the right point in a process integrations should take place is critical to success, and how it impacts the business.
+-Going fast using abstract data models that help to accelerate your integration project avoiding having to spend time collecting real-world operational data.
+
+6*Three business challenges stand in the way of integration. One of those challenges is addressed by closed-loop. What is closed loop in this context?
+-It is the practice of feeding back into a process operational data that can be used to inform the intelligence that is automating integration work.
+-3****It is a system for improving a product, process, etc. by collecting and reacting to users' comments.
+-2****It is the practice of automating the integration of code changes from multiple contributors into a single software project.
+-*It is a continuous cycle of observing, reflecting and making. It is a set of behaviors focused on discovering users’ needs and envisioning a better future.
+
+7*You are discussing Business Automation with your client Line of Business managers. They ask you for common use cases where Business Automation will apply as opposed to IT Automation. What are some of the commonly quoted use cases for Business Automation?
+-2Client experience, business operations, and workforce management
+-Client experience, real-time interactions, and platform operations
+-*1Transactional integrity, workforce management, and platform operations
+-Business operations, infrastructure stability, and workforce management
+
+*IBM believes that businesses can gain real competitive differentiation by automating the enterprise.  From an IBM point of view, what do we mean when we say, ‘automating the enterprise’?
+-*It means automating both business functions and IT systems to accelerate innovation and improve how business and IT work together.
+-Automation is the use of largely automatic equipment in a system of manufacturing or other production process.
+-Automation is a series of business processes which facilitate the orchestration of human tasks through advanced software solutions.
+-Automation includes the use of control systems for operating mechanical systems or applications with limited human intervention.
+
+*IBM Automation offers a unique framework for improving business performance. What are the 4 dials of the Automation framework?
+-*Discover, Decide, Act, and Optimize
+-Collect, Classify, Optimize, and Automate
+-Collect, Organize, Classify, and Analyze
+-Discover, Decide, Automate, and Optimize
+
+*Based on Forbes Research, why do 70% of digital transformation projects fail?
+-Lack of team skills
+-Excessive use of cloud solutions
+-Use of wrong platform and technologies
+-*Lack of integration quality
+
+8*Your client is trying to replace the bottleneck of a centralized, monolithic architecture and trying to remove the inefficiency and cost of maintaining multiple integration offerings. What is the business challenge that they are facing?
+-*Drive new engagement models and digital transformation
+-3*****Accelerate Integration while reducing costs
+-Automate real-time decisions with business rules and machine learning
+-2**Reduce exposure to business and security risks
+
+*You are facing many manual tasks throughout the integration lifecycle from creation to deployment, to operation and maintenance, all of this requires expert integration skills. How can Cloud Pak for Integration help you?
+-With a closed-loop integration lifecycle that uses real-world, company specific, operational data using AI to identify issues and recommendations
+-With an integrated API management offering, where all of the steps in the API lifecycle, and the actions that surround it, are performed within the offering.
+-*With automated integrations, powered by AI, leveraging best practices and built-in reuse to eliminate the skills barrier.
+-With a multi-style integration using different styles of integration together to deliver faster and better than a one-style-fits-all approach
+
+*Your client is facing a "Reduce exposure to business and security risks" challenge. One good example of activity that they are doing is?
+-*Keeping their reputation intact by protecting business data and client records
+-Promoting tailored offers at point of sale, based on past purchases
+-Providing an omni-channel client experience
+-Empowering agile teams to build and deploy their own integrations
+
+9*Creating an environment that leverages multiple stages of service delivery, from development to testing, to deployment, and life cycle management is an example of?
+-AI-driven Integration
+-*Microservices architecture and implementation
+-3Continuous feedback
+-2**API management
+
+10*What is the right workshop to help clients move from Plan to Design and Build along the maturity ladder?
+-3****Integration workshops
+-Discovery workshops
+-*Design Thinking workshops
+-**2**Solution Architecture workshops
+
+11*If your client is trying to reduce exposure to business and security risks, what are the 3 entry points to get started?
+-Protect transaction integrity; Reduce costs and increase reuse; Respond to events in real-time
+-3**Accelerate delivery; Build and deploy integration in minutes; Reduce cost and increase reuse
+-*Create and Manage APIs; Respond to events in real-time; Access data in a fast, secure, and re-usable way
+-2**Secure your business; Protect transaction integrity; Balance workload demands
+
+*A client is looking for a capability that can be used to build bots to automate human interfaces, human actions, complex integrations, and other orchestration requirements. What is the service from the Automation Foundation layer that provides this capability?
+-Event Detection
+-*Robotic Process Automation
+-Process and Task Mining
+-Natural Language Interactions
+
+*You are having a one-on-one conversation with the CIO of a company that expressed concerns about productivity and time to market issues. What are the top two recommendations you would offer to make people more productive and improve business performance?
+-1. Increase training budget to improve productivity
+2. Buy productivity improvement tools
+-1. Automate all tasks using robots
+2. Reduce workforce no longer needed
+-*1. Eliminate repetitive tasks so employees can focus on higher-value work.
+2. Automate manual tasks.
+-1. Replace workers with low productivity 
+2. Use offshore resources
+
+
+12*If a client is expressing the following pain points:
+    -  All their integration teams are siloed,
+    -  Integration team resources are separate from application developers,
+    -  The team that develops messaging solutions is different than the team that developed event-base solutions,
+    -  Each team believes their integration technology stack is the best option for solving all enterprise integration workload,
+Which key value proposition point of view would you lead with to solve for these complaints?
+-Multiple style Integration
+-3****Automated integration powered by AI
+-2***Continuous feedback
+-*Continuous integration with continuous delivery utilizing pipelines
+
+
+2*Your client is exploring the Application Integration capability within the Cloud Pak for Integration. What is this capability?
+-*This capability helps companies to share APIs (Application Programming Interfaces) securely with other client applications that want to use them.
+-3****This capability enables disparate applications to talk to one another and share data and request for actions to be performed.
+-It uses patented protocols to dramatically improve transfer rates.
+-2***This capability enables a receiving application to not only receive the events one by one, but also to view the entire stream at will.
+
+-------------------------------Section 3--------------------------------------------
+
+
+*Which of the following capabilities explains why your client should deploy a DataPower instance in a Demilitarized Zone (DMZ)?
+-Encryption/Decryption servers
+-Load Balancing to back-ends
+-Mediation with Application
+-*Access Security
+
+*Which of the following statements is INCORRECT about the DataPower Operations Dashboard (DPOD)?
+-DPOD will log and report on all traffic flowing through DataPower.
+-DPOD is sold as an Add-on.
+-DPOD support both virtual and physical gateway form factors
+-*DPOD does not provide for multiple levels of messaging traffic nor transactional views
+
+Second Wrong*Which of the following statements does NOT align with the Virtual DataPower Gateway security capabilities?
+-3***Rate limiting for quota enforcement.
+-Modern message protection with digital signature and encryption.
+-*Transport protection with SSL/TLS processing.
+-2***Authentication, Authorization, and Auditing to converge security enforcement.
+
+*A client tells you they want to 'Rapidly organize, publish, and analyze any API through the full lifecycle'. What API Connect capability best matches the client's statement?
+-Socialize
+-Create
+-*Manage
+-Secure
+
+Second Wrong*A client tells you they want to 'empower application developers to explore and consume your APIs using branded self-service portals'. Which API Management capability does this statement align to best??
+-*Secure
+-2**Integrate
+-Socialize
+-3***Create
+
+Second Wrong*Your client is interested in a managed API Management solution but would like greater flexibility in gateway placement and increased security. Which API Connect Package is recommended?
+-2***API Connect with API Calls
+-*Cloud Pak for Integration
+-API Connect Enterprise
+-3***API Connect Reserved Instance
+
+Second Wrong*Which of the following DataPower Gateway capabilities are associated with Control?
+-2***Flexible error handling, content-based routing, front side self load balancing.
+-3***Rate limiting, routing services, processing of errors.
+-Rate limiting, routing services, caching.
+-*Caching, processing of errors, front side self load balancing.
+
+Wrong*When API Connect is deployed as part of the Cloud Pak for Integration, which of the following statements is INCORRECT?
+-*Common services delivering security, logging and monitoring is deployed.
+-A shared asset repository is deployed.
+-2***Deploys a common data fabric tier to manage all persistence data requirements.
+-A unified governance framework is deployed.
+
+
+*Which of the following scenario statements does NOT align to a &lsquo;Accelerate Delivery with AI-powered Integration' entry point?
+-Scale on demand with a robust infrastructure that automatically adjusts to transient peaks in real time.
+-Make integrations portable and simple to move to new environments and locations to meet capacity growth needs.
+-*Support data needs of cloud-native applications deployed over multiple clouds.
+-Deploy and update integrations rapidly and seamlessly without impacting existing deployments.
+
+*Of the following examples, which is NOT a typical use case for IBM Application Integration?
+-Automate tasks - Business users are reaching out to integration and automation technologies to help automate their repetitive manual tasks so that they can focus on their core responsibilities.
+-*File Transfer - Movement of large files, over long distances at high speed.
+-360 -degree customer view - clients are getting more data and insights driven to continuously improved their business outcomes. This requires them to have real time access to their apps and data
+-SaaS integration - clients are adopting SaaS solutions like Salesforce, ServiceNow, Workday, etc. To have it ready for their Enterprise-wide adoption, it must be fully integrated with other existing apps, data and processes
+
+Wrong*Which of the following statements does NOT reflect IBM definition of Integration?  IBM Integration Provides:
+-*Routing
+-2**Eventual Consistency
+-Connectivity
+-Transformation
+
+*Within the API Management marketspace, which of the following best describes why API Connect wins?
+-Strongest enterprise-grade security supporting only APIs.
+-IBM is a leads vendor support  in the hybrid/multi-cloud market for API Management only
+-*IBM is a leading vendor in the hybrid/multi-cloud market for API Management, offering the strongest enterprise-grade gateway security supporting both APIs and other protocols with native support for Kubernetes leading with our investment in RedHat OpenShift
+-Native support for Kubernetes leading with our investment in RedHat OpenShift only.
+
+*Which of the following DataPower Gateway features are sold as a capability add-on?
+-Integrate
+-*Application Optimization
+-Control & Manage
+-Optimize & Offload
+
+
+*Which of the following personas is aligned with API Consumers?
+-*App Developer
+-API Product Manager
+-API Developer
+-API Operator
+
+Second Wrong*Your client expressed interest in deploying API management capabilities. Which API Connect package is NOT an option?
+-*Standalone API connect on any cloud with your own OpenShift
+-2**Standalone API Connect on premises with Virtual Machine
+-3***API Connect capabilities via a Cloud Pak for Business Automation
+-API Connect Reserved Instance, a single tenant instance on IBM Cloud
+
+*Which of the following scenario statements does NOT align to the 'Secure Your Business to Protect Assess to Critical Assets' entry point?
+-Comply with latest in security and privacy regulations with consistent security policies applied to network traffic and content
+-Build a digital ecosystem with secure, open access to business data and assets without increasing risk
+-Simplify audit responses with end-to-end encryption of client data in flight or at rest
+-*Deploy and update integrations rapidly and seamlessly without impacting existing deployments
+
+Wrong*Which of the following statements best describes the Smart Connectors available in IBM App Connect Enterprise?
+-*Pre-built connectors that uses Machine Learning capabilities.
+-Connectors developed by partners that uses IBM Watson features.
+-2***Pre-built connectors with built-in error handling and native support for batch and build interactions.
+-Special type of connectors that follow a least privilege security policy.
+
+
+Second Wrong*IBM is the only integration vendor offering skill-based / persona-based based development tools.  Which of the following statements describe the App Connect Enterprise Toolkit offering?
+-3**App Connect Enterprise is a browser-based integration development tool.
+-2***App Connect Enterprise has been developed from scratch using IBM Design Thinking principles and is purpose-built for citizen integrators.
+-*App Connect Enterprise leverages AI technologies and guided experiences to simplify integration development.
+-App Connect Enterprise is an advanced development platform used by integration development experts.
+
+
+*Which of the following App Connect Enterprise (ACE) deployment options should you recommend if the client is interested in Application Integration capabilities running on IBM Power leveraging virtual machines and potentially containers?
+-IBM App Connect Enterprise within a Cloud Pak for Integration instance.
+-IBM Cloud Pak for Business Automation.
+-IBM App Connect on Cloud.
+-*IBM App Connect Enterprise standalone on premises.
+
+*Your client is interested in consuming API Management integration capabilities from a unified integration platform. Which API Connect Package is recommended?
+-API Connect Reserved Instance
+-*Cloud Pak for Integration
+-API Connect single tenant on IBM Cloud
+-API Connect Enterprise
+
+*Create, Manager, Secure, and Socialize are the four primary capabilities of what IBM Offering?
+-MQ
+-App Connect
+-*API Connect
+-DataPower Gateway
+
+Wrong*Know your IBM DataPower personas.  Which of the following statements aligns to the Line of Business buyer?
+-Is under pressure to deliver dynamic, responsive applications.
+-*Must support the use of gateway usage across the organization.
+-2***Is under pressure to improve client experience and respond in real-time.
+-Struggles with deployment inefficiencies.
+
+Wrong*If you are competing against Apigee, What capability is NOT a competitive advantage against them?
+-2**Performance
+-Multi-cloud
+-*Security
+-Architecture
+
+Second Wrong*All of the following statements align with the 'New Integrator' persona, except one.  Select the statement that does NOT apply to 'New Integrator'.
+-3***I need power tools that support a wide range of integration patterns.
+-I need smart tooling to securely expose back-end data.
+-2***I need no-code tooling to replace repeating manual tasks.
+-*I need high productivity tooling to automate routine business processes.
+
+Second Wrong*Which of the following statement regarding the IBM App Connect product does NOT describe its market differentiation?
+-3**Strongest enterprise-grade gateway security supporting both APIs and other protocols.
+-Native support for Kubernetes leading with our investment in RedHat OpenShift.
+-*AI powered application integration with mapping assistance and Watson Services
+-2**Strongest enterprise-grade universal connectivity supporting top industry-specific client use cases.
+
+
+----------------------------Section 4-------------------------------------------
+
+Wrong*Which of the following statements does *NOT* describe IBM Event Streams?
+-Real-time data feeds.
+-Publish and subscribe
+-*High-throughput with low-latency.
+-2**Delivery of messages exactly once.
+
+Wrong*IBM MQ has a versioning delivery model based on Long Term Support (LTS), this delivery model is ideal for clients that are interested in fixed function and stability, as well as a Continuous Delivery (CD) model. What are the client characteristics that would be lead you to recommend a CD delivery model?
+-The client who refreshes software environments every year.
+-*The client who continuously integrates to take meet GDPR requirements.
+-2**The client continuously integrates to take advantage of new function as it becomes available.
+-The client who continuously updates business process workflows.
+
+
+*The requirement to 'stay open for business' yet current with new capabilities is top of mind with most clients. How does IBM Event Streams accomplish this differently than the competition?
+-*IBM Event Streams supports zero downtime upgrades through utilizing a 'change later' capture feature.
+-IBM Event Streams supports zero downtime upgrades through a real-time update feature to back end systems.
+-IBM Event Streams supports intuitively designed geo-replication features for system updates and connectivity.
+-IBM Event Streams supports this with a simple, 3-click-deploy feature.
+
+Wrong*Your client agrees that IBM Event Streams is a great best fit for their business. How is IBM Event Streams implemented?
+-IBM Event Streams is purchased and implemented with App Connect as both styles of integration are required for implementation.
+-IBM Event Streams is purchased and implemented with IBM MQ as both have messaging components.
+-*IBM Event Streams is purchased and implemented as a stand-alone offering.
+-2**IBM Event Streams is purchased and implemented with Cloud Pak for Integration.
+
+Wrong*A client needs to protect their Systems of Record while streaming data in a multicloud environment. Which Usage Pattern is this?
+-Drive data to applications with machine learning.
+-*Drive interactive applications.
+-Provide data to applications while protecting the back-end.
+-2**Provide data to messaging queues while protecting the back-end.
+
+
+Wrong*Your client states that Kafka is all they need for mission critical messaging. How do you reply?
+-Kafka focuses on real-time processing and data analysis through synchronous messaging. Highlight that IBM MQ is also ideal with tasks that are long running, require prioritization, transactionality, and flexible routing amongst systems and that Kafka's strength is streaming data.
+-2**Ask the client if once-and-only once message delivery for communication, integration between systems and/or applications is important. Highlight that IBM MQ is also ideal with tasks that are long running, require prioritization, and flexible routing amongst systems. It also includes important capabilities for mission-critical messaging.
+-*IBM MQ is Kafka based so it is ideal for mission-critical messaging due to its once-and-only-once messaging and support. Highlight that IBM MQ messaging is also ideal for tasks that are long running, require prioritization, transactionality, and flexible routing amongst systems. 
+-IBM Event Streams, which is Kafka based, is ideal for mission-critical messaging due to its bi-directional messaging support. Highlight that IBM Event Streams messaging is also ideal with tasks that are long running, require prioritization, transactionality, and flexible routing amongst systems. 
+
+*Your client is interested in high availability and cloud native messaging. However, the client does see value in single sign-on and common logging. What do you recommend?
+-MQ Advanced
+-IBM MQ on z/OS
+-*IBM Cloud Pak for Integration
+-IBM Event Streams
+
+Wrong*A client tells you they want to 'bring data closer to a client’s loyalty application, allowing the application to provide a more responsive and interactive experience for customer' Which IBM Event Streams usage pattern is applicable?
+-2**Drive Interactive Applications.
+-Provide Data to Application While Protecting your Backend.
+-Maximize client interaction.
+-*Take Advantage of Machine Learning.
+
+Wrong*Today, many industries require an event-driven architecture. What is a common characteristic across all industries that is driving more and more clients to invest in event-driven architectures?
+-*Clients are seeing the need to implement high volume transaction speed capability to check inventory in real-time.
+-Clients are seeing the need to transition from batch transactions to real-time access to data.
+-Clients are seeing the need to transition to edge computing to keep up with the competition.
+-2**Clients are seeing the need to implement a user experience that is highly digitized given today's mobile devices.
+
+*Which of the following statements describes a benefit of IBM MQ over a Kafka-based solution?
+-IBM MQ is less expensive regardless which form factor is deployed.
+-*IBM MQ is a more lightweight solution that can be deployed into a container alongside the microservice on a fraction of a core.
+-IBM MQ is designed to store event history. This is beneficial to debugging and problem determination.
+-IBM MQ is very lightweight and can be deployed on appliances at a fraction of the cost.
+
+Wrong*Which IBM Messaging product would you recommend for a client that has the need to use streaming and storage of event messages?
+-IBM DataPower
+-IBM Aspera
+-2**IBM Event Streams
+-*IBM MQ
+
+Wrong*During a cloud messaging conversation with your client, they mention how AWS is the company standard for public cloud. Before the end of the meeting what do you want to ensure your client knows?
+-IBM understands that clients need flexibility when selecting public cloud solutions. IBM supports deploying IBM MQ through software deployment to Virtual Machines or running in containers on public clouds such as AWS and Azure.
+-*IBM supports deployment of IBM MQ  to virtual Machines and to containers running only on RedHat Public Cloud.
+-IBM understands that clients need flexibility when selecting public cloud solutions. While IBM supports deploying IBM MQ through software deployment to Virtual Machines or running in containers on public clouds such as AWS, IBM Pubic Cloud is preferred.
+-2**Deploying messaging on AWS is a great solution. IBM supports deployment of IBM MQ through software deployment to Virtual Appliances on Public Clouds.
+
+*Simple maintenance is characteristic of the MQ Appliance form factor. Which form factor has the characteristics of reduced complexity for debug and troubleshooting?
+-*IBM MQ on z/OS
+-IBM MQ Software-as-a-Service
+-IBM MQ in containers
+-IBM MQ Appliance
+
+*You are working on a pricing estimate for a proposal. What are the three value components of IBM Event Streams that are used to price?
+-Kafka Broker Containers, Global Replicator Containers, and Kafka Connects Containers.
+-Kafka Broker Containers, Geo Replicator Containers, and Kafka Schema Registry.
+-*Kafka Broker Containers, Geo Replicator Containers, and Kafka Connects Containers.
+-Kafka Broker Containers, Geo Replicator Containers, and Appicurio Connect Containers.
+
+*A client discusses the need to transfer large files over long distances at high speed. Which IBM Messaging product would you recommend?
+-IBM App Connect
+-*IBM Aspera
+-IBM Event Streams
+-IBM MQ
+
+*Which of the following statements is *NOT* a benefit of deploying the IBM Event Streams Operator versus open-source Apache Kafka?*
+-Apache Kafka has many distinct components to deploy, configure, and coordinate for secure connectivity.
+-Secured network ingress traffic.
+-Container placement critical to ensure production-level availability.
+-*Highly skilled experts to monitor and manage deployment.
+
+*How would you describe IBM MQ's guarantee once-and-only-once delivery to a client?
+-IBM MQ provides a gateway to help secure, control and log messaging traffic and interactions, and supporting containers while maintaining system performance. This is what guarantees once only delivery. 
+-IBM MQ allows clients to create, expose, manage, and monetize APIs across clouds. This means businesses and their customers can connect digital applications so that messages are delivered only-and-only-once.
+-*Referred to as asynchronous messaging, IBM MQ is the "shock absorber" between applications. The sender application does not need the receiving application to be available at the same time, as IBM MQ provides queue availability to support guaranteed once-and-only-once.
+-With IBM MQ, clients can build integration flows in minutes starting with a catalog of connectors. These connectors have a MQ queue between them. The IBM MQ checks to make sure the messages are sent and received once-and-only-once. 
+
+*You are discussing the following with your client. 'When a source application has no knowledge of who is listening to the events being emitted, or when a source application is normally completely disconnected from the target application’ what messaging pillar are you discussing?
+-*Event Driven Enterprise
+-Business Critical Communication
+-Microservices and Cloud Native application development
+-Hight Speed Data Transfer
+
+Wrong*Which of the following statements is NOT a characteristic aligned with Asynchronous Messaging?
+-2***A safe place' for messages to live between applications
+-Simple HTTP connectivity without requiring service guarantees
+-*Fire and forget
+-Delivery of messages exactly once
+
+*Which IBM Messaging product would you recommend for the transfer of files between mission-critical systems that require exactly-once delivery?
+-IBM Event Streams
+-IBM API Connect
+-IBM Aspera
+-*IBM MQ
+
+Wrong*Which statement best describes the difference between IBM MQ Managed File Transfer (MFT) capabilities and IBM Aspera?
+-IBM MQ Managed File Transfer is for transferring files over long distances at speed while IBM Aspera is best for short distance transfer of very large volumes of data.
+-*IBM MQ Managed File Transfer is only to be used for files up to 100KB and Aspera is for all message sizes including image and video data.
+-2***IBM MQ MFT is a better fit for regional transfer use cases while IBM Aspera focuses on moving very large files quickly over longer distances.
+-IBM MQ Managed File Transfer uses IBM Aspera under the covers so there is no real difference between the two solutions.
+
+*A client is discussing how difficult it is to offer its customers a more personalized experience. Which client persona are you speaking with, and are they a Buyer or an Influencer?
+-*The client is a Line of Business persona and is a Buyer.
+-The client is a Line of Business persona and is a Influencer.
+-The client is a Enterprise Architect persona and is a Buyer.
+-The client is Developer persona and is a Buyer.
+
+
+Wrong*A MQ Appliance has three main benefits over traditional MQ software deployments. What are they?
+-Reduced TCO by consolidation, enhanced security, and business continuity with simple high availability disaster recovery.
+-*There are no additional benefits to using the IBM MQ Appliance over traditional software deployments.
+-2**Reduced TCO by consolidation, enhanced security with Access Method Services (AMS), and low latency support.
+-Reduced TCO by consolidation, enabled for multicloud, and business continuity with high availability with disaster recovery.
+
+Wrong*In a competitive streaming opportunity you need to highlight why IBM is a better fit for your client. Which of the following differentiators does NOT apply to IBM Event Streams?
+-2***IBM offers Event Streams on several form factors in both Private and Public Clouds.
+-IBM Event Streams utilizes highly skilled experts to monitor and manage scalable implementations for speedy problem determination.
+-*IBM Event Streams supports geo-replication for Disaster Recovery and integration with IBM MQ.
+-IBM Event Streams simplifies Kafka access control with integrated security.
+
+Wrong*You are having a messaging discussion with a client. The client asks what deployment form factors are available for IBM MQ. What form factors do you tell your client?
+-Traditional software deployment for mainframe, a dedicated physical Appliance, and Software-as-a-Service.
+-*RedHat certified container, in containers, and Software-as-a-Service.
+-Software for deployment to public and private clouds, a dedicated physical Appliance, and public physical appliance.
+-2**Software deployment for VMs and containers on premises and public clouds, dedicated physical appliance, and Software-as-a-Service.
+
+----------------------------------------Section 5-----------------------------------------
+
+*A client tells you they want to "Build highly scalable workflows running on premises, in the cloud, or both". What use case is this client describing?
+-Transfer automation and management
+-*Hybrid cloud workflows
+-Big data transport and sync
+-Large-file sending and sharing
+
+*Your client is exploring the flexible licensing models and packaging offered by Aspera. Which of the following is an Aspera offering?
+-IBM Aspera Enterprise SaaS
+-IBM Aspera Software
+-*IBM Aspera Enterprise on Demand
+-IBM Aspera Endpoint on Cloud
+
+*A client tells you they want to "Transfer, distribute, and synchronize huge files and data sets, globally". What use case is this client describing?
+-Hybrid cloud workflows
+-Large-file sending and sharing
+-Transfer automation and management
+-*Big data transport and sync
+
+*When you are prospecting for Aspera opportunities, which of the following is a typical pain point to listen for?*
+-Your client complains about application data consistency in different systems.
+-Your client needs to react to events in real time, they need to know when changes occur in their business.
+-*Your client complains that FTP for file transfer is very slow, unreliable and not secure
+-Your client needs to expose application data securely to new consumers.
+
+*What IBM Aspera functionality allows many sites to keep current information readily available?
+-Collaboration
+-*Synchronization
+-Migration
+-Orchestration
+
+*Aspera secures data in two ways, one is 'at rest'. What is the second way Aspera secures data?
+-*In-Transit
+-In-storage
+-Backup
+-Analysis
+
+*Which of the following is an accomplishment of Aspera technology?
+-IBM Aspera is slower than FTP and HTTP.
+-*IBM Aspera is 400% faster than TCP when transferring millions of files.
+-IBM Aspera is able to transfer 200TB in 24 hours.
+-IBM Aspera sends packets across the internet and ensure the successful delivery of data.
+
+Wrong*Your client is interested in a data transfer solution. Which of the following statement is NOT a benefit of Aspera technology?
+-Maximum transfer speed
+-2***Create and manage APIs to enable digital business
+-*Scalable management, monitoring, and control
+-Congestion avoidance and policy control
+
+*Which of the following is considered a competitor to IBM Aspera?
+-Apple
+-*Signiant
+-Event Streams
+-MQ
+
+Wrong*Where does Aspera Faspex fit in the IBM Aspera software environment?
+-Sharing & Collaboration
+-Automation
+-2**Transfer & Distribution
+-*Synchronization
+
+Wrong*Cloud users in San Paulo can easily check on data stored locally in London through a single User Interface. What deployment is being utilized?
+-*On-Premises to Private Cloud
+-2**On-Premises to Cloud
+-Cloud to Cloud
+-On-Premises to On-Premises
+
+Wrong*Many technologies degrade as the distance increases.  Aspera has the ability to thrive in what kind of environment?
+-Low latency
+-*Fast network
+-2***High Latency
+-Internal network
+
+Wrong*Where does the Aspera Console fit in the IBM Aspera software environment?
+-2***Transfer & Distribution
+-Automation
+-*Centralized Administration
+-Sharing & Collaboration
+
+*IBM Aspera can be implemented in two ways, one as a client managed. What is the second managed option?
+-*IBM Managed
+-Developer managed
+-Expert Labs managed
+-Partner managed
+
+Wrong*Your client is exploring locations to install Aspera Enterprise on Demand. What are the options?
+-On-Premises, AWS, Azure, Google and IBM Cloud
+-2***On-Premises only
+-Any Kubernetes Engine in any cloud
+-*On-Premises and IBM Cloud only
+
+*What transfer component does IBM Aspera Enterprise include?
+-Aspera on Cloud
+-IBM Aspera Transfer Server
+-IBM Aspera High-Speed Transfer Endpoint
+-*IBM Aspera High-Speed Transfer Server
+
+Wrong*A client tells you they want to "Orchestrate, monitor and control data transfers and workflows". What use case is this client describing?
+-*Hybrid cloud workflows
+-2**Large-file sending and sharing
+-Transfer automation and management
+-Big data transport and sync
+
+Wrong*Your client would like to know more about Aspera technology. Which of the following challenges does Aspera's FASP transfer technology help overcome?
+-*Corrupt data
+-Data size, distance, network conditions
+-Data loss, distance, network conditions
+-2***Data size, distance, blockchain
+
+*Your client is interested in a perpetual Aspera license. They identified IBM Aspera Enterprise as the right solution for them. However, they don't know how the Aspera Enterprise is priced. What is the correct answer?
+-*Aggregate bandwidth
+-RVU Install
+-RVU users
+-Aggregate transfer volume
+
+*Dynamic prioritization of transfers utilizing available bandwidth is a huge value add of a Aspera Solution. Which of the following describes IBM's differentiation from the competition?
+-Maximum transfer speed
+-Scalable management, monitoring and control
+-*Policy control with added congestion control
+-Uncompromising security and reliability
+
+*Organizations are increasingly adopting an infrastructure that uses a combination of public cloud, private cloud, and on-premises storage and compute resources. What is the deployment described?
+-*Hybrid-Cloud
+-Multi-cloud
+-Block storage
+-Object storage
+
+Wrong*A client tells you they want to  "Accelerate collaboration with teams around the world on big data and large files". What use case is this client describing?
+-2**Transfer automation and management
+-Big data transport and sync
+-*Hybrid cloud workflows
+-Large-file sending and sharing
+
+*Your client would like to explore IBM Aspera capabilities. Which IBM Cloud Pak is Aspera capabilities available in?
+-IBM Cloud Pak for Security
+-*IBM Cloud Pak for Integration
+-IBM Cloud Pak for Business Automation
+-IBM Cloud Pak for Watson AI
+
+Wrong*Which of the following Aspera applications has built-in guided tours?
+-*Aspera Share
+-2**Aspera on Cloud
+-Aspera Enterprise on Demand
+-Aspera Faspio
+
+*When clients are evaluating the Aspera packaging, what are the four Aspera primary capabilities?
+-Collaboration, Exchange, Automation, and Metering
+-Collaboration, Erroneous, Automation, and Management
+-Collaboration, Exchange, Arranging, and Management
+-*Collaboration, Exchange, Automation, and Management
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+*What is the name of the panel that we used to monitor the transfers?
+
+-2*Transfer activity
+-*Transfer monitor
+-My transfers
+-Transfer dashboard
+
+*In this demo, what are the Aspera on Cloud Apps that we used?
+
+-Files, Packages, and Activity
+-Files, Packages, Monitoring, Admin, and Workflow
+-*2Files, Packages, Activity, Admin, and Automation
+-Files, Packages, and Admin
+
+*What are the names of the Aspera on Cloud Workspaces that we used in this demo?
+
+-Human Resources Workspace and Sales Workspace
+-Sales Workspace and TechSales Workspace
+-2*Marketing Workspace and Sales Workspace
+-Marketing Workspace and Engineering Workspace
+
+*In this demo, what is the monitor capability that we use to get insights into events throughout our Aspera on Cloud applications?
+
+-File Access
+-Usage Events
+-2**Application Event
+-*Transfer Activity
+
+*In the Workflow creation, what is the type of the trigger that we use to start the flow?
+
+-2*Shared inbox event
+-Time schedule
+-File add event
+-Manual event by API

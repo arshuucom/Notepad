@@ -1,0 +1,101 @@
+
+
+$PSVersionTable = Powershell version
+
+//Cmdlet = Perform a single function
+Get-Location = Get the current directory
+Set-Location = Change the current directory
+Copy-Item = Copy Files
+Remove-Item = Remove a file or directory
+Move-Item = Move a file
+Rename-Item = Rename a file
+New-Item = Create a new file or directory
+
+//How to find the Cmdlet
+Get-Service = Get the service
+Start-Service = To start the service
+
+//Three Important Cmdlet commands
+Get-Command = This will help you to find Cmdlet which you can use
+Get-Help = Powershell has help same as man in unix
+Get-Member = Explore methods and properties within power shell
+
+
+pwd = current path
+cd= change directory
+dir = directory
+mkdir = to create directory
+rmdir = to delete directory
+type nul >arshad.txt =to create a file with extension
+del arshad.txt = to delete a file
+xcopy arshad.txt "arshad.txt" = to copy a file
+xcopy *.txt ".txt" = to copy multiple files
+move arshad.txt "arshad.txt" = to move a file
+move *.txt ".txt" = to move multiple files
+
+//CPU Information
+
+wmic and the cpu enter = Shows all the information
+
+//Hard Disk
+chkdsk= to check the harddisk
+msinfo32 = Show the desktop version
+
+//Byus version
+wmic bios get smbiosversion = To get the bios version
+
+//TO get the information
+wmic enter path product get name, version
+
+
+//Task and Service
+tasklist = running services
+taskkill /pid 8096 = to kill the task
+Get-Process calculator | Stop-Process = Same as Tasklist and kill work as stop
+net start = list of the services .
+Get-History = History of the commands
+
+//Networking
+
+ipconfig = Ip history
+Get-NetAdapter = to get the information of our adapter
+ping website = connection
+
+//Encrypt Files
+
+cipher /e filename = To encrypth OR (Get-Item -path text.txt).encrypth()
+cipher /d filename = To decrypth OR (Get-Item -path text.txt).decrypth()
+
+//Hide Files
+
+attrib +h +r +s filename = To hide the file OR (Get-Item text.txt).Attributes='Hidden
+
+attrib -h -r -s filename = To unhide the file
+
+//To add user in server
+
+net user arshad pass@123/add = To add user 
+net use arshad /del = To delete user
+
+//Shutdown system command and restart
+
+shutdown -s -t 00 = shutdown system
+Restart-Computer = restart system
+
+
+Set-Content  file.txt 'Hello wordl' = Works to create a file and put content in it
+
+$= Sign start
+$a=2 = Data type INT
+$b=20.25 Double
+[char]$c = 0xada
+$d="arshad" = String
+
+//Variable
+$a=2
+$b=2
+$add=$a+$b
+$add
+
+Write-Host = Is to print
+Read-Host = Is to take input from user

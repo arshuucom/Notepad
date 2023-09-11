@@ -1,0 +1,671 @@
+
+
+   [ Shell Scripting ] 
+   
+   [ Grep ]
+   To search and filter..
+   
+   Case 1 :
+   To ignore the upper case and lower case while searching
+       -i is used for ignore.
+	   1. grep -i This dummyData.txt 
+	   
+   Case 2 :
+   To search eveything except given pattern/keyword
+		-iv is used .
+		1. grep -iv This dummyData.txt
+	
+   Case 3 :
+   To print how many times count given keyword present in file.
+		-c is used.
+		1. grep -c This dummyData.txt
+	
+   Case 4 :
+   To search for exact match of given keyword in a file
+        -w is used.
+		1. grep -w This dummyData.txt
+		
+   Case 5 :
+   To search the line no of the matches of given keyword in a file
+        -n is used.
+		1. grep -n This dummyData.txt
+		
+   Case 6 :
+   To search a given keyword in multipe files 
+        grep "keyword" file1 file2.
+		1. grep Welcome file1 file2 dummyData.txt
+		
+   Case 7 :
+   To suppress file name while search a given keyword in multipe files
+        grep -h "keyword" file1 file2
+		1. grep -h Welcome file1 file2 dummyData.txt
+		
+   Case 8 :
+   To search multipe keyword in a file
+        grep -e "keyword" -e "keyword2" file
+		1. grep -e world -e Shell dummyData.txt
+		
+   Case 9 :
+   To only print file name which matches given keyword
+        grep -l "keyword" file1 file2
+		1. grep -l Shell dummyData.txt
+		
+   Case 10 :
+   To get the keyword/pattern from a file and match with a another file.
+         grep -f keyword.txt file1
+		 1. grep -f keyword.txt file1 file2 dummyData.txt
+		 
+   Case 11 :
+   To print the matching line which start with the given keyword
+		grep "^keyword" file
+		1. grep "^This" dummyData.txt
+		
+   Case 12 :
+   To print the matching line which end with the given keyword
+		grep "keyword$" file
+		1.grep "world$" dummyData.txt
+	
+   Case 13 :
+   To Suppose we have 100 files in a directory and we need to search a keyword in all the files.
+       grep -R "world" DirectoryName
+       1. grep -R world ../shellScriting/
+ 
+   Case 14 :
+   We can use egrep command for the multipe keyword search
+       egrep "key1 | key2 | key3" file
+	   1. egrep "Arshad|Vaibhav|Prince" keyword.txt	
+	   
+   Case 15 :
+   If you just wanna search but dont wanna to print in terminal
+       grep -q "keyword" file
+	   1. grep -q "world" dummyData.txt
+	   
+   Case 16 : 
+   If you want to suppress error message
+		grep -s "keyword" file
+		1. grep -s "world" dummyData.txt
+		
+		
+		[ AWK ]
+		AWK is a text processing command. Space separted used.
+		
+		Case 1: 
+		To print the column
+		1. awk '{print $2}' awkData
+		
+		Case 2:
+		To print Name and Country
+		1. awk '{print $2, $4}' awkData
+		
+		Case 3 :
+		To print the last column
+		1. awk '{print $NF}' awkData
+		
+		Case 4:
+		To add serial number print the line number in the file
+		1. awk '{print NR $0}' keyword.txt
+		
+        Case 5:
+        To add colon in the file
+		1. awk '{print NR ": " $0}' keyword.txt
+		
+		Case 6 :
+		If we want to separate a specific data details
+		-F is used for Field
+		1. awk -F '{print $4}' dummyData.txt
+		
+		Case 7 :
+		To used if else condition using awk for salary more than 25000.
+		1. awk '{if($3>25000) print $0}' awkData
+		
+		Case 8 :
+		To change the salary using column.
+		1. awk '{if($2=="Arshad"){$3=80000} print $0}' awkData
+		
+		Case 9 :
+		To search the word and print the line
+		1. awk '/world/ {print $0}' file1
+		
+		Case 10 :
+		To see only a particular line
+			NR is row Number
+		1. awk 'NR=="3" {print $0}' file1
+		
+		Case 10 :
+		To see the range of multiple line
+		1. awk 'NR=="4", NR=="5" {print $0}' file1
+		
+		Case 11 :
+		To check the empty lines in a file
+		1. awk 'NF==0 {print NR}' awkData
+		
+		Case 12 :
+		To see the line no of the file
+		1. awk 'END {print NR}' file1
+		
+		Case 13 :
+		To check the forloop
+		1. awk 'BEGIN {for(i=0;i<=10;i++) print i;}'
+		
+		Case 14:
+		To check the while loop
+		1. awk 'BEGIN {while(i=10){i++; print "num is " i}}'
+		
+		[ Cut Command ]
+		Cut command is used for character level processing in text..
+		
+		Case 1:
+		To see the first letter of everylines
+		1. cut -c1 keyword.txt
+		
+		Case 2:
+		To see the first and fixth charcter
+		1. cut -c1,5 keyword.txt
+		
+		Case 3 :
+		To see the letter from 1 to 5 
+		1. cut -c1-5 keyword.txt
+		
+		Case 4 :
+		To change the syntax , to |
+		1. cut -d, -f l- keyword.txt
+		
+		[ SED Command ]
+		Sed command is used for replacing a lines.
+		
+		1. How to show only a given line or range of lines?
+		1. sed -n '1p' file_name
+		2. sed -n '1,5p' file_name
+		3. sed -n '$p' file_name
+
+		2. How to see all the users from India Country?
+		1. sed -n '/India/p' file_name
+
+
+		3. How to use multiple expression in sed command?
+		Example: If you wanna only see 2 and 5th line
+		sed -n -e '2p' -e '5p' file_name
+
+		4. How to see all the users from India and Germany?
+		sed -n -e '/India/p' -e '/Germany/p' file_name
+
+
+		5. How to see next 4 lines from 2nd line?
+		sed -n ‘2,+4p’ file_name
+
+		6. How to see every 2nd line from first line?
+		sed -n ‘1~2p’ file_name
+
+		7. How to read expression from external file?
+		sed -f ex_file file_name
+
+		8. How to replace a word in a file and show?
+		sed 's/<string_to_change>/<new_string>/g' file_name
+
+		9. How to replace a word in a file and show except a given line or only in given line?
+		sed '5 s/<string_to_change>/<new_string>/g' file_name
+		sed '5! s/<string_to_change>/<new_string>/g' file_name
+
+		10. How to replace a word and and edit in your file?
+		sed -i's/<string_to_change>/<new_string>/g' file_name
+
+		11. How to change salary or country of a user (Paul)?
+		sed '/Paul/ s/25000/35000/g' file_name
+		sed '/Paul/ s/India/US/g' file_name
+
+
+		12. How to delete a line?
+		sed '1d' file_name                                    (to delete first line)
+		sed '1,2d' file_name
+		sed '$d' file_name
+
+		13. How to delete user from India country?
+		sed ‘/India/d’ file_name
+
+		14. How to delete empty line?
+		sed '/^$/d' file_name
+
+		15.How to replace tab with space?
+		sed 's/\t/ /g' file_name
+
+		16.How to copy output of sed command in separate file?
+		sed -n ‘/India/ w new_file_name’ file_name
+
+		17. How to add new line after a given line no.?
+		sed '5 a new_text' file_name
+
+		18.How to add new line after a given string, so it will add text after Paul?
+		sed '/Paul/ a new_text' file_name
+
+		19. How to edit existing line instead of adding new line?
+		sed '5 c new_text' file_name (it will add text at line 5)
+
+		20. How to add new line before a given string, so it will add text before Paul?
+		sed '/Paul/ i new_text' file_name
+
+		21. How to see the hidden characters?
+		sed -n 'l' file_name
+
+		22. How to wrap your file content with given no. of characters?
+		sed -n 'l 50' file_name
+
+		23. How to read content from a file and use in our command?
+		sed '3 r externalfile' file_name
+
+		24. How to stop execution of sed command as soon as first occurance found?
+		sed ‘/India/ q’ file_name
+		sed ‘5 q’ file_name  (stop execution at line 5)
+
+		25. How to provide exit status for your sed command?
+		sed ‘/India/ q 100’ file_name
+
+
+		26. How to execute external command line date in your expression?
+		sed '2 e date' file_name
+
+		27.How to see the line number in file?
+		sed '=' file_name
+
+
+
+
+		SED Regular Expressions
+
+		^   start of line
+		$   end of line
+		.   single character
+		[]  match character set
+		[^] exclusive Set 
+		*   zero or more occurance
+
+		examples:
+
+		sed -n '/^2/p' file_name
+		sed -n '/ia$/p' file_name
+
+		28. How to find a 5 letter name which start with S and end with a?
+		sed -n '/^S...a$/p' names
+
+		29. How to find names start with V?
+		sed -n '/^V/p' names
+
+		30. How to find names end with a?
+		sed -n '/a$/p' names
+
+		31. How to use wild card?
+		ls -ltr *.txt
+
+		32. How to see names start with only A and C?
+		sed -n '/[AC]/p' names
+		sed -n '/[AC]/p' names
+
+
+		33. How to see names start with only A to D?
+		sed -n '/^[A-D]/p' names
+
+				
+				
+		
+---
+ - hosts: Password
+   gather_facts: yes
+   tasks:
+   - name: Shell Scripting
+     shell:
+      chdir: /root/numberLooping
+      cmd: |
+       for i in {1..10..2};
+       do
+       echo $i
+       done
+
+...
+	[ To Find the file ]
+
+find /root/shellScripting/ -type f -name sample.sh
+
+
+	[ To change the owner of group ]
+	chown :Arshad /linux = linux is Directory
+
+
+#! /bin/bash
+
+value=$(df -h | awk '{print $5}' | sed 's/%//')
+echo $value > /root/shellScriting/test.txt 
+To store the output in a file..
+
+cat passwd | sed -n 16p | cut -d ":" -f4
+
+
+		1.To Print 
+			echo "Hello World"
+			
+			
+		2. User Define Variable
+			name="Arshad"
+			echo "Heyy this is $name"
+			
+		3. Take user input
+			#! /bin/bash
+
+			read name
+			read age
+echo "Hello ${name} and your ${age}"
+
+		4. To store a output in a variable
+		
+#! /bin/bash
+
+worker1 ALL=(ALL) NOPASSWD:/usr/bin/su - admin1
+To allow sudo to access only to admin1 user.
+
+
+current=`pwd` == back ` to store the output in a varibale
+echo "${current}"
+			
+			Method 2
+			#! /bin/bash
+
+
+current=$(pwd)
+echo "${current}"
+
+
+		[ For Loop varname Example 1 ]
+		for data in {10..20..1}
+	do
+		echo "$data"
+	done
+
+		[ For Loop for expression Example 2 ]
+		for ((a=1; a<5; a++))
+		{
+		echo $a
+		}
+		
+		[ For Loop for iterate a list Example 3 ]
+		for varname in 1 2 3 4 5
+		do
+			echo "$varname"
+		done
+		
+		[ If Else Condition ]
+		if [ "name" = arshad ];
+		then
+			echo "Welcome"
+		else
+			echo "Enter correct name"
+		fi
+		
+		
+		
+		
+
+
+Variabe store in cloumn
+loop and count
+loop and check value is less than 1000 and make variable a and increment
+greather than equal to then b ++
+
+  To check for Condition
+  man test
+
+
+
+#! /bin/bash
+sed -x
+number=$(cat passwd | wc -l)
+a=0
+b=0
+
+for (( c=1; c<=$number; c++ ))
+do
+    count=$(cat passwd | sed -n "$c"p | cut -d ":" -f4)
+    if [[ "$count" -gt "1000" ]]; then
+       a=$(($a+1))
+    else
+        b=$(($b+1))
+    fi
+done
+echo "Count of Numbers which is Greater than 1000 = $a"
+echo "Count of Numbers which is Smaller than 1000 = $b"
+
+
+
+	[ To Convert a string to Upper and Lower Case ]
+	
+	string="hello world"
+	
+	echo "${string^^}" = To convert the string to UPPER Case.
+	echo "${string,,}" = To convert the string to LOWER Case.
+	echo "${#string}" = To see the length to string.
+	
+	[ Convert a string to substring ]
+	string="helloworld"
+	
+	echo "${string:1}" = elloworld
+	echo "${string: -5}" = world
+	echo "${string#h*l}" = loworld = from starting , shortest match 
+	echo "${string#r*d}" = hellowo = from ending , shortest match
+	
+	[ To Perform Arithemtic operation ]
+	
+	a=5
+	b=6
+	
+	echo "$((a+b))"
+	echo "$((a-b))"
+	echo "$((a*b))"	
+	echo "$((a/b))"
+	
+	echo "AnsibleDockerInstallationusingPlaybook" | sed 's/\(\{7\6\}\)/\1 /g'
+	
+	
+	[ Practice Shell Scripting ]
+	
+	
+	#! /bin/bash
+
+count=$(df -h | wc -l)
+a=0
+for (( c=1; c<=$count; c++ ))
+do
+    col=$(df -h | awk '{print $5}' | sed -n "$c"p | sed 's/%//')
+    if [[ "$col" -gt "30" ]]; then
+        a=$(($a+1))
+        echo "Count of Numbers which is Greater than 30 = $a"
+    else
+        echo "print"
+    fi
+done
+
+----------Done 1 -----
+
+#! /bin/bash
+
+count=$(df -h | wc -l)
+a=0
+for (( c=1; c<=$count; c++ ))
+do
+    col=$(df -h | awk '{print $5}' | sed -n "$c"p | sed 's/%//')
+    if [[ "$col" -gt "30" ]]; then
+        echo "This number is above than 30 = $col"
+    fi
+done
+
+
+--------Done 2 -------
+
+#! /bin/bash
+
+FILE="/root/shellScriting/source/a.txt"
+
+    if [[ -e "/root/shellScriting/source/a.txt" ]]; then
+        rm -f "/root/shellScriting/source/a.txt"
+    fi
+
+-----Done 3 ------
+
+#! /bin/bash
+
+useradd admin1
+useradd worker1
+useradd worker2
+
+echo "worker1 ALL=(worker2) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
+
+
+-----Done 4---------
+
+---
+ - hosts: Password
+   gather_facts: no
+   become: yes
+   tasks:
+   - name: Shell script
+     shell: |
+      # FILE="/root/numberLooping"
+      File="/root/numberLooping/test.txt"
+      if [[ -f "${File}" ]]; then
+        echo "$File" | sed 's/ //g'
+      fi
+...
+
+----- Done 5 --------
+
+---
+ - hosts: Password
+   gather_facts: no
+   become: yes
+   tasks:
+   - name: Shell script
+     shell: |
+      File="/root/numberLooping/test.txt"
+      if [[ -f "${File}" ]]; then
+          sed -i "s/ //g" "${File}"
+      fi
+...
+ 
+-------Done 6 --------
+
+---
+ - hosts: Password
+   gather_facts: no
+   become: yes
+   tasks:
+   - name: Shell script
+     shell: |
+      File="/root/numberLooping/docker.txt"
+      if [[ -f "${File}" ]]; then
+          awk 'NR==2 || {gsub(/[[:space:]]/,"");} 1' "${File}"
+      fi
+...
+
+
+----Done 7 --------
+
+To remove space from file
+
+---
+ - hosts: Password
+   gather_facts: no
+   become: yes
+   tasks:
+   - name: Shell script
+     shell: |
+      File="/root/numberLooping/docker.txt"
+      if [[ -f "${File}" ]]; then
+        sed -i '3n; 3,5 s/[[:space:]]//g' "${File}"
+      fi
+...
+
+----Done 8 ------
+
+name=$(grep -w administrator passwd)
+echo $name >> test.txt
+
+-----Done 9 -------
+
+To add space Letter
+---
+ - hosts: Password
+   gather_facts: no
+   become: yes
+   tasks:
+   - name: Shell script
+     shell: |
+      File="/root/numberLooping/docker.txt"
+      if [[ -f "${File}" ]]; then
+        sed 's/[A-Z]/ &/g;s/^ //' "${File}"
+      fi
+...
+
+
+-----Done 10------
+
+#! /bin/bash
+
+
+Directory="/root/shellScripting/arshad"
+
+if [[ -e "${Directory}" ]]; then
+  echo "Directory already present"
+else
+  mkdir arshad
+fi
+
+
+
+
+
+
+
+# #! /bin/bash
+
+# count=$(df -h | wc -l)
+# a=0
+# for (( c=1; c<=$count; c++ ))
+# do
+#     col=$(df -h | awk '{print $5}' | sed 's/%//')
+#     if [[ "$col" -gt "30" ]]; then
+#         echo "print $a"
+#     fi
+# done
+
+
+# a=0
+# count=$(df -h | wc -l)
+# column=$(df -h | awk '{print $5}')
+
+# if [[ "$column" -gt "30" ]]; then
+#     a=$(($a+1))
+# fi
+# done
+# echo "show number = $a"
+
+mkfs.ext4 /dev/sda (For file system)
+
+
+#!/bin/bash
+
+# Set the JBoss home directory
+export JBOSS_HOME=/path/to/jboss/home
+
+# Set the name of the WAR file you want to deploy
+WAR_FILE=myapp.war
+
+# Set the deployment directory
+DEPLOY_DIR=$JBOSS_HOME/standalone/deployments
+
+# Copy the WAR file to the deployment directory
+cp $WAR_FILE $DEPLOY_DIR
+
+# Wait for the deployment to complete
+sleep 5
+
+# Check the server log to make sure the deployment was successful
+tail -f $JBOSS_HOME/standalone/log/server.log
+
+	
+	
